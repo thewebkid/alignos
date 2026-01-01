@@ -22,5 +22,14 @@ const count = ref(0)
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+// Example SCSS usage - you can now use SCSS features like nesting, variables, etc.
+.container {
+  // You can access Bootstrap variables if needed
+  // Example: color: $primary;
+  
+  h1 {
+    margin-bottom: 1rem;
+  }
+}
 </style>

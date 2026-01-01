@@ -1,10 +1,10 @@
 import { createApp } from 'vue'
 import { createBootstrap } from 'bootstrap-vue-next'
 
-// Add the necessary CSS
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
+// Import SCSS with Bootstrap theme customization
+import './assets/scss/main.scss'
 
+// Keep your existing custom styles if needed
 import './style.css'
 import App from './App.vue'
 
