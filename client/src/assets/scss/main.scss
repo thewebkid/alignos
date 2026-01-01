@@ -1,0 +1,25 @@
+// Bootstrap SCSS import with custom variable overrides
+// Step 1: Import Bootstrap functions first (required for using Bootstrap functions in your variables)
+@import "bootstrap/scss/functions";
+
+// Step 2: Import your custom variable overrides
+// Define your custom variables BEFORE importing Bootstrap's default variables
+@import "variables";
+
+// Step 3: Import Bootstrap's variables (your overrides will take precedence)
+@import "bootstrap/scss/variables";
+
+// Step 4: Import Bootstrap's maps and mixins
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+// Step 5: Import Bootstrap components
+// You can import the full Bootstrap, or selectively import only what you need
+@import "bootstrap/scss/bootstrap";
+
+// Import BootstrapVueNext styles
+@import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
+
+// Your custom global styles can go here
+// Add any global styles that should apply across your application
