@@ -12,4 +12,18 @@ export default defineConfig({
       },
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Silence deprecation warnings from Bootstrap
+        // These warnings come from Bootstrap's internal code and will be fixed in Bootstrap 6
+        silenceDeprecations: [
+          'import',
+          'if-function',
+          'global-builtin',
+          'color-functions'
+        ],
+      },
+    },
+  },
 })
