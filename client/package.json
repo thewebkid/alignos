@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "build:lattice": "node scripts/build-lattice.js",
+    "dev": "npm run build:lattice && vite",
+    "build": "npm run build:lattice && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
