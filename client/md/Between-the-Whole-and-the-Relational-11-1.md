@@ -1,3 +1,5 @@
+<img src="covers/Between-the-Whole-and-the-Relational-11-1.jpg" alt="Between the Whole and the Relational (Cover Image)"/>
+
 # Between the Whole and the Relational
 
 ## The Sovereign Integral and the InterBeing
