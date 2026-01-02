@@ -111,7 +111,7 @@ const filterCounts = computed(() => {
 
 <style lang="scss" scoped>
 .browse-view {
-  padding-bottom: 3rem;
+  // Let content flow naturally
 }
 
 .hero-section {
@@ -142,7 +142,7 @@ const filterCounts = computed(() => {
 .filter-section {
   padding: 1rem 0;
   position: sticky;
-  top: 60px;
+  top: 0;
   z-index: 100;
   background: var(--cl-bg);
   border-bottom: 1px solid var(--cl-border-light);

@@ -44,9 +44,8 @@ const handleKeydown = (e) => {
           <component :is="Component" />
         </transition>
       </RouterView>
+      <AppFooter />
     </main>
-    
-    <AppFooter />
     
     <SearchOverlay 
       :show="showSearch" 
@@ -58,17 +57,20 @@ const handleKeydown = (e) => {
 <style lang="scss">
 // Global app styles using CSS custom properties
 .app-container {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: var(--cl-bg);
   color: var(--cl-text);
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow: hidden; // Prevent container scroll
 }
 
 .main-content {
   flex: 1;
   width: 100%;
+  min-height: 0; // Allows flex child to shrink below content size
+  overflow-y: auto;
 }
 
 // Page transition

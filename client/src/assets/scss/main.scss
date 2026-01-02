@@ -28,6 +28,7 @@
 // HTML & Body baseline
 html {
   scroll-behavior: smooth;
+  height: 100%;
 }
 
 body {
@@ -36,6 +37,15 @@ body {
   font-family: $font-family-sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; // Prevent body scroll, let main-content handle it
+}
+
+#app {
+  height: 100%;
+  width: 100%;
 }
 
 // Custom font stack CSS variable

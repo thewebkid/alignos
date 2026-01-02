@@ -45,7 +45,7 @@ const totalCodexes = computed(() => codexRegistry?.size || 0)
   background: var(--cl-surface);
   border-top: 1px solid var(--cl-border-light);
   padding: 2rem 0;
-  margin-top: auto;
+  margin-top: 3rem;
 }
 
 .footer-content {

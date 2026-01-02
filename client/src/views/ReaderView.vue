@@ -216,7 +216,6 @@ const nextCodex = computed(() => {
 
 <style lang="scss" scoped>
 .reader-view {
-  min-height: 100vh;
   background: var(--cl-reader-bg);
 }
 
