@@ -1,6 +1,5 @@
 # AlignOS Deployment Script for Staging Server
-# Run this script on the staging PC (192.168.50.209) after running setup-staging.ps1
-# This will clone/update the repository, install dependencies, build, and deploy
+# Run this script on the staging PC after running setup-staging.ps1
 
 param(
     [string]$Branch = "main"
@@ -33,24 +32,20 @@ if (!(Test-Path "$appPath\.git")) {
 } else {
     Write-Host "Pulling latest changes..." -ForegroundColor Green
     Set-Location $appPath
-    
-    # Stash any local changes
     git stash
-    
-    # Pull latest
     git checkout $Branch
     git pull origin $Branch
-    
     if ($LASTEXITCODE -ne 0) {
         Write-Host "ERROR: Failed to pull latest changes" -ForegroundColor Red
         exit 1
     }
 }
 
-Write-Host "✓ Repository updated" -ForegroundColor Green
+Write-Host "Repository updated" -ForegroundColor Green
 
 # Install server dependencies
-Write-Host "`nInstalling server dependencies..." -ForegroundColor Green
+Write-Host ""
+Write-Host "Installing server dependencies..." -ForegroundColor Green
 Set-Location "$appPath\server"
 
 if (!(Test-Path "package.json")) {
@@ -63,10 +58,11 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Failed to install server dependencies" -ForegroundColor Red
     exit 1
 }
-Write-Host "✓ Server dependencies installed" -ForegroundColor Green
+Write-Host "Server dependencies installed" -ForegroundColor Green
 
 # Install client dependencies and build
-Write-Host "`nInstalling client dependencies..." -ForegroundColor Green
+Write-Host ""
+Write-Host "Installing client dependencies..." -ForegroundColor Green
 Set-Location "$appPath\client"
 
 if (!(Test-Path "package.json")) {
@@ -79,33 +75,34 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Failed to install client dependencies" -ForegroundColor Red
     exit 1
 }
-Write-Host "✓ Client dependencies installed" -ForegroundColor Green
+Write-Host "Client dependencies installed" -ForegroundColor Green
 
-Write-Host "`nBuilding client application..." -ForegroundColor Green
+Write-Host ""
+Write-Host "Building client application..." -ForegroundColor Green
 npm run build
 if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Failed to build client" -ForegroundColor Red
     exit 1
 }
-Write-Host "✓ Client built successfully" -ForegroundColor Green
+Write-Host "Client built successfully" -ForegroundColor Green
 
 # Create .env file if it doesn't exist
 $envPath = "$appPath\server\.env"
 if (!(Test-Path $envPath)) {
-    Write-Host "`nCreating .env file..." -ForegroundColor Green
-    @"
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/alignos
-NODE_ENV=production
-"@ | Out-File -FilePath $envPath -Encoding UTF8
-    Write-Host "✓ .env file created" -ForegroundColor Green
-    Write-Host "  You may need to edit $envPath for your environment" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Creating .env file..." -ForegroundColor Green
+    $envContent = "PORT=5000`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
+    [System.IO.File]::WriteAllText($envPath, $envContent)
+    Write-Host ".env file created" -ForegroundColor Green
+    Write-Host "You may need to edit $envPath for your environment" -ForegroundColor Yellow
 } else {
-    Write-Host "`n✓ .env file already exists" -ForegroundColor Green
+    Write-Host ""
+    Write-Host ".env file already exists" -ForegroundColor Green
 }
 
 # Deploy with PM2
-Write-Host "`nDeploying application with PM2..." -ForegroundColor Green
+Write-Host ""
+Write-Host "Deploying application with PM2..." -ForegroundColor Green
 Set-Location "$appPath\server"
 
 # Check if app is already running
@@ -129,26 +126,29 @@ if ($pm2List -match $appName) {
 # Save PM2 process list
 pm2 save
 
-Write-Host "✓ Application deployed" -ForegroundColor Green
+Write-Host "Application deployed" -ForegroundColor Green
 
 # Show status
-Write-Host "`n=== Application Status ===" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "=== Application Status ===" -ForegroundColor Cyan
 pm2 status
 
 # Get local IP addresses
-Write-Host "`n=== Access URLs ===" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "=== Access URLs ===" -ForegroundColor Cyan
 $ipAddresses = Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -ne "127.0.0.1" } | Select-Object -ExpandProperty IPAddress
 foreach ($ip in $ipAddresses) {
     Write-Host "http://${ip}:5000" -ForegroundColor Green
 }
 Write-Host "http://localhost:5000" -ForegroundColor Green
 
-Write-Host "`n=== Deployment Complete! ===" -ForegroundColor Green
+Write-Host ""
+Write-Host "=== Deployment Complete! ===" -ForegroundColor Green
 Write-Host ""
 Write-Host "Useful PM2 commands:" -ForegroundColor Cyan
-Write-Host "  pm2 status              - Show running processes" -ForegroundColor White
-Write-Host "  pm2 logs $appName        - View application logs" -ForegroundColor White
-Write-Host "  pm2 restart $appName     - Restart the application" -ForegroundColor White
-Write-Host "  pm2 stop $appName        - Stop the application" -ForegroundColor White
-Write-Host "  pm2 monit               - Monitor in real-time" -ForegroundColor White
+Write-Host "  pm2 status       - Show running processes" -ForegroundColor White
+Write-Host "  pm2 logs alignos - View application logs" -ForegroundColor White
+Write-Host "  pm2 restart alignos - Restart the app" -ForegroundColor White
+Write-Host "  pm2 stop alignos - Stop the application" -ForegroundColor White
+Write-Host "  pm2 monit        - Monitor in real-time" -ForegroundColor White
 Write-Host ""
