@@ -109,12 +109,26 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed staging deployment instruction
    ```
 
 2. **Deploy/Update**
+   
+   **Option A: Standard deployment (port 5000)**
    ```powershell
    # On staging server
    .\deploy-to-staging.ps1
    ```
+   
+   **Option B: Multi-port deployment (80, 443, 5000)**
+   ```powershell
+   # Deploy on specific ports
+   .\deploy-multi-port.ps1 -Port80          # Deploy on port 80
+   .\deploy-multi-port.ps1 -Port5000        # Deploy on port 5000
+   .\deploy-multi-port.ps1 -All             # Deploy on all ports
+   ```
 
-The application will be deployed to `C:\inetpub\alignos` and accessible at `http://192.168.50.209:5000`
+**Access URLs:**
+- LAN: `http://192.168.50.209:5000` (or port 80: `http://192.168.50.209`)
+- WAN: `http://thewebkid.asuscomm.com:5000` (or port 80: `http://thewebkid.asuscomm.com`)
+
+**Note:** The Express server now serves both the Vue frontend and API endpoints. All routes serve the SPA except `/api/*` which are reserved for API endpoints.
 
 ## 📁 Project Structure
 
