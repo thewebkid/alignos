@@ -13,6 +13,7 @@ import { Codex } from './codex.js';
  * @property {number} score - Relevance score (higher is better)
  * @property {'title'|'keyword'|'content'|'series'} match - What matched
  * @property {string} [snippet] - Context snippet for content matches
+ * @property {number} [matchCount] - Number of matches in content (only for content matches)
  */
 
 /**
@@ -20,6 +21,7 @@ import { Codex } from './codex.js';
  * @property {('title'|'keyword'|'content'|'series')[]} [searchIn] - Fields to search
  * @property {number} [limit] - Maximum results
  * @property {boolean} [fuzzy] - Enable fuzzy matching
+ * @property {boolean} [includeMatchCount] - Include match count for content results
  */
 
 export class CodexRegistry {
@@ -284,7 +286,8 @@ export class CodexRegistry {
     const {
       searchIn = ['title', 'keyword', 'content'],
       limit = 10,
-      fuzzy = false
+      fuzzy = false,
+      includeMatchCount = false
     } = options;
     
     const results = [];
@@ -292,10 +295,10 @@ export class CodexRegistry {
     const addedIds = new Set();
     
     // Helper to add result without duplicates
-    const addResult = (codex, score, match, snippet = null) => {
+    const addResult = (codex, score, match, snippet = null, matchCount = null) => {
       if (!addedIds.has(codex.id)) {
         addedIds.add(codex.id);
-        results.push({ codex, score, match, snippet });
+        results.push({ codex, score, match, snippet, matchCount });
       }
     };
     
@@ -348,7 +351,12 @@ export class CodexRegistry {
       for (const codex of this.codexes.values()) {
         if (!addedIds.has(codex.id) && codex.containsText(query)) {
           const snippet = codex.getSnippet(query);
-          addResult(codex, 10, 'content', snippet);
+          // Count matches if requested
+          let matchCount = null;
+          if (includeMatchCount) {
+            matchCount = this.countMatches(codex, query);
+          }
+          addResult(codex, 10, 'content', snippet, matchCount);
         }
       }
     }
@@ -357,6 +365,81 @@ export class CodexRegistry {
     return results
       .sort((a, b) => b.score - a.score)
       .slice(0, limit);
+  }
+
+  /**
+   * Count total matches of query in a codex's content
+   * @param {Codex} codex 
+   * @param {string} query 
+   * @returns {number}
+   */
+  countMatches(codex, query) {
+    const lower = codex.markdown.toLowerCase();
+    const queryLower = query.toLowerCase();
+    let count = 0;
+    let pos = 0;
+    while ((pos = lower.indexOf(queryLower, pos)) !== -1) {
+      count++;
+      pos += queryLower.length;
+    }
+    return count;
+  }
+
+  /**
+   * Get total count of matching codexes (without limit)
+   * @param {string} query 
+   * @param {SearchOptions} [options={}] 
+   * @returns {number}
+   */
+  getTotalResultCount(query, options = {}) {
+    const { searchIn = ['title', 'keyword', 'content'], fuzzy = false } = options;
+    const queryLower = query.toLowerCase();
+    const matchedIds = new Set();
+    
+    // Title search
+    if (searchIn.includes('title')) {
+      for (const codex of this.codexes.values()) {
+        const titleLower = codex.title.toLowerCase();
+        if (titleLower === queryLower || titleLower.includes(queryLower)) {
+          matchedIds.add(codex.id);
+        } else if (fuzzy && this.fuzzyMatch(titleLower, queryLower)) {
+          matchedIds.add(codex.id);
+        }
+      }
+    }
+    
+    // Keyword search
+    if (searchIn.includes('keyword')) {
+      for (const [keyword, codexIds] of this.keywordIndex) {
+        if (keyword.includes(queryLower) || queryLower.includes(keyword)) {
+          for (const id of codexIds) {
+            matchedIds.add(id);
+          }
+        }
+      }
+    }
+    
+    // Series name search
+    if (searchIn.includes('series')) {
+      for (const [seriesName, codexes] of this.series) {
+        if (seriesName.toLowerCase().includes(queryLower)) {
+          for (const codex of codexes) {
+            matchedIds.add(codex.id);
+          }
+        }
+      }
+    }
+    
+    // Content search
+    if (searchIn.includes('content')) {
+      for (const codex of this.codexes.values()) {
+        if (!matchedIds.has(codex.id) && codex.containsText(query)) {
+          matchedIds.add(codex.id);
+        }
+      }
+    }
+    
+    return matchedIds.size;
   }
 
   /**

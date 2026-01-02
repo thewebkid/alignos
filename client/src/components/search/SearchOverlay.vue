@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, inject, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import { markdown2Html } from '../../lib/markdown'
 
 const props = defineProps({
   show: Boolean
@@ -15,6 +16,11 @@ const searchInput = ref(null)
 const query = ref('')
 const results = ref([])
 const selectedIndex = ref(0)
+const titleOnly = ref(false)
+const totalResultCount = ref(0)
+
+// Track mousedown target to prevent drag-select from closing modal
+const mouseDownTarget = ref(null)
 
 // Focus input when overlay opens
 watch(() => props.show, async (newShow) => {
@@ -24,41 +30,87 @@ watch(() => props.show, async (newShow) => {
     query.value = ''
     results.value = []
     selectedIndex.value = 0
+    totalResultCount.value = 0
+    // Keep titleOnly state across sessions for convenience
   }
 })
 
-// Search as user types
-watch(query, (newQuery) => {
-  if (!newQuery.trim()) {
+// Perform search with current settings
+const performSearch = () => {
+  const q = query.value.trim()
+  if (!q) {
     results.value = []
+    totalResultCount.value = 0
     return
   }
   
   if (codexRegistry) {
-    const searchResults = codexRegistry.search(newQuery, { limit: 10 })
+    const searchIn = titleOnly.value 
+      ? ['title'] 
+      : ['title', 'keyword', 'content']
+    
+    const searchResults = codexRegistry.search(q, { 
+      limit: 20, 
+      searchIn,
+      includeMatchCount: true
+    })
+    
     results.value = searchResults.map(result => {
-      // search returns { codex, score, match, snippet }
+      // search returns { codex, score, match, snippet, matchCount }
       return {
         id: result.codex.id,
         codex: result.codex,
         score: result.score,
         match: result.match,
-        snippet: result.snippet || getSnippet(result.codex, newQuery)
+        snippet: result.snippet || getSnippet(result.codex, q),
+        matchCount: result.matchCount
       }
     })
     selectedIndex.value = 0
+    
+    // Get total count for "see more" link
+    totalResultCount.value = codexRegistry.getTotalResultCount(q, { searchIn })
   }
-})
+}
+
+// Search as user types
+watch(query, performSearch)
+
+// Re-search when titleOnly changes
+watch(titleOnly, performSearch)
 
 // Get text snippet with match
 const getSnippet = (codex, searchQuery) => {
   if (!codex) return ''
-  const snippet = codex.getSnippet(searchQuery, 120)
+  let snippet = codex.getSnippet(searchQuery, 120)
   if (!snippet) return ''
+  
+  // Remove cover image markdown (e.g., ![alt](path) or ![](path)) - must be done first
+  snippet = snippet.replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+  
+  // Remove any remaining image-like patterns (broken markdown)
+  snippet = snippet.replace(/!\[[^\]]*\]/g, '')
+  
+  // Remove heading markdown (# ## ### etc.) and just keep the text
+  snippet = snippet.replace(/^#{1,6}\s+/gm, '')
+  
+  // Remove "(Cover Image)" text that might appear
+  snippet = snippet.replace(/\(Cover Image\)/gi, '')
+  
+  // Clean up multiple spaces and trim
+  snippet = snippet.replace(/\s+/g, ' ').trim()
+  
+  if (!snippet) return ''
+  
+  // Convert markdown to HTML
+  let html = markdown2Html(snippet) || snippet
+  
+  // Remove any <img> tags that may have been generated
+  html = html.replace(/<img[^>]*>/gi, '')
   
   // Highlight matching text
   const regex = new RegExp(`(${escapeRegex(searchQuery)})`, 'gi')
-  return snippet.replace(regex, '<mark>$1</mark>')
+  return html.replace(regex, '<mark>$1</mark>')
 }
 
 const escapeRegex = (string) => {
@@ -89,11 +141,37 @@ const selectResult = (result) => {
   }
 }
 
-// Close on backdrop click
+// Track mousedown for distinguishing clicks from drag-select
+const handleMouseDown = (e) => {
+  mouseDownTarget.value = e.target
+}
+
+// Close on backdrop click (only if mousedown was also on backdrop)
 const handleBackdropClick = (e) => {
-  if (e.target === e.currentTarget) {
+  // Only close if both mousedown and mouseup happened on the backdrop
+  if (e.target === e.currentTarget && mouseDownTarget.value === e.currentTarget) {
     emit('close')
   }
+  mouseDownTarget.value = null
+}
+
+// Handle broken cover images
+const handleImageError = (e) => {
+  // Hide the image container when image fails to load
+  e.target.parentElement.style.display = 'none'
+}
+
+// Check if there are more results than displayed
+const hasMoreResults = computed(() => totalResultCount.value > results.value.length)
+
+// Navigate to full search results page
+const goToFullResults = () => {
+  const params = new URLSearchParams({ q: query.value })
+  if (titleOnly.value) {
+    params.set('titleOnly', 'true')
+  }
+  router.push({ path: '/search', query: { q: query.value, ...(titleOnly.value ? { titleOnly: 'true' } : {}) } })
+  emit('close')
 }
 </script>
 
@@ -103,6 +181,7 @@ const handleBackdropClick = (e) => {
       <div 
         v-if="show" 
         class="search-overlay"
+        @mousedown="handleMouseDown"
         @click="handleBackdropClick"
         @keydown="handleKeydown"
       >
@@ -121,7 +200,19 @@ const handleBackdropClick = (e) => {
               placeholder="Search codexes..."
               autocomplete="off"
             />
-            <kbd class="search-hint">ESC</kbd>
+            <label class="title-only-toggle">
+              <input 
+                type="checkbox" 
+                v-model="titleOnly"
+              />
+              <span>Titles only</span>
+            </label>
+            <button class="close-button" @click="emit('close')" aria-label="Close search">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
           </div>
           
           <!-- Results -->
@@ -139,10 +230,21 @@ const handleBackdropClick = (e) => {
                   :src="`/md/${result.codex.coverImage}`" 
                   :alt="result.codex.title"
                   loading="lazy"
+                  @error="handleImageError"
                 />
               </div>
               <div class="result-content">
                 <div class="result-title">{{ result.codex?.title }}</div>
+                <div class="result-meta">
+                  <span 
+                    v-if="result.matchCount && result.match === 'content'" 
+                    class="match-count"
+                  >
+                    {{ result.matchCount }} {{ result.matchCount === 1 ? 'match' : 'matches' }}
+                  </span>
+                  <span v-else-if="result.match === 'title'" class="match-type">Title match</span>
+                  <span v-else-if="result.match === 'keyword'" class="match-type">Keyword match</span>
+                </div>
                 <div 
                   class="result-snippet" 
                   v-if="result.snippet"
@@ -150,6 +252,7 @@ const handleBackdropClick = (e) => {
                 ></div>
               </div>
             </button>
+            
           </div>
           
           <!-- Empty state -->
@@ -162,11 +265,14 @@ const handleBackdropClick = (e) => {
             <p>Start typing to search through all codexes...</p>
           </div>
           
-          <!-- Footer hints -->
-          <div class="search-footer">
-            <span class="hint"><kbd>↑↓</kbd> Navigate</span>
-            <span class="hint"><kbd>↵</kbd> Select</span>
-            <span class="hint"><kbd>ESC</kbd> Close</span>
+          <!-- Footer with results count -->
+          <div class="search-footer" v-if="results.length > 0">
+            <span class="results-count">
+              Showing {{ results.length }} of {{ totalResultCount }} results
+            </span>
+            <button v-if="hasMoreResults" class="see-all-button" @click="goToFullResults">
+              See full results
+            </button>
           </div>
         </div>
       </div>
@@ -231,6 +337,53 @@ const handleBackdropClick = (e) => {
   color: var(--cl-text-muted);
 }
 
+.title-only-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--cl-text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  user-select: none;
+  
+  &:hover {
+    background: var(--cl-surface-hover);
+    color: var(--cl-text);
+  }
+  
+  input {
+    accent-color: var(--cl-accent);
+    cursor: pointer;
+  }
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  color: var(--cl-text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: var(--cl-surface-hover);
+    color: var(--cl-text);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
 .search-results {
   max-height: 400px;
   overflow-y: auto;
@@ -281,13 +434,50 @@ const handleBackdropClick = (e) => {
   font-family: var(--bs-font-serif);
   font-weight: 500;
   color: var(--cl-text-heading);
+  margin-bottom: 0.125rem;
+}
+
+.result-meta {
+  font-size: 0.75rem;
   margin-bottom: 0.25rem;
+}
+
+.match-count {
+  color: var(--cl-accent);
+  font-weight: 500;
+}
+
+.match-type {
+  color: var(--cl-text-muted);
+  font-style: italic;
 }
 
 .result-snippet {
   font-size: 0.875rem;
   color: var(--cl-text-muted);
   line-height: 1.5;
+  
+  // Normalize all HTML elements to consistent small text
+  :deep(h1), :deep(h2), :deep(h3), :deep(h4), :deep(h5), :deep(h6) {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0;
+    display: inline;
+  }
+  
+  :deep(p) {
+    font-size: 0.875rem;
+    margin: 0;
+    display: inline;
+  }
+  
+  :deep(strong), :deep(b) {
+    font-weight: 600;
+  }
+  
+  :deep(em), :deep(i) {
+    font-style: italic;
+  }
   
   :deep(mark) {
     background: var(--cl-accent);
@@ -311,21 +501,35 @@ const handleBackdropClick = (e) => {
 .search-footer {
   display: flex;
   gap: 1rem;
+  align-items: center;
   justify-content: center;
   padding: 0.75rem;
   background: var(--cl-surface-hover);
   border-top: 1px solid var(--cl-border-light);
   
-  .hint {
-    font-size: 0.75rem;
+  .results-count {
+    font-size: 0.875rem;
     color: var(--cl-text-muted);
+  }
+  
+  .see-all-button {
+    background: transparent;
+    border: none;
+    font-size: 0.875rem;
+    color: var(--cl-accent);
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--bs-border-radius);
+    transition: all 0.2s ease;
     
-    kbd {
+    &:hover {
       background: var(--cl-surface);
-      border: 1px solid var(--cl-border-light);
-      border-radius: 3px;
-      padding: 0.0625rem 0.375rem;
-      margin-right: 0.25rem;
+      text-decoration: underline;
+    }
+    
+    &::after {
+      content: ' →';
     }
   }
 }
