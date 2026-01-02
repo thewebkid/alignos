@@ -37,7 +37,13 @@ export class BrowserCodex extends Codex {
    */
   toHtml() {
     if (this._html === null) {
-      this._html = DOMPurify.sanitize(marked.parse(this.markdown));
+      let html = DOMPurify.sanitize(marked.parse(this.markdown));
+      
+      // Fix image paths - convert relative paths to /md/ absolute paths
+      // Handles both src="covers/..." and src="./covers/..."
+      html = html.replace(/src="(\.\/)?covers\//g, 'src="/md/covers/');
+      
+      this._html = html;
     }
     return this._html;
   }

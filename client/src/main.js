@@ -1,12 +1,12 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import { createBootstrap } from 'bootstrap-vue-next'
 
 // Import SCSS with Bootstrap theme customization
 import './assets/scss/main.scss'
 
-// Keep your existing custom styles if needed
-import './style.css'
 import App from './App.vue'
+import router from './router'
 
 // Codex Lattice imports
 import { CodexRegistry } from './lib/codex-registry.js'
@@ -27,6 +27,12 @@ console.log(`📖 ${glossaryManager.size} glossary terms loaded`)
 // Create Vue app
 const app = createApp(App)
 
+// Use plugins
+const pinia = createPinia()
+app.use(pinia)
+app.use(router)
+app.use(createBootstrap())
+
 // Provide the registry and glossary to all components
 app.provide('codexRegistry', codexRegistry)
 app.provide('glossaryManager', glossaryManager)
@@ -37,5 +43,4 @@ if (typeof window !== 'undefined') {
   window.glossaryManager = glossaryManager
 }
 
-app.use(createBootstrap())
 app.mount('#app')

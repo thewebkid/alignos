@@ -21,5 +21,165 @@
 // Import BootstrapVueNext styles
 @import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
 
-// Your custom global styles can go here
-// Add any global styles that should apply across your application
+// =============================================================================
+// GLOBAL CUSTOM STYLES
+// =============================================================================
+
+// HTML & Body baseline
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--cl-bg);
+  color: var(--cl-text);
+  font-family: $font-family-sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Custom font stack CSS variable
+:root {
+  --bs-font-serif: #{$font-family-serif};
+}
+
+// Focus styles
+*:focus-visible {
+  outline: 2px solid var(--cl-primary);
+  outline-offset: 2px;
+}
+
+// Container customization
+.container {
+  @media (min-width: 1400px) {
+    max-width: 1320px;
+  }
+}
+
+// =============================================================================
+// BUTTON CUSTOMIZATIONS
+// =============================================================================
+
+.btn-primary {
+  background-color: var(--cl-primary);
+  border-color: var(--cl-primary);
+  
+  &:hover,
+  &:focus {
+    background-color: var(--cl-primary-hover);
+    border-color: var(--cl-primary-hover);
+  }
+}
+
+.btn-outline-primary {
+  color: var(--cl-primary);
+  border-color: var(--cl-primary);
+  
+  &:hover,
+  &:focus {
+    background-color: var(--cl-primary);
+    border-color: var(--cl-primary);
+    color: white;
+  }
+}
+
+// =============================================================================
+// CARD CUSTOMIZATIONS
+// =============================================================================
+
+.card {
+  background-color: var(--cl-surface);
+  border: none;
+  box-shadow: $box-shadow;
+}
+
+// =============================================================================
+// LINK CUSTOMIZATIONS
+// =============================================================================
+
+a {
+  color: var(--cl-primary);
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: var(--cl-primary-hover);
+  }
+}
+
+// =============================================================================
+// TYPOGRAPHY HELPERS
+// =============================================================================
+
+.font-serif {
+  font-family: var(--bs-font-serif) !important;
+}
+
+.text-heading {
+  color: var(--cl-text-heading) !important;
+}
+
+.text-muted {
+  color: var(--cl-text-muted) !important;
+}
+
+// =============================================================================
+// ANIMATION UTILITIES
+// =============================================================================
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+// =============================================================================
+// LOADING SKELETON
+// =============================================================================
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--cl-surface-hover) 25%,
+    var(--cl-surface) 50%,
+    var(--cl-surface-hover) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: var(--bs-border-radius);
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// =============================================================================
+// DARK MODE ADJUSTMENTS
+// =============================================================================
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color-scheme: dark;
+  }
+  
+  img {
+    opacity: 0.95;
+  }
+  
+  .card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
