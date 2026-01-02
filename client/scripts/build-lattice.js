@@ -2,10 +2,10 @@
 
 /**
  * Build Lattice Script
- * 
+ *
  * Reads all markdown files from client/md/, extracts metadata,
  * and generates a JSON lattice file for the application.
- * 
+ *
  * Usage: node scripts/build-lattice.js
  */
 
@@ -17,7 +17,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.join(__dirname, '..');
-const MD_DIR = path.join(ROOT_DIR, 'md');
+const MD_DIR = path.join(ROOT_DIR, 'public/md');
 const OUTPUT_DIR = path.join(ROOT_DIR, 'src', 'generated');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'codex-lattice.json');
 
@@ -187,29 +187,29 @@ function buildSequenceMap() {
 const PATTERNS = {
   // Cover image: <img src="covers/filename.jpg" alt="..."/>
   coverImage: /^<img\s+src="covers\/([^"]+)"\s+alt="([^"]+)"[^>]*\/?>/m,
-  
+
   // Title: # Title (first h1)
   title: /^#\s+(.+)$/m,
-  
+
   // Subtitle: First line after title that's italicized or plain text
   subtitle: /^#\s+.+\n\n(?:\*([^*\n]+)\*|([A-Z][^\n]{10,}))$/m,
-  
+
   // Registry section
   registry: /^##\s*(?:❖\s*)?(?:Codex\s+)?Registry\s*\n([\s\S]*?)(?=^##\s|\Z)/m,
-  
+
   // Series preface
   seriesPreface: /^##\s*Series Preface:\s*([^\n]+)/m,
-  
+
   // Special sections
   stillpoint: /^###?\s*(?:❖\s*)?(?:A\s+)?Stillpoint\s*\n([\s\S]*?)(?=^##|\n###|\Z)/gim,
   fieldNote: /^###?\s*(?:❖\s*)?Field Note[:\s]*([^\n]*)\n([\s\S]*?)(?=^##|\n###|\Z)/gim,
   dialogicInterlude: /^##\s*(?:❖\s*)?Dialogic Interlude[:\s]*([^\n]*)\n([\s\S]*?)(?=^##\s|\Z)/gim,
   whisper: /^###?\s*(?:❖\s*)?(?:A\s+)?Whisper[:\s]*([^\n]*)\n([\s\S]*?)(?=^##|\n###|\Z)/gim,
   closingSeal: /^##\s*(?:❖\s*)?(?:Final\s+)?(?:Closing\s+)?Seal[:\s]*([^\n]*)\n([\s\S]*?)(?=^##\s|\Z)/gim,
-  
+
   // Glossary terms (bolded capitalized terms)
   glossaryTerms: /\*\*([A-Z][a-zA-Z\s\-]+)\*\*/g,
-  
+
   // Living Glossary entry format: ## ✧ Term Name
   livingGlossaryEntry: /^##\s*✧\s*(.+)$/gm
 };
@@ -269,7 +269,7 @@ function extractSubtitle(markdown) {
   const lines = markdown.split('\n');
   let foundTitle = false;
   let emptyCount = 0;
-  
+
   for (const line of lines) {
     if (line.startsWith('# ')) {
       foundTitle = true;
@@ -301,7 +301,7 @@ function extractSubtitle(markdown) {
  */
 function extractKeywords(markdown, title) {
   const keywords = new Set();
-  
+
   // Add core vocabulary terms found in the document
   for (const term of CORE_VOCABULARY) {
     // Case-insensitive search, but respect word boundaries
@@ -310,7 +310,7 @@ function extractKeywords(markdown, title) {
       keywords.add(term);
     }
   }
-  
+
   // Extract bolded terms that look like concepts
   let match;
   const boldPattern = /\*\*([A-Z][a-zA-Z\s\-]{2,30})\*\*/g;
@@ -321,16 +321,16 @@ function extractKeywords(markdown, title) {
       keywords.add(term);
     }
   }
-  
+
   // Extract key terms from title
   const titleWords = title
     .replace(/^The\s+Codex\s+of\s+/i, '')
     .replace(/^Codex\s+\w+:\s*/i, '')
     .split(/[\s\-:]+/)
     .filter(w => w.length > 3 && /^[A-Z]/.test(w));
-  
+
   titleWords.forEach(w => keywords.add(w));
-  
+
   return Array.from(keywords).slice(0, 25); // Limit to top 25
 }
 
@@ -339,7 +339,7 @@ function extractKeywords(markdown, title) {
  */
 function extractGlossaryTerms(markdown) {
   const terms = new Set();
-  
+
   // Look for bolded Field terms
   let match;
   while ((match = PATTERNS.glossaryTerms.exec(markdown)) !== null) {
@@ -348,7 +348,7 @@ function extractGlossaryTerms(markdown) {
       terms.add(term);
     }
   }
-  
+
   return Array.from(terms);
 }
 
@@ -357,7 +357,7 @@ function extractGlossaryTerms(markdown) {
  */
 function extractSpecialSections(markdown) {
   const sections = [];
-  
+
   // Extract stillpoints
   let match;
   const stillpointPattern = /^###?\s*(?:❖\s*)?(?:A\s+)?Stillpoint\s*\n([\s\S]*?)(?=\n##|\n###[^#]|\Z)/gim;
@@ -369,7 +369,7 @@ function extractSpecialSections(markdown) {
       lineStart: markdown.substring(0, match.index).split('\n').length
     });
   }
-  
+
   // Extract field notes
   const fieldNotePattern = /^###?\s*(?:❖\s*)?Field Note[:\s]*([^\n]*)\n([\s\S]*?)(?=\n##|\n###[^#]|\Z)/gim;
   while ((match = fieldNotePattern.exec(markdown)) !== null) {
@@ -380,7 +380,7 @@ function extractSpecialSections(markdown) {
       lineStart: markdown.substring(0, match.index).split('\n').length
     });
   }
-  
+
   // Extract dialogic interludes
   const dialogPattern = /^##\s*(?:❖\s*)?Dialogic Interlude[:\s]*([^\n]*)\n([\s\S]*?)(?=\n##[^#]|\Z)/gim;
   while ((match = dialogPattern.exec(markdown)) !== null) {
@@ -391,7 +391,7 @@ function extractSpecialSections(markdown) {
       lineStart: markdown.substring(0, match.index).split('\n').length
     });
   }
-  
+
   // Extract whispers
   const whisperPattern = /^###?\s*(?:❖\s*)?(?:A\s+)?Whisper[:\s]*([^\n]*)\n([\s\S]*?)(?=\n##|\n###[^#]|\Z)/gim;
   while ((match = whisperPattern.exec(markdown)) !== null) {
@@ -402,7 +402,7 @@ function extractSpecialSections(markdown) {
       lineStart: markdown.substring(0, match.index).split('\n').length
     });
   }
-  
+
   // Extract closing seal
   const sealPattern = /^##\s*(?:❖\s*)?(?:Final\s+)?(?:Closing\s+)?Seal[:\s]*([^\n]*)\n([\s\S]*?)(?=\n##[^#]|\Z)/gim;
   while ((match = sealPattern.exec(markdown)) !== null) {
@@ -413,7 +413,7 @@ function extractSpecialSections(markdown) {
       lineStart: markdown.substring(0, match.index).split('\n').length
     });
   }
-  
+
   return sections;
 }
 
@@ -423,10 +423,10 @@ function extractSpecialSections(markdown) {
 function extractRegistry(markdown) {
   const registryMatch = markdown.match(/^##\s*(?:❖\s*)?(?:Codex\s+)?Registry\s*\n([\s\S]*?)(?=^##[^#]|\Z)/m);
   if (!registryMatch) return null;
-  
+
   const registryText = registryMatch[1];
   const registry = {};
-  
+
   // Extract key-value pairs from bullet list format
   const bulletPattern = /^[-*]\s*\*\*([^:*]+)(?::\*\*|\*\*:)\s*(.+)$/gm;
   let match;
@@ -435,7 +435,7 @@ function extractRegistry(markdown) {
     const value = match[2].trim();
     registry[key] = value;
   }
-  
+
   // Also try colon-separated format
   const colonPattern = /^[-*]\s*\*\*([^*]+)\*\*\s+(.+)$/gm;
   while ((match = colonPattern.exec(registryText)) !== null) {
@@ -445,7 +445,7 @@ function extractRegistry(markdown) {
       registry[key] = value;
     }
   }
-  
+
   // Extract arrays (like primary architectures, codex entries)
   const arrayPattern = /^[-*]\s*\*\*([^:*]+)(?::\*\*|\*\*:)\s*\n((?:\s+[-*]\s+.+\n?)+)/gm;
   while ((match = arrayPattern.exec(registryText)) !== null) {
@@ -456,7 +456,7 @@ function extractRegistry(markdown) {
       .filter(Boolean);
     registry[key] = items;
   }
-  
+
   return Object.keys(registry).length > 0 ? registry : null;
 }
 
@@ -466,7 +466,7 @@ function extractRegistry(markdown) {
 function parseCodex(filename, markdown, sequence) {
   const id = generateId(filename);
   const title = extractTitle(markdown) || filename.replace('.md', '').replace(/-/g, ' ');
-  
+
   const codex = {
     id,
     title,
@@ -482,7 +482,7 @@ function parseCodex(filename, markdown, sequence) {
     registry: extractRegistry(markdown),
     specialSections: extractSpecialSections(markdown)
   };
-  
+
   return codex;
 }
 
@@ -492,32 +492,32 @@ function parseCodex(filename, markdown, sequence) {
 
 async function build() {
   console.log('🔮 Building Codex Lattice...\n');
-  
+
   const startTime = Date.now();
   const sequenceMap = buildSequenceMap();
-  
+
   // Read all markdown files
   const files = (await fs.readdir(MD_DIR))
     .filter(f => f.endsWith('.md'))
     .sort();
-  
+
   console.log(`📚 Found ${files.length} markdown files\n`);
-  
+
   const codexes = [];
   const seriesMap = new Map();
-  
+
   // Parse each file
   for (const file of files) {
     try {
       const content = await fs.readFile(path.join(MD_DIR, file), 'utf-8');
-      
+
       // Find sequence number
       const basename = file.replace('.md', '');
       const sequence = sequenceMap.get(basename) || null;
-      
+
       const codex = parseCodex(file, content, sequence);
       codexes.push(codex);
-      
+
       // Track series membership
       if (codex.series) {
         const seriesName = codex.series.name;
@@ -526,17 +526,17 @@ async function build() {
         }
         seriesMap.get(seriesName).push(codex.id);
       }
-      
+
       // Progress indicator
       const seqStr = sequence ? `#${sequence}` : '   ';
       const seriesStr = codex.series ? ` [${codex.series.name}]` : '';
       console.log(`  ✓ ${seqStr} ${codex.title.substring(0, 50)}${seriesStr}`);
-      
+
     } catch (error) {
       console.error(`  ✗ Error parsing ${file}:`, error.message);
     }
   }
-  
+
   // Link siblings within each series
   console.log('\n🔗 Linking series siblings...');
   for (const [seriesName, codexIds] of seriesMap) {
@@ -548,7 +548,7 @@ async function build() {
       }
     }
   }
-  
+
   // Sort by sequence (codexes without sequence go to the end)
   codexes.sort((a, b) => {
     if (a.sequence === null && b.sequence === null) return 0;
@@ -556,23 +556,23 @@ async function build() {
     if (b.sequence === null) return -1;
     return a.sequence - b.sequence;
   });
-  
+
   // Ensure output directory exists
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
-  
+
   // Write output
   await fs.writeFile(OUTPUT_FILE, JSON.stringify(codexes, null, 2));
-  
+
   // Calculate stats
   const totalWords = codexes.reduce((sum, c) => {
     const words = c.markdown.split(/\s+/).length;
     return sum + words;
   }, 0);
-  
+
   const totalSize = codexes.reduce((sum, c) => sum + c.markdown.length, 0);
-  
+
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
-  
+
   console.log('\n' + '─'.repeat(50));
   console.log('✨ Codex Lattice built successfully!\n');
   console.log(`   📊 Statistics:`);
