@@ -133,9 +133,13 @@ const seriesBadge = computed(() => {
 
 .card-cover {
   position: relative;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 2 / 3;
   overflow: hidden;
   background: var(--cl-surface-hover);
+  
+  @media (min-width: 640px) {
+    aspect-ratio: 3 / 4;
+  }
 }
 
 .cover-image {
@@ -164,18 +168,23 @@ const seriesBadge = computed(() => {
 
 .progress-indicator {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: 0.5rem;
+  right: 0.5rem;
   background: var(--cl-surface);
   border-radius: 50%;
   padding: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  
+  @media (min-width: 640px) {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
 }
 
 .complete-badge {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: 0.5rem;
+  right: 0.5rem;
   width: 28px;
   height: 28px;
   background: var(--cl-accent);
@@ -185,23 +194,36 @@ const seriesBadge = computed(() => {
   justify-content: center;
   color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  
+  @media (min-width: 640px) {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
 }
 
 .card-content {
-  padding: 1rem;
+  padding: 0.75rem;
   flex: 1;
   display: flex;
   flex-direction: column;
+  
+  @media (min-width: 640px) {
+    padding: 1rem;
+  }
 }
 
 .card-title {
   font-family: var(--bs-font-serif);
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--cl-text-heading);
   margin: 0;
   line-height: 1.4;
   flex: 1;
+  
+  @media (min-width: 640px) {
+    font-size: 1rem;
+  }
 }
 
 .card-meta {

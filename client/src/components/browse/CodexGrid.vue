@@ -22,15 +22,25 @@ defineProps({
 <style lang="scss" scoped>
 .codex-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
   
-  @media (min-width: 768px) {
+  // Mobile: 2 columns for better density
+  grid-template-columns: repeat(2, 1fr);
+  
+  // Tablet: responsive columns based on available space
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  // Desktop: larger cards
+  @media (min-width: 1024px) {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 2rem;
   }
   
-  @media (min-width: 1200px) {
+  // Large desktop: even larger cards
+  @media (min-width: 1400px) {
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   }
 }

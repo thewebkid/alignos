@@ -146,6 +146,24 @@ const filterCounts = computed(() => {
   z-index: 100;
   background: var(--cl-bg);
   border-bottom: 1px solid var(--cl-border-light);
+  
+  // Add gradient fade on right edge to indicate more filters
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 3rem;
+    background: linear-gradient(to left, var(--cl-bg), transparent);
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.2s;
+    
+    @media (min-width: 640px) {
+      display: none;
+    }
+  }
 }
 
 .filter-bar {
@@ -154,11 +172,34 @@ const filterCounts = computed(() => {
   overflow-x: auto;
   padding: 0.25rem;
   
-  // Hide scrollbar but keep functionality
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
+  // Show thin scrollbar on mobile so users know to scroll
+  @media (max-width: 639px) {
+    padding-right: 3rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--cl-border-light) transparent;
+    
+    &::-webkit-scrollbar {
+      display: block;
+      height: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: var(--cl-border-light);
+      border-radius: 2px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  }
+  
+  // Hide scrollbar on larger screens
+  @media (min-width: 640px) {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
