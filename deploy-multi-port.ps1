@@ -80,7 +80,9 @@ if ($Port80) {
     $env80 = "PORT=80`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
     [System.IO.File]::WriteAllText("$appPath\server\.env.80", $env80)
     
-    pm2 start index.js --name alignos-80 --env-file .env.80
+    # Copy the env file to .env before starting
+    Copy-Item "$appPath\server\.env.80" "$appPath\server\.env" -Force
+    pm2 start index.js --name alignos-80
     Write-Host "  Started on port 80" -ForegroundColor Green
 }
 
@@ -90,7 +92,9 @@ if ($Port443) {
     $env443 = "PORT=443`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
     [System.IO.File]::WriteAllText("$appPath\server\.env.443", $env443)
     
-    pm2 start index.js --name alignos-443 --env-file .env.443
+    # Copy the env file to .env before starting
+    Copy-Item "$appPath\server\.env.443" "$appPath\server\.env" -Force
+    pm2 start index.js --name alignos-443
     Write-Host "  Started on port 443" -ForegroundColor Green
 }
 
@@ -100,7 +104,7 @@ if ($Port5000) {
     $env5000 = "PORT=5000`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
     [System.IO.File]::WriteAllText("$appPath\server\.env", $env5000)
     
-    pm2 start index.js --name alignos-5000 --env-file .env
+    pm2 start index.js --name alignos-5000
     Write-Host "  Started on port 5000" -ForegroundColor Green
 }
 
