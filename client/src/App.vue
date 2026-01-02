@@ -37,7 +37,7 @@ const handleKeydown = (e) => {
 <template>
   <div class="app-container" @keydown="handleKeydown" tabindex="-1">
     <AppHeader @open-search="openSearch" />
-    
+
     <main class="main-content">
       <RouterView v-slot="{ Component }">
         <transition name="fade" mode="out-in">
@@ -46,10 +46,10 @@ const handleKeydown = (e) => {
       </RouterView>
       <AppFooter />
     </main>
-    
-    <SearchOverlay 
-      :show="showSearch" 
-      @close="closeSearch" 
+
+    <SearchOverlay
+      :show="showSearch"
+      @close="closeSearch"
     />
   </div>
 </template>
@@ -86,40 +86,41 @@ const handleKeydown = (e) => {
 
 // Global typography overrides for codex content
 .codex-content {
-  font-family: var(--bs-font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-family: var(--bs-font-sans-serif, 'Source Sans 3', Georgia, serif);
   font-size: 1.125rem;
   line-height: 1.8;
   color: var(--cl-reader-text);
-  
+
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--bs-font-serif, 'Cormorant Garamond', Georgia, serif);
+    font-family: var(--bs-font-serif, 'Source Sans 3', Georgia, serif);
     color: var(--cl-text-heading);
     margin-top: 2rem;
     margin-bottom: 1rem;
     font-weight: 500;
   }
-  
+
   h1 {
     font-size: 2.5rem;
     text-align: center;
     margin-bottom: 2rem;
   }
-  
+
   h2 {
     font-size: 1.75rem;
     border-bottom: 1px solid var(--cl-border-light);
     padding-bottom: 0.5rem;
   }
-  
+
   h3 {
     font-size: 1.5rem;
     font-style: italic;
   }
-  
+
   p {
     margin-bottom: 1.25rem;
+    font-family: 'Source Sans 3', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
-  
+
   blockquote {
     border-left: 3px solid var(--cl-accent);
     padding-left: 1.5rem;
@@ -127,16 +128,16 @@ const handleKeydown = (e) => {
     font-style: italic;
     color: var(--cl-text-muted);
   }
-  
+
   strong {
     color: var(--cl-text-heading);
     font-weight: 600;
   }
-  
+
   em {
     font-style: italic;
   }
-  
+
   // Cover image styling
   img {
     max-width: 100%;
@@ -146,13 +147,13 @@ const handleKeydown = (e) => {
     display: block;
     box-shadow: var(--cl-shadow-lg);
   }
-  
+
   // First image (cover) special styling
   > img:first-child {
-    max-width: min(400px, 80%);
+    //max-width: min(800px, 80%);
     margin-bottom: 2rem;
   }
-  
+
   hr {
     border: none;
     height: 1px;
@@ -164,13 +165,13 @@ const handleKeydown = (e) => {
     );
     margin: 3rem 0;
   }
-  
+
   // Lists
   ul, ol {
     margin-bottom: 1.25rem;
     padding-left: 1.5rem;
   }
-  
+
   li {
     margin-bottom: 0.5rem;
   }
@@ -206,7 +207,7 @@ const handleKeydown = (e) => {
 ::-webkit-scrollbar-thumb {
   background: var(--cl-border);
   border-radius: 4px;
-  
+
   &:hover {
     background: var(--cl-text-muted);
   }

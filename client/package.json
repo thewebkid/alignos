@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build:lattice": "node scripts/build-lattice.js",
-    "dev": "npm run build:lattice && vite",
+    "dev": "npm run build:lattice && vite --host",
     "build": "npm run build:lattice && vite build",
     "preview": "vite preview"
   },
