@@ -35,7 +35,7 @@ app.use(express.static(clientPath, {
 
 // SPA fallback - serve index.html for all non-API routes
 // This allows Vue Router to handle client-side routing
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(clientPath, 'index.html'));
 });
 
