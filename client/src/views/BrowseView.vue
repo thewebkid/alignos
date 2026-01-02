@@ -1,10 +1,39 @@
 <script setup>
-import { ref, computed, inject } from 'vue'
+import { ref, computed, inject, onMounted, onUnmounted } from 'vue'
 import CodexGrid from '../components/browse/CodexGrid.vue'
 import { useReadingProgressStore } from '../stores/readingProgress'
 
 const codexRegistry = inject('codexRegistry')
 const progressStore = useReadingProgressStore()
+
+// Scroll position tracking for browse view
+const BROWSE_SCROLL_KEY = 'browse-scroll-position'
+
+// Get the scrollable container
+const getScrollContainer = () => {
+  return document.querySelector('.main-content')
+}
+
+// Save scroll position before unmounting
+onUnmounted(() => {
+  const container = getScrollContainer()
+  if (container) {
+    sessionStorage.setItem(BROWSE_SCROLL_KEY, container.scrollTop.toString())
+  }
+})
+
+// Restore scroll position on mount
+onMounted(() => {
+  const container = getScrollContainer()
+  if (container) {
+    const savedPosition = sessionStorage.getItem(BROWSE_SCROLL_KEY)
+    if (savedPosition) {
+      setTimeout(() => {
+        container.scrollTo({ top: parseInt(savedPosition), behavior: 'instant' })
+      }, 0)
+    }
+  }
+})
 
 // Filter state
 const activeFilter = ref('all')

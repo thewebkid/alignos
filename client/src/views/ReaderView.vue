@@ -37,13 +37,20 @@ watch(codex, (newCodex) => {
   }
 }, { immediate: true })
 
+// Get the scrollable container (main-content element from App.vue)
+const getScrollContainer = () => {
+  return document.querySelector('.main-content')
+}
+
 // Scroll handler
 const handleScroll = () => {
   if (!contentRef.value) return
   
-  const element = document.documentElement
-  const scrollTop = window.scrollY
-  const scrollHeight = element.scrollHeight - element.clientHeight
+  const container = getScrollContainer()
+  if (!container) return
+  
+  const scrollTop = container.scrollTop
+  const scrollHeight = container.scrollHeight - container.clientHeight
   
   if (scrollHeight > 0) {
     scrollPercent.value = Math.round((scrollTop / scrollHeight) * 100)
@@ -57,23 +64,29 @@ const handleScroll = () => {
 
 // Restore scroll position on mount
 onMounted(async () => {
+  const container = getScrollContainer()
+  if (!container) return
+  
   if (codex.value) {
     const savedPosition = progressStore.getScrollPosition(codex.value.id)
     if (savedPosition > 0) {
       await nextTick()
       // Small delay to ensure content is rendered
       setTimeout(() => {
-        window.scrollTo({ top: savedPosition, behavior: 'instant' })
+        container.scrollTo({ top: savedPosition, behavior: 'instant' })
       }, 100)
     }
   }
   
-  window.addEventListener('scroll', handleScroll, { passive: true })
+  container.addEventListener('scroll', handleScroll, { passive: true })
   handleScroll() // Initial calculation
 })
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
+  const container = getScrollContainer()
+  if (container) {
+    container.removeEventListener('scroll', handleScroll)
+  }
 })
 
 // Copy markdown to clipboard
