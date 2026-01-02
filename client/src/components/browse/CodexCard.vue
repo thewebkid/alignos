@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useReadingProgressStore } from '../../stores/readingProgress'
-import ProgressRing from './ProgressRing.vue'
 
 const props = defineProps({
   codex: {
@@ -66,20 +65,9 @@ const seriesBadge = computed(() => {
         <span>{{ codex.title.charAt(0) }}</span>
       </div>
       
-      <!-- Progress indicator -->
-      <div class="progress-indicator" v-if="isStarted">
-        <ProgressRing 
-          :percent="scrollPercent" 
-          :size="36"
-          :stroke-width="3"
-        />
-      </div>
-      
-      <!-- Complete checkmark -->
-      <div class="complete-badge" v-if="isComplete">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
-        </svg>
+      <!-- Reading progress bar -->
+      <div class="progress-bar-container" v-if="isStarted">
+        <div class="progress-bar" :style="{ width: scrollPercent + '%' }"></div>
       </div>
     </div>
     
@@ -116,17 +104,6 @@ const seriesBadge = computed(() => {
     
     &:hover {
       opacity: 1;
-    }
-  }
-  
-  &.is-complete {
-    .card-cover::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border: 2px solid var(--cl-card-complete-glow);
-      border-radius: inherit;
-      pointer-events: none;
     }
   }
 }
@@ -166,39 +143,19 @@ const seriesBadge = computed(() => {
   font-weight: 500;
 }
 
-.progress-indicator {
+.progress-bar-container {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background: var(--cl-surface);
-  border-radius: 50%;
-  padding: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  
-  @media (min-width: 640px) {
-    top: 0.75rem;
-    right: 0.75rem;
-  }
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
 }
 
-.complete-badge {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 28px;
-  height: 28px;
-  background: var(--cl-accent);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  
-  @media (min-width: 640px) {
-    top: 0.75rem;
-    right: 0.75rem;
-  }
+.progress-bar {
+  height: 100%;
+  background: #10b981;
+  transition: width 0.3s ease;
 }
 
 .card-content {
