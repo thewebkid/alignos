@@ -2,6 +2,7 @@
 import { ref, computed, inject, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useReadingProgressStore } from '../stores/readingProgress'
+import { BDropdown, BDropdownItem } from 'bootstrap-vue-next'
 
 const route = useRoute()
 const router = useRouter()
@@ -104,6 +105,20 @@ const copyMarkdown = async () => {
   }
 }
 
+// Get PDF download link
+const getPdfLink = computed(() => {
+  if (!codex.value?.originalFileName) return null
+  // Remove .md extension if present before adding .pdf
+  const fileName = codex.value.originalFileName.replace(/\.md$/, '')
+  return `/pdf/${fileName}.pdf`
+})
+
+// Get Markdown download link
+const getMdLink = computed(() => {
+  if (!codex.value?.originalFileName) return null
+  return `/md/${codex.value.originalFileName}`
+})
+
 // Navigation
 const goBack = () => {
   if (window.history.length > 1) {
@@ -158,20 +173,57 @@ const nextCodex = computed(() => {
           
           <h1 class="reader-title" v-if="codex">{{ codex.title }}</h1>
           
-          <button 
-            class="btn-copy" 
-            @click="copyMarkdown" 
-            :title="showCopied ? 'Copied!' : 'Copy markdown to clipboard'"
+          <b-dropdown 
+            variant="outline-secondary"
+            size="sm" no-caret
+            class="codex-dropdown"
+            menu-class="codex-dropdown-menu"
+            toggle-class="d-flex align-items-center"
           >
-            <svg v-if="!showCopied" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-            <span class="d-none d-sm-inline">{{ showCopied ? 'Copied!' : 'Copy' }}</span>
-          </button>
+            <template #button-content>
+              <svg v-if="!showCopied" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+              <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span class="d-none d-sm-inline ms-2">{{ showCopied ? 'Copied!' : 'Menu' }}</span>
+            </template>
+            
+            <b-dropdown-item @click="copyMarkdown">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              Copy Codex
+            </b-dropdown-item>
+            
+            <b-dropdown-item 
+              v-if="getPdfLink"
+              :href="getPdfLink" 
+              :download="codex.originalFileName.replace(/\.md$/, '') + '.pdf'"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download PDF
+            </b-dropdown-item>
+            
+            <b-dropdown-item 
+              v-if="getMdLink"
+              :href="getMdLink" 
+              :download="codex.originalFileName"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download Markdown
+            </b-dropdown-item>
+          </b-dropdown>
         </div>
       </div>
     </header>
@@ -289,8 +341,7 @@ const nextCodex = computed(() => {
   }
 }
 
-.btn-back,
-.btn-copy {
+.btn-back {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -307,6 +358,59 @@ const nextCodex = computed(() => {
     background: var(--cl-surface-hover);
     color: var(--cl-text);
     border-color: var(--cl-border);
+  }
+}
+
+.codex-dropdown {
+  :deep(.btn) {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border-color: var(--cl-border-light);
+    background: var(--cl-surface);
+    color: var(--cl-text-muted);
+    font-size: 0.875rem;
+    
+    &:hover {
+      background: var(--cl-surface-hover);
+      color: var(--cl-text);
+      border-color: var(--cl-border);
+    }
+    
+    &:focus {
+      box-shadow: none;
+      border-color: var(--cl-border);
+    }
+  }
+}
+
+:deep(.codex-dropdown-menu) {
+  min-width: 200px;
+  border-color: var(--cl-border);
+  background: var(--cl-surface);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+  @media (prefers-color-scheme: dark) {
+    background: var(--cl-surface);
+    border-color: var(--cl-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: var(--cl-text);
+    
+    &:hover {
+      background: var(--cl-surface-hover);
+    }
+    
+    svg {
+      flex-shrink: 0;
+      color: var(--cl-text-muted);
+    }
   }
 }
 
