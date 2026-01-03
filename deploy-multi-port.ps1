@@ -16,8 +16,10 @@ $repoUrl = "https://github.com/thewebkid/alignos.git"
 Write-Host "=== AlignOS Multi-Port Deployment ===" -ForegroundColor Cyan
 Write-Host ""
 
-# If no ports specified, default to port 5000
+# If no ports specified, default to all ports
 if (-not $Port80 -and -not $Port443 -and -not $Port5000 -and -not $All) {
+    $Port80 = $true
+    $Port443 = $true
     $Port5000 = $true
 }
 
