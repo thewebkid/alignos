@@ -34,7 +34,7 @@ const showCopied = ref(false)
 // Update document title
 watch(codex, (newCodex) => {
   if (newCodex) {
-    document.title = `${newCodex.title} | Align OS`
+    document.title = `${newCodex.title} | AlignOS`
   }
 }, { immediate: true })
 
