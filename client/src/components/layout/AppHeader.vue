@@ -18,6 +18,11 @@ const isActive = (item) => {
   }
   return route.path.startsWith(item.path)
 }
+
+const handleSearchClick = () => {
+  navExpanded.value = false // Close mobile menu if open
+  emit('open-search')
+}
 </script>
 
 <template>
@@ -45,15 +50,30 @@ const isActive = (item) => {
           <span class="brand-text">Align<span class="brand-accent">OS</span></span>
         </RouterLink>
 
-        <!-- Mobile toggle -->
-        <button 
-          class="navbar-toggler border-0" 
-          type="button"
-          @click="navExpanded = !navExpanded"
-          :aria-expanded="navExpanded"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
+        <!-- Mobile controls -->
+        <div class="mobile-controls d-flex d-md-none align-items-center gap-2">
+          <!-- Search button (always visible on mobile) -->
+          <button 
+            class="btn btn-search-mobile d-flex align-items-center justify-content-center"
+            @click="handleSearchClick"
+            title="Search (⌘K or /)"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+          </button>
+
+          <!-- Mobile toggle -->
+          <button 
+            class="navbar-toggler border-0" 
+            type="button"
+            @click="navExpanded = !navExpanded"
+            :aria-expanded="navExpanded"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
 
         <!-- Navigation -->
         <div class="collapse navbar-collapse" :class="{ show: navExpanded }">
@@ -69,8 +89,8 @@ const isActive = (item) => {
               </RouterLink>
             </li>
             
-            <!-- Search button -->
-            <li class="nav-item ms-md-3">
+            <!-- Search button (desktop) -->
+            <li class="nav-item ms-md-3 d-none d-md-block">
               <button 
                 class="btn btn-search d-flex align-items-center"
                 @click="emit('open-search')"
@@ -152,6 +172,28 @@ const isActive = (item) => {
   &.active {
     color: var(--cl-primary);
     background-color: var(--cl-surface-hover);
+  }
+}
+
+.mobile-controls {
+  .btn-search-mobile {
+    background: transparent;
+    border: none;
+    color: var(--cl-text-muted);
+    padding: 0.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--bs-border-radius);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: var(--cl-surface-hover);
+      color: var(--cl-primary);
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
   }
 }
 
