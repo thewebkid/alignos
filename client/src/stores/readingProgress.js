@@ -50,17 +50,13 @@ export const useReadingProgressStore = defineStore('readingProgress', () => {
   const updateProgress = (codexId, scrollPercent, scrollPosition) => {
     const existing = progress.value[codexId] || {}
     
-    // Only update if new scroll percent is greater (don't go backwards)
-    // Unless this is a fresh start
-    const shouldUpdate = !existing.scrollPercent || scrollPercent >= existing.scrollPercent - 5
-    
-    if (shouldUpdate) {
-      progress.value[codexId] = {
-        ...existing,
-        scrollPercent: Math.max(scrollPercent, existing.scrollPercent || 0),
-        scrollPosition,
-        lastRead: new Date().toISOString()
-      }
+    // Always update the last position (for restoration to where user left off)
+    // But only increase the max scroll percent (for progress tracking - never decreases)
+    progress.value[codexId] = {
+      ...existing,
+      scrollPercent: Math.max(scrollPercent, existing.scrollPercent || 0),
+      scrollPosition, // Always update to current position
+      lastRead: new Date().toISOString()
     }
   }
 
