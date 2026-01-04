@@ -3,6 +3,7 @@ import { ref, computed, inject, onMounted, onUnmounted, watch, nextTick } from '
 import { useRoute, useRouter } from 'vue-router'
 import { useReadingProgressStore } from '../stores/readingProgress'
 import { BDropdown, BDropdownItem } from 'bootstrap-vue-next'
+import GlossaryPopover from '../components/content/GlossaryPopover.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,12 +17,12 @@ const codex = computed(() => {
   return codexRegistry.codexes.get(route.params.id)
 })
 
-// Rendered HTML content
+// Rendered HTML content with glossary terms and codex cross-references
 const htmlContent = computed(() => {
   if (!codex.value) return ''
-  // Use toHtmlWithGlossary if available, otherwise basic toHtml
-  if (codex.value.toHtmlWithGlossary && glossaryManager) {
-    return codex.value.toHtmlWithGlossary(glossaryManager)
+  // Use toHtmlWithGlossary with both glossary and registry for full processing
+  if (codex.value.toHtmlWithGlossary) {
+    return codex.value.toHtmlWithGlossary(glossaryManager, codexRegistry)
   }
   return codex.value.toHtml()
 })
@@ -59,6 +60,18 @@ const handleScroll = () => {
     // Throttled progress update
     if (codex.value) {
       progressStore.updateProgress(codex.value.id, scrollPercent.value, scrollTop)
+    }
+  }
+}
+
+// Handle clicks on codex cross-reference links (use Vue Router instead of full page nav)
+const handleContentClick = (e) => {
+  const link = e.target.closest('.codex-link')
+  if (link) {
+    e.preventDefault()
+    const href = link.getAttribute('href')
+    if (href && href.startsWith('/codex/')) {
+      router.push(href)
     }
   }
 }
@@ -235,6 +248,7 @@ const nextCodex = computed(() => {
           <div 
             class="codex-content" 
             v-html="htmlContent"
+            @click="handleContentClick"
           ></div>
           
           <!-- Series navigation -->
@@ -276,6 +290,9 @@ const nextCodex = computed(() => {
         <RouterLink to="/" class="btn btn-primary">Browse Codexes</RouterLink>
       </div>
     </div>
+    
+    <!-- Glossary popover handler -->
+    <GlossaryPopover v-if="codex" />
   </div>
 </template>
 

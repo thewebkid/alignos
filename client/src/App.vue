@@ -175,6 +175,35 @@ const handleKeydown = (e) => {
   li {
     margin-bottom: 0.5rem;
   }
+
+  // Glossary term highlighting
+  .glossary-term {
+    &.has-definition {
+      border-bottom: 1.5px dotted var(--cl-primary);
+      cursor: help;
+      transition: all 0.2s ease;
+      padding-bottom: 1px;
+      
+      &:hover {
+        background-color: var(--cl-glossary-highlight);
+        border-bottom-color: var(--cl-primary-hover);
+      }
+    }
+  }
+
+  // Codex cross-reference links
+  .codex-link {
+    color: var(--cl-primary);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      color: var(--cl-primary-hover);
+      border-bottom-color: var(--cl-primary-hover);
+    }
+  }
 }
 
 // Utility classes

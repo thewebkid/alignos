@@ -138,6 +138,9 @@ $transition-fade: opacity 0.2s ease-in-out;
   // Card states
   --cl-card-unread-opacity: 0.85;
   --cl-card-complete-glow: #{$gold-400};
+  
+  // Glossary highlighting
+  --cl-glossary-highlight: rgba(74, 124, 126, 0.12);
 }
 
 // Dark mode
@@ -167,6 +170,9 @@ $transition-fade: opacity 0.2s ease-in-out;
     
     --cl-card-unread-opacity: 0.7;
     --cl-card-complete-glow: #{$gold-500};
+    
+    // Glossary highlighting
+    --cl-glossary-highlight: rgba(93, 163, 165, 0.15);
   }
 }
 

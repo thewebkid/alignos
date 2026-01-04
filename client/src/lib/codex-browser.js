@@ -8,6 +8,7 @@
 import { Codex } from './codex.js';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+import { injectCodexLinks } from './codex-linker.js';
 
 /**
  * Configure marked for consistent rendering
@@ -49,21 +50,26 @@ export class BrowserCodex extends Codex {
   }
 
   /**
-   * Convert markdown to HTML with glossary term highlighting
-   * @param {import('./glossary.js').GlossaryManager} glossaryManager 
+   * Convert markdown to HTML with glossary term highlighting and codex cross-references
+   * @param {import('./glossary.js').GlossaryManager} [glossaryManager] 
+   * @param {import('./codex-registry.js').CodexRegistry} [registry] - Registry for cross-reference links
    * @returns {string}
    */
-  toHtmlWithGlossary(glossaryManager) {
-    // If no glossary manager, return plain HTML
-    if (!glossaryManager) {
-      return this.toHtml();
+  toHtmlWithGlossary(glossaryManager, registry = null) {
+    // Get base HTML
+    let html = this.toHtml();
+    
+    // Inject codex cross-reference links (before glossary to avoid spans inside links)
+    if (registry) {
+      html = injectCodexLinks(html, registry);
     }
     
-    // Get base HTML
-    const html = this.toHtml();
+    // Inject glossary term highlighting
+    if (glossaryManager) {
+      html = glossaryManager.injectLinks(html);
+    }
     
-    // Inject glossary links
-    return glossaryManager.injectLinks(html);
+    return html;
   }
 
   /**
