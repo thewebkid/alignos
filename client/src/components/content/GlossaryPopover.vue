@@ -1,11 +1,11 @@
 <script setup>
 /**
- * GlossaryPopover - Shows glossary term definitions on hover/click
+ * GlossaryPopover - Shows glossary term definitions on click
  * 
- * Uses event delegation to handle all glossary terms in the content area.
+ * Uses a single popover that updates based on which term is clicked.
  * Works with terms injected by GlossaryManager.injectLinks()
  */
-import { ref, computed, inject, onMounted, onUnmounted } from 'vue'
+import { ref, computed, inject, onMounted, onUnmounted, nextTick } from 'vue'
 import { BPopover } from 'bootstrap-vue-next'
 
 const props = defineProps({
@@ -29,97 +29,61 @@ const termData = computed(() => {
   return glossaryManager.getTerm(currentTerm.value)
 })
 
-// Detect if device supports hover (desktop) vs touch-only (mobile)
-const isTouchDevice = ref(false)
-onMounted(() => {
-  isTouchDevice.value = window.matchMedia('(hover: none)').matches
-})
-
-// Event handlers
-let hideTimeout = null
-
-const showPopover = (element, termKey) => {
-  clearTimeout(hideTimeout)
-  targetElement.value = element
-  currentTerm.value = termKey
-  isVisible.value = true
-}
-
-const hidePopover = () => {
-  // Delay hiding to allow moving to popover content
-  hideTimeout = setTimeout(() => {
+// Event delegation handler for clicks on glossary terms
+const handleClick = (e) => {
+  const term = e.target.closest('.glossary-term.has-definition')
+  if (!term) return
+  
+  e.preventDefault()
+  e.stopPropagation()
+  
+  const termKey = term.dataset.term
+  if (!termKey) return
+  
+  // Toggle if clicking the same term
+  if (isVisible.value && targetElement.value === term) {
     isVisible.value = false
     targetElement.value = null
     currentTerm.value = null
-  }, 150)
-}
-
-const cancelHide = () => {
-  clearTimeout(hideTimeout)
-}
-
-// Event delegation handlers
-const handleMouseEnter = (e) => {
-  const term = e.target.closest('.glossary-term.has-definition')
-  if (term && !isTouchDevice.value) {
-    const termKey = term.dataset.term
-    if (termKey) {
-      showPopover(term, termKey)
-    }
+  } else {
+    // Show popover for clicked term
+    targetElement.value = term
+    currentTerm.value = termKey
+    
+    // Use nextTick to ensure the target is set before showing
+    nextTick(() => {
+      isVisible.value = true
+    })
   }
 }
 
-const handleMouseLeave = (e) => {
-  const term = e.target.closest('.glossary-term.has-definition')
-  if (term && !isTouchDevice.value) {
-    hidePopover()
-  }
-}
-
-const handleClick = (e) => {
-  const term = e.target.closest('.glossary-term.has-definition')
-  if (term && isTouchDevice.value) {
-    e.preventDefault()
-    const termKey = term.dataset.term
-    if (termKey) {
-      // Toggle on click for touch devices
-      if (isVisible.value && currentTerm.value === termKey) {
-        isVisible.value = false
-      } else {
-        showPopover(term, termKey)
-      }
-    }
-  }
-}
-
-// Close popover when clicking outside on mobile
+// Close popover when clicking outside
 const handleDocumentClick = (e) => {
-  if (isTouchDevice.value && isVisible.value) {
-    const popover = document.querySelector('.glossary-popover')
-    const term = e.target.closest('.glossary-term.has-definition')
-    if (!popover?.contains(e.target) && !term) {
-      isVisible.value = false
-    }
+  if (!isVisible.value) return
+  
+  const popover = document.querySelector('.glossary-popover')
+  const term = e.target.closest('.glossary-term.has-definition')
+  
+  // Close if clicking outside both the popover and any glossary term
+  if (!popover?.contains(e.target) && !term) {
+    isVisible.value = false
+    targetElement.value = null
+    currentTerm.value = null
   }
 }
 
-// Setup event delegation on the content container
+// Setup event listeners
 onMounted(() => {
   const container = document.querySelector(props.contentSelector)
   if (container) {
-    container.addEventListener('mouseenter', handleMouseEnter, true)
-    container.addEventListener('mouseleave', handleMouseLeave, true)
     container.addEventListener('click', handleClick, true)
   }
   document.addEventListener('click', handleDocumentClick)
 })
 
 onUnmounted(() => {
-  clearTimeout(hideTimeout)
   const container = document.querySelector(props.contentSelector)
   if (container) {
-    container.removeEventListener('mouseenter', handleMouseEnter, true)
-    container.removeEventListener('mouseleave', handleMouseLeave, true)
     container.removeEventListener('click', handleClick, true)
   }
   document.removeEventListener('click', handleDocumentClick)
@@ -130,13 +94,11 @@ onUnmounted(() => {
   <BPopover
     v-if="targetElement && termData"
     :target="targetElement"
-    :model-value="isVisible"
+    v-model="isVisible"
     placement="top"
     class="glossary-popover"
     :delay="{ show: 0, hide: 0 }"
-    @mouseenter="cancelHide"
-    @mouseleave="hidePopover"
-    
+    manual
   >
     <template #title>
       <span class="glossary-popover-title">{{ termData.term }}</span>
@@ -160,44 +122,78 @@ onUnmounted(() => {
 
 <style lang="scss">
 // Popover styling (not scoped to affect the global popover)
-.glossary-popover {
-  .popover {
-    // Wider popovers for verbose definitions
-    max-width: 550px;
-    min-width: 420px;
-    border: 1px solid var(--cl-border);
-    box-shadow: 0 4px 24px var(--cl-shadow-lg);
-    background: var(--cl-surface);
-    border-radius: 0.5rem;
-    
-    .popover-header {
-      background: var(--cl-bg-elevated);
-      border-bottom: 1px solid var(--cl-border-light);
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem 0.5rem 0 0;
+// Using !important to override Bootstrap inline styles
+.popover.glossary-popover,
+.glossary-popover.popover {
+  // Wider popovers for verbose definitions - force with !important
+  max-width: 550px !important;
+  min-width: 420px !important;
+  width: max-content !important;
+  border: 1px solid var(--cl-border) !important;
+  box-shadow: 0 4px 24px var(--cl-shadow-lg) !important;
+  background: var(--cl-surface) !important;
+  border-radius: 0.5rem !important;
+  color: var(--cl-text) !important;
+  
+  .popover-header {
+    background: var(--cl-bg-elevated) !important;
+    border-bottom: 1px solid var(--cl-border-light) !important;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    color: var(--cl-text-heading) !important;
+  }
+  
+  .popover-body {
+    padding: 1rem 1.25rem;
+    background: var(--cl-surface) !important;
+    color: var(--cl-text) !important;
+  }
+  
+  // Arrow positioning for top placement
+  &.bs-popover-top,
+  &[data-popper-placement^="top"] {
+    .popover-arrow::before {
+      border-top-color: var(--cl-border) !important;
     }
     
-    .popover-body {
-      padding: 1rem 1.25rem;
+    .popover-arrow::after {
+      border-top-color: var(--cl-surface) !important;
+    }
+  }
+  
+  // Arrow positioning for bottom placement
+  &.bs-popover-bottom,
+  &[data-popper-placement^="bottom"] {
+    .popover-arrow::before {
+      border-bottom-color: var(--cl-border) !important;
     }
     
-    // Dark mode explicit overrides
-    @media (prefers-color-scheme: dark) {
-      background: #252a3d;
-      border-color: #3a4156;
-      
-      .popover-header {
-        background: #2d3348;
-        border-bottom-color: #3a4156;
-      }
-      
-      .popover-arrow::before {
-        border-top-color: #3a4156;
-      }
-      
-      .popover-arrow::after {
-        border-top-color: #252a3d;
-      }
+    .popover-arrow::after {
+      border-bottom-color: var(--cl-surface) !important;
+    }
+  }
+  
+  // Arrow positioning for left placement
+  &.bs-popover-start,
+  &[data-popper-placement^="left"] {
+    .popover-arrow::before {
+      border-left-color: var(--cl-border) !important;
+    }
+    
+    .popover-arrow::after {
+      border-left-color: var(--cl-surface) !important;
+    }
+  }
+  
+  // Arrow positioning for right placement
+  &.bs-popover-end,
+  &[data-popper-placement^="right"] {
+    .popover-arrow::before {
+      border-right-color: var(--cl-border) !important;
+    }
+    
+    .popover-arrow::after {
+      border-right-color: var(--cl-surface) !important;
     }
   }
 }
