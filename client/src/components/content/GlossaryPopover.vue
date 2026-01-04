@@ -126,8 +126,8 @@ onUnmounted(() => {
 .popover.glossary-popover,
 .glossary-popover.popover {
   // Wider popovers for verbose definitions - force with !important
-  max-width: 550px !important;
-  min-width: 420px !important;
+  max-width: 450px !important;
+  min-width: 350px !important;
   width: max-content !important;
   border: 1px solid var(--cl-border) !important;
   box-shadow: 0 4px 24px var(--cl-shadow-lg) !important;
@@ -147,6 +147,8 @@ onUnmounted(() => {
     padding: 1rem 1.25rem;
     background: var(--cl-surface) !important;
     color: var(--cl-text) !important;
+    max-height: 300px;
+    overflow-y: auto;
   }
   
   // Arrow positioning for top placement
