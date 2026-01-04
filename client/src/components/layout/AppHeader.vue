@@ -8,7 +8,7 @@ const navExpanded = ref(false)
 
 const navItems = [
   { name: 'Codex Lattice', path: '/', exact: true },
-  { name: 'FAQ', path: '/faq' },
+  //{ name: 'FAQ', path: '/faq' },
   { name: 'About', path: '/about' }
 ]
 
@@ -47,7 +47,7 @@ const handleSearchClick = () => {
               stroke-linecap="round"
             />
           </svg>
-          <span class="brand-text">Align<span class="brand-accent">OS</span></span>
+          <span class="brand-text">Align<span class="brand-accent">OS</span> <em>Reader</em></span>
         </RouterLink>
 
         <!-- Mobile controls -->
