@@ -44,7 +44,7 @@ const router = createRouter({
 
 // Update document title on navigation
 router.beforeEach((to, from, next) => {
-  const baseTitle = 'Align OS'
+  const baseTitle = 'AlignOS'
   document.title = to.meta.title ? `${to.meta.title} | ${baseTitle}` : baseTitle
   next()
 })

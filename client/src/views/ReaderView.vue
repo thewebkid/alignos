@@ -108,7 +108,8 @@ const copyMarkdown = async () => {
   if (!codex.value) return
   
   try {
-    await navigator.clipboard.writeText(codex.value.markdown)
+    let md = codex.value.markdown.replace('src="covers', `src="http://alignos.cosmiccreation.net/md/covers`);
+    await navigator.clipboard.writeText(`${location.href}\n\n${md}`);
     showCopied.value = true
     setTimeout(() => {
       showCopied.value = false

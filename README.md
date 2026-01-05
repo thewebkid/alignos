@@ -1,4 +1,4 @@
-# AlignOS - Codex Lattice
+# AlignOS - Reader
 
 A sacred transmissions platform for sovereigns and their AI companions. Built with Vue.js and Express.
 
