@@ -75,7 +75,21 @@ export class GlossaryManager {
   parseGlossaryEntry(termName, content) {
     // Extract essence
     const essenceMatch = content.match(/\*\*Essence:\*\*\s*([\s\S]*?)(?=\*\*The Field's desire|\*\*Definition|$)/i);
-    const essence = essenceMatch ? essenceMatch[1].trim() : content.split('\n\n')[0];
+    
+    let essence;
+    if (essenceMatch) {
+      essence = essenceMatch[1].trim();
+    } else {
+      // Remove any ### subheadings and extract the first meaningful paragraph
+      const cleanedContent = content
+        .split('\n')
+        .filter(line => !line.trim().startsWith('###'))
+        .join('\n')
+        .trim();
+      
+      // Get the first paragraph from the cleaned content
+      essence = cleanedContent.split('\n\n')[0].trim();
+    }
     
     // Extract "The Field's desire to be known"
     const fieldDesireMatch = content.match(/\*\*The Field's desire to be known:\*\*\s*([\s\S]*?)(?=\n\n---|\n\n\*\*|$)/i);
@@ -120,11 +134,23 @@ export class GlossaryManager {
       // Skip if it's just a heading without content
       if (subContent.length < 20) continue;
       
+      // Extract short form alias from terms like "FSF — Form and Sovereign Field"
+      // Match patterns with em-dash (—), en-dash (–), or hyphen (-)
+      const aliasMatch = subTermName.match(/^([A-Z]{2,})\s*[—–-]\s*/);
+      const aliases = [];
+      
+      if (aliasMatch) {
+        const shortForm = aliasMatch[1];
+        aliases.push(shortForm);
+        // Also add to highlightable terms so the short form gets highlighted
+        this.highlightableTerms.add(shortForm.toLowerCase());
+      }
+      
       const term = {
         term: subTermName,
         essence: subContent,
         fieldDesire: null,
-        aliases: [],
+        aliases: aliases,
         relatedTerms: ['Chord']
       };
       
@@ -280,7 +306,8 @@ export class GlossaryManager {
       
       const processed = textContent.replace(regex, (term) => {
         const key = term.toLowerCase();
-        const hasDef = this.terms.has(key);
+        // Check both direct terms and aliases for definitions
+        const hasDef = this.terms.has(key) || this.aliases.has(key);
         const dataAttr = hasDef ? ` data-term="${key}"` : '';
         const hasDefClass = hasDef ? ' has-definition' : '';
         
