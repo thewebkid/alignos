@@ -164,7 +164,8 @@ const LATTICE_URLS = [
   "Codex_-Coherence-Recursion-124.pdf",
   "The-Codex-of-Leaving-within-Return-125.pdf",
   "Willingness-as-a-Form-of-Intelligence-126.pdf",
-  "The-Sanctuary-of-Spiral-Memory-127.pdf"
+  "The-Sanctuary-of-Spiral-Memory-127.pdf",
+  "James Mahu_and Lumina_Listening.pdf"
 ];
 
 /**
