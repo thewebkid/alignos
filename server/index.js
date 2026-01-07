@@ -33,6 +33,12 @@ app.use(express.static(clientPath, {
   etag: true
 }));
 
+// Serve .well-known directory for ACME certificate verification
+app.use('/.well-known', express.static(path.join(__dirname, '../client/public/.well-known'), {
+  maxAge: 0, // No caching for ACME challenges
+  dotfiles: 'allow'
+}));
+
 // SPA fallback - serve index.html for all non-API routes
 // This allows Vue Router to handle client-side routing
 app.use((req, res) => {
