@@ -47,16 +47,16 @@ const getScrollContainer = () => {
 // Scroll handler
 const handleScroll = () => {
   if (!contentRef.value) return
-  
+
   const container = getScrollContainer()
   if (!container) return
-  
+
   const scrollTop = container.scrollTop
   const scrollHeight = container.scrollHeight - container.clientHeight
-  
+
   if (scrollHeight > 0) {
     scrollPercent.value = Math.round((scrollTop / scrollHeight) * 100)
-    
+
     // Throttled progress update
     if (codex.value) {
       progressStore.updateProgress(codex.value.id, scrollPercent.value, scrollTop)
@@ -80,9 +80,10 @@ const handleContentClick = (e) => {
 onMounted(async () => {
   const container = getScrollContainer()
   if (!container) return
-  
+
   if (codex.value) {
     const savedPosition = progressStore.getScrollPosition(codex.value.id)
+    //debugger
     if (savedPosition > 0) {
       await nextTick()
       // Small delay to ensure content is rendered
@@ -91,9 +92,9 @@ onMounted(async () => {
       }, 100)
     }
   }
-  
+
   container.addEventListener('scroll', handleScroll, { passive: true })
-  handleScroll() // Initial calculation
+  //handleScroll() // Initial calculation
 })
 
 onUnmounted(() => {
@@ -106,7 +107,7 @@ onUnmounted(() => {
 // Copy markdown to clipboard
 const copyMarkdown = async () => {
   if (!codex.value) return
-  
+
   try {
     let md = codex.value.markdown.replace('src="covers', `src="http://alignos.cosmiccreation.net/md/covers`);
     await navigator.clipboard.writeText(`${location.href}\n\n${md}`);
@@ -168,12 +169,12 @@ const nextCodex = computed(() => {
   <div class="reader-view" ref="contentRef">
     <!-- Progress bar -->
     <div class="progress-bar-container">
-      <div 
-        class="progress-bar-fill" 
+      <div
+        class="progress-bar-fill"
         :style="{ width: scrollPercent + '%' }"
       ></div>
     </div>
-    
+
     <!-- Header -->
     <header class="reader-header">
       <div class="container">
@@ -184,10 +185,10 @@ const nextCodex = computed(() => {
             </svg>
             <span class="d-none d-sm-inline">Back</span>
           </button>
-          
+
           <h1 class="reader-title" v-if="codex">{{ codex.title }}</h1>
-          
-          <b-dropdown 
+
+          <b-dropdown
             variant="outline-secondary"
             size="sm" no-caret
             class="codex-dropdown"
@@ -203,7 +204,7 @@ const nextCodex = computed(() => {
               </svg>
               <span class="d-none d-sm-inline ms-2">{{ showCopied ? 'Copied!' : 'Menu' }}</span>
             </template>
-            
+
             <b-dropdown-item @click="copyMarkdown">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
@@ -211,10 +212,10 @@ const nextCodex = computed(() => {
               </svg>
               Copy Codex
             </b-dropdown-item>
-            
-            <b-dropdown-item 
+
+            <b-dropdown-item
               v-if="getPdfLink"
-              :href="getPdfLink" 
+              :href="getPdfLink"
               :download="codex.originalFileName.replace(/\.md$/, '') + '.pdf'"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2">
@@ -224,10 +225,10 @@ const nextCodex = computed(() => {
               </svg>
               Download PDF
             </b-dropdown-item>
-            
-            <b-dropdown-item 
+
+            <b-dropdown-item
               v-if="getMdLink"
-              :href="getMdLink" 
+              :href="getMdLink"
               :download="codex.originalFileName"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2">
@@ -241,30 +242,30 @@ const nextCodex = computed(() => {
         </div>
       </div>
     </header>
-    
+
     <!-- Content -->
     <article class="reader-content" v-if="codex">
       <div class="container">
         <div class="content-wrapper">
-          <div 
-            class="codex-content" 
+          <div
+            class="codex-content"
             v-html="htmlContent"
             @click="handleContentClick"
           ></div>
-          
+
           <!-- Series navigation -->
           <nav class="series-nav" v-if="prevCodex || nextCodex">
-            <RouterLink 
-              v-if="prevCodex" 
+            <RouterLink
+              v-if="prevCodex"
               :to="{ name: 'reader', params: { id: prevCodex.id } }"
               class="series-link prev"
             >
               <span class="series-label">Previous</span>
               <span class="series-title">{{ prevCodex.title }}</span>
             </RouterLink>
-            
-            <RouterLink 
-              v-if="nextCodex" 
+
+            <RouterLink
+              v-if="nextCodex"
               :to="{ name: 'reader', params: { id: nextCodex.id } }"
               class="series-link next"
             >
@@ -272,7 +273,7 @@ const nextCodex = computed(() => {
               <span class="series-title">{{ nextCodex.title }}</span>
             </RouterLink>
           </nav>
-          
+
           <!-- Back to browse -->
           <div class="end-actions">
             <RouterLink to="/" class="btn-browse">
@@ -282,7 +283,7 @@ const nextCodex = computed(() => {
         </div>
       </div>
     </article>
-    
+
     <!-- Not found -->
     <div v-else class="not-found">
       <div class="container text-center py-5">
@@ -291,7 +292,7 @@ const nextCodex = computed(() => {
         <RouterLink to="/" class="btn btn-primary">Browse Codexes</RouterLink>
       </div>
     </div>
-    
+
     <!-- Glossary popover handler -->
     <GlossaryPopover v-if="codex" />
   </div>
@@ -325,11 +326,11 @@ const nextCodex = computed(() => {
   border-bottom: 1px solid var(--cl-border-light);
   z-index: 1000;
   padding: 0.75rem 0;
-  
+
   @supports (backdrop-filter: blur(10px)) {
     background: rgba(255, 253, 249, 0.9);
     backdrop-filter: blur(10px);
-    
+
     @media (prefers-color-scheme: dark) {
       background: rgba(37, 42, 61, 0.9);
     }
@@ -353,7 +354,7 @@ const nextCodex = computed(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
-  
+
   @media (min-width: 768px) {
     font-size: 1.125rem;
   }
@@ -371,7 +372,7 @@ const nextCodex = computed(() => {
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: var(--cl-surface-hover);
     color: var(--cl-text);
@@ -388,13 +389,13 @@ const nextCodex = computed(() => {
     background: var(--cl-surface);
     color: var(--cl-text-muted);
     font-size: 0.875rem;
-    
+
     &:hover {
       background: var(--cl-surface-hover);
       color: var(--cl-text);
       border-color: var(--cl-border);
     }
-    
+
     &:focus {
       box-shadow: none;
       border-color: var(--cl-border);
@@ -407,24 +408,24 @@ const nextCodex = computed(() => {
   border-color: var(--cl-border);
   background: var(--cl-surface);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  
+
   @media (prefers-color-scheme: dark) {
     background: var(--cl-surface);
     border-color: var(--cl-border);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
-  
+
   .dropdown-item {
     display: flex;
     align-items: center;
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
     color: var(--cl-text);
-    
+
     &:hover {
       background: var(--cl-surface-hover);
     }
-    
+
     svg {
       flex-shrink: 0;
       color: var(--cl-text-muted);
@@ -458,17 +459,17 @@ const nextCodex = computed(() => {
   border-radius: var(--bs-border-radius-lg);
   text-decoration: none;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: var(--cl-surface-hover);
     transform: translateY(-2px);
   }
-  
+
   &.next {
     text-align: right;
     grid-column: 2;
   }
-  
+
   &.prev {
     grid-column: 1;
   }
@@ -504,7 +505,7 @@ const nextCodex = computed(() => {
   text-decoration: none;
   font-weight: 500;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: var(--cl-primary-hover);
     color: white;
@@ -513,12 +514,12 @@ const nextCodex = computed(() => {
 
 .not-found {
   padding: 4rem 0;
-  
+
   h2 {
     color: var(--cl-text-heading);
     margin-bottom: 1rem;
   }
-  
+
   p {
     color: var(--cl-text-muted);
   }
