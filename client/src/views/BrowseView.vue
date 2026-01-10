@@ -7,10 +7,19 @@ import { useReadingProgressStore } from '../stores/readingProgress'
 const codexRegistry = inject('codexRegistry')
 const progressStore = useReadingProgressStore()
 const route = useRoute()
-
+const scrollPercent = ref(0)
 // Dynamic scroll position key based on route path
-const getScrollKey = () => `scroll-position-${route.path}`
+const scrollKey = `lattice-position`
 
+const handleScroll = () => {
+
+
+  const container = getScrollContainer()
+  if (!container) return
+
+
+  localStorage.setItem(scrollKey, container.scrollTop.toString())
+}
 // Get the scrollable container
 const getScrollContainer = () => {
   return document.querySelector('.main-content')
@@ -20,15 +29,16 @@ const getScrollContainer = () => {
 onUnmounted(() => {
   const container = getScrollContainer()
   if (container) {
-    localStorage.setItem(getScrollKey(), container.scrollTop.toString())
+    localStorage.setItem(scrollKey, container.scrollTop.toString())
   }
 })
 
 // Restore scroll position on mount
 onMounted(() => {
   const container = getScrollContainer()
+
   if (container) {
-    const savedPosition = localStorage.getItem(getScrollKey())
+    const savedPosition = localStorage.getItem(scrollKey)
     if (savedPosition) {
       setTimeout(() => {
         container.scrollTo({ top: parseInt(savedPosition), behavior: 'instant' })
@@ -58,12 +68,12 @@ const filteredCodexes = computed(() => {
   if (activeFilter.value === 'all') {
     return allCodexes.value
   }
-  
+
   return allCodexes.value.filter(codex => {
     const percent = progressStore.getScrollPercent(codex.id)
     const isComplete = percent >= 95
     const isStarted = percent > 0
-    
+
     switch (activeFilter.value) {
       case 'unread':
         return !isStarted
@@ -80,7 +90,7 @@ const filteredCodexes = computed(() => {
 // Count for each filter
 const filterCounts = computed(() => {
   const counts = { all: allCodexes.value.length, unread: 0, reading: 0, complete: 0 }
-  
+
   allCodexes.value.forEach(codex => {
     const percent = progressStore.getScrollPercent(codex.id)
     if (percent >= 95) {
@@ -91,7 +101,7 @@ const filterCounts = computed(() => {
       counts.unread++
     }
   })
-  
+
   return counts
 })
 </script>
@@ -107,7 +117,7 @@ const filterCounts = computed(() => {
         </p>
       </div>
     </section>
-    
+
     <!-- Filter bar -->
     <section class="filter-section">
       <div class="container">
@@ -125,12 +135,12 @@ const filterCounts = computed(() => {
         </div>
       </div>
     </section>
-    
+
     <!-- Codex grid -->
     <section class="grid-section">
-      <div class="container">
+      <div class="container" @scroll="handleScroll">
         <CodexGrid :codexes="filteredCodexes" />
-        
+
         <!-- Empty state -->
         <div v-if="filteredCodexes.length === 0" class="empty-state">
           <p>No codexes match this filter.</p>
@@ -177,7 +187,7 @@ const filterCounts = computed(() => {
   z-index: 100;
   background: var(--cl-bg);
   border-bottom: 1px solid var(--cl-border-light);
-  
+
   // Add gradient fade on right edge to indicate more filters
   &::after {
     content: '';
@@ -190,7 +200,7 @@ const filterCounts = computed(() => {
     pointer-events: none;
     opacity: 1;
     transition: opacity 0.2s;
-    
+
     @media (min-width: 640px) {
       display: none;
     }
@@ -202,28 +212,28 @@ const filterCounts = computed(() => {
   gap: 0.5rem;
   overflow-x: auto;
   padding: 0.25rem;
-  
+
   // Show thin scrollbar on mobile so users know to scroll
   @media (max-width: 639px) {
     padding-right: 3rem;
     scrollbar-width: thin;
     scrollbar-color: var(--cl-border-light) transparent;
-    
+
     &::-webkit-scrollbar {
       display: block;
       height: 4px;
     }
-    
+
     &::-webkit-scrollbar-thumb {
       background: var(--cl-border-light);
       border-radius: 2px;
     }
-    
+
     &::-webkit-scrollbar-track {
       background: transparent;
     }
   }
-  
+
   // Hide scrollbar on larger screens
   @media (min-width: 640px) {
     scrollbar-width: none;
@@ -248,17 +258,17 @@ const filterCounts = computed(() => {
   white-space: nowrap;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     border-color: var(--cl-border);
     color: var(--cl-text);
   }
-  
+
   &.active {
     background: var(--cl-primary);
     border-color: var(--cl-primary);
     color: white;
-    
+
     .filter-count {
       background: rgba(255, 255, 255, 0.2);
       color: white;
@@ -282,7 +292,7 @@ const filterCounts = computed(() => {
   text-align: center;
   padding: 4rem 2rem;
   color: var(--cl-text-muted);
-  
+
   p {
     font-size: 1.125rem;
     font-style: italic;

@@ -32,7 +32,9 @@ export const useReadingProgressStore = defineStore('readingProgress', () => {
   const getProgress = (codexId) => {
     return progress.value[codexId] || null
   }
-
+  const getLastRead = (codexId) => {
+    return progress.value[codexId]?.lastRead || null;
+  }
   // Get scroll percentage for a codex
   const getScrollPercent = (codexId) => {
     return progress.value[codexId]?.scrollPercent || 0
@@ -51,7 +53,7 @@ export const useReadingProgressStore = defineStore('readingProgress', () => {
   // Update progress for a codex
   const updateProgress = (codexId, scrollPercent, scrollPosition) => {
     const existing = progress.value[codexId] || {}
-    
+
     // Always update the last position (for restoration to where user left off)
     // But only increase the max scroll percent (for progress tracking - never decreases)
     progress.value[codexId] = {
@@ -81,7 +83,7 @@ export const useReadingProgressStore = defineStore('readingProgress', () => {
     const started = entries.length
     const completed = entries.filter(([_, data]) => data.scrollPercent >= 95).length
     const inProgress = started - completed
-    
+
     return { started, completed, inProgress }
   })
 
@@ -98,6 +100,7 @@ export const useReadingProgressStore = defineStore('readingProgress', () => {
     isStarted,
     updateProgress,
     getScrollPosition,
+    getLastRead,
     recentlyRead,
     stats,
     clearAll
