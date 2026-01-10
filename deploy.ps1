@@ -1,5 +1,5 @@
 # AlignOS Simple Deployment Script
-# Deploys the application on ports 80 and 443 (for local SSL termination via Caddy)
+# Deploys the application on port 80 (Caddy handles SSL termination and proxying)
 # Run this after any manual changes or to redeploy fresh
 
 param(
@@ -60,7 +60,7 @@ Set-Location "$appPath\client"
 npm install
 npm run build
 
-# Deploy on ports 80 and 443
+# Deploy on port 80 (Caddy handles SSL)
 Set-Location "$appPath\server"
 
 Write-Host ""
@@ -71,10 +71,9 @@ pm2 delete alignos-443 2>$null
 
 Write-Host ""
 Write-Host "Starting AlignOS on port 80..." -ForegroundColor Green
-$envContent80 = "PORT=80`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
-[System.IO.File]::WriteAllText("$appPath\server\.env", $envContent80)
-pm2 start index.js --name alignos-80
-
+$envContent = "PORT=80`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
+[System.IO.File]::WriteAllText("$appPath\server\.env", $envContent)
+pm2 start index.js --name alignos
 
 pm2 save
 
@@ -86,11 +85,10 @@ pm2 status
 
 Write-Host ""
 Write-Host "=== Access URLs ===" -ForegroundColor Cyan
+Write-Host "  HTTPS: https://alignos.cosmiccreation.net" -ForegroundColor Green
 Write-Host "  HTTP:  http://alignos.cosmiccreation.net" -ForegroundColor Green
-Write-Host "         http://thewebkid.asuscomm.com" -ForegroundColor Green
-Write-Host "         http://192.168.50.209" -ForegroundColor Green
 Write-Host ""
-Write-Host "Note: Local SSL termination via Caddy running on 80" -ForegroundColor Yellow
+Write-Host "Note: Caddy handles SSL termination and proxies to Express on port 80" -ForegroundColor Yellow
 
 # Return to starting directory
 Set-Location $startingDir

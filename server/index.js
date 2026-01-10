@@ -11,6 +11,8 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/aligno
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.set('trust proxy', true);
+
 
 // Database Connection
 mongoose.connect(MONGODB_URI)
@@ -19,8 +21,8 @@ mongoose.connect(MONGODB_URI)
 
 // API Routes (prefix with /api to distinguish from static files)
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
+  res.json({
+    status: 'ok',
     message: 'AlignOS API is running',
     timestamp: new Date().toISOString()
   });
@@ -52,5 +54,5 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Access URLs:`);
   console.log(`  Local:    http://localhost:${PORT}`);
   console.log(`  Network:  http://192.168.50.209:${PORT}`);
-  console.log(`  WAN:      http://thewebkid.asuscomm.com:${PORT}`);
+  console.log(`  WAN:      https://alignos.cosmiccreation.net:${PORT}`);
 });
