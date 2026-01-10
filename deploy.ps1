@@ -68,7 +68,6 @@ Write-Host "Stopping any existing AlignOS instances..." -ForegroundColor Yellow
 pm2 delete alignos 2>$null
 pm2 delete alignos-80 2>$null
 pm2 delete alignos-443 2>$null
-pm2 delete alignos-5000 2>$null
 
 Write-Host ""
 Write-Host "Starting AlignOS on port 80..." -ForegroundColor Green
@@ -76,10 +75,6 @@ $envContent80 = "PORT=80`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_EN
 [System.IO.File]::WriteAllText("$appPath\server\.env", $envContent80)
 pm2 start index.js --name alignos-80
 
-Write-Host "Starting AlignOS on port 443..." -ForegroundColor Green
-$envContent443 = "PORT=443`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
-[System.IO.File]::WriteAllText("$appPath\server\.env", $envContent443)
-pm2 start index.js --name alignos-443
 
 pm2 save
 
@@ -95,11 +90,7 @@ Write-Host "  HTTP:  http://alignos.cosmiccreation.net" -ForegroundColor Green
 Write-Host "         http://thewebkid.asuscomm.com" -ForegroundColor Green
 Write-Host "         http://192.168.50.209" -ForegroundColor Green
 Write-Host ""
-Write-Host "  HTTPS: https://alignos.cosmiccreation.net" -ForegroundColor Green
-Write-Host "         https://thewebkid.asuscomm.com" -ForegroundColor Green
-Write-Host "         https://192.168.50.209" -ForegroundColor Green
-Write-Host ""
-Write-Host "Note: Local SSL termination via Caddy running on both ports 80 and 443" -ForegroundColor Yellow
+Write-Host "Note: Local SSL termination via Caddy running on 80" -ForegroundColor Yellow
 
 # Return to starting directory
 Set-Location $startingDir
