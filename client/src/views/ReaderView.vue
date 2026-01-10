@@ -53,15 +53,16 @@ const contentRef = ref(null)
 const scrollPercent = ref(0)
 const showCopied = ref(false)
 
-// Update document title
+// Update document title (client-side only)
 watch(codex, (newCodex) => {
-  if (newCodex) {
+  if (newCodex && typeof document !== 'undefined') {
     document.title = `${newCodex.title} | AlignOS`
   }
 }, { immediate: true })
 
 // Get the scrollable container (main-content element from App.vue)
 const getScrollContainer = () => {
+  if (typeof document === 'undefined') return null
   return document.querySelector('.main-content')
 }
 
@@ -127,7 +128,7 @@ onUnmounted(() => {
 
 // Copy markdown to clipboard
 const copyMarkdown = async () => {
-  if (!codex.value) return
+  if (!codex.value || typeof navigator === 'undefined' || typeof location === 'undefined') return
 
   try {
     let md = codex.value.markdown.replace('src="covers', `src="http://alignos.cosmiccreation.net/md/covers`);
@@ -157,7 +158,7 @@ const getMdLink = computed(() => {
 
 // Navigation
 const goBack = () => {
-  if (window.history.length > 1) {
+  if (typeof window !== 'undefined' && window.history.length > 1) {
     router.back()
   } else {
     router.push('/')

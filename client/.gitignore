@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Generated files (regenerated during build)
+src/generated/codex-lattice.json
+src/generated/codex-lattice-meta.json
+public/codex-content/*.json
+
 # Editor directories and files
 .vscode/*
 .idea/*

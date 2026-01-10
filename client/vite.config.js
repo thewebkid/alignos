@@ -1,6 +1,15 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
+import fs from 'fs'
+
+// Read codex lattice to generate all routes for SSG
+const codexLatticeData = JSON.parse(
+  fs.readFileSync(resolve(__dirname, 'src/generated/codex-lattice.json'), 'utf-8')
+)
+
+// Generate all codex routes
+const codexRoutes = codexLatticeData.map(codex => `/codex/${codex.id}`)
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -58,6 +67,25 @@ export default defineConfig({
           'color-functions'
         ],
       },
+    },
+  },
+  // vite-ssg configuration
+  ssgOptions: {
+    script: 'async',
+    formatting: 'minify',
+    crittersOptions: {
+      reduceInlineStyles: false,
+    },
+    includedRoutes(paths, routes) {
+      // Generate all 133+ codex routes for production
+      console.log(`📝 Generating ${codexRoutes.length} codex pages...`)
+      return [
+        '/',
+        '/search',
+        '/faq',
+        '/about',
+        ...codexRoutes
+      ]
     },
   },
 })
