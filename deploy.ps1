@@ -71,7 +71,7 @@ pm2 delete alignos-443 2>$null
 
 Write-Host ""
 Write-Host "Starting AlignOS on port 80..." -ForegroundColor Green
-$envContent = "PORT=80`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
+$envContent = "PORT=8888`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
 [System.IO.File]::WriteAllText("$appPath\server\.env", $envContent)
 pm2 start index.js --name alignos
 
