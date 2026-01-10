@@ -32,7 +32,8 @@ app.get('/api/health', (req, res) => {
 const clientPath = path.join(__dirname, '../client/dist');
 app.use(express.static(clientPath, {
   maxAge: '1d', // Cache static assets for 1 day
-  etag: true
+  etag: true,
+  extensions: ['html'] // Try .html extension for routes without extensions
 }));
 
 // Serve .well-known directory for ACME certificate verification
