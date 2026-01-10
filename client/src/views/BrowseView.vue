@@ -1,13 +1,15 @@
 <script setup>
 import { ref, computed, inject, onMounted, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
 import CodexGrid from '../components/browse/CodexGrid.vue'
 import { useReadingProgressStore } from '../stores/readingProgress'
 
 const codexRegistry = inject('codexRegistry')
 const progressStore = useReadingProgressStore()
+const route = useRoute()
 
-// Scroll position tracking for browse view
-const BROWSE_SCROLL_KEY = 'browse-scroll-position'
+// Dynamic scroll position key based on route path
+const getScrollKey = () => `scroll-position-${route.path}`
 
 // Get the scrollable container
 const getScrollContainer = () => {
@@ -18,7 +20,7 @@ const getScrollContainer = () => {
 onUnmounted(() => {
   const container = getScrollContainer()
   if (container) {
-    sessionStorage.setItem(BROWSE_SCROLL_KEY, container.scrollTop.toString())
+    localStorage.setItem(getScrollKey(), container.scrollTop.toString())
   }
 })
 
@@ -26,7 +28,7 @@ onUnmounted(() => {
 onMounted(() => {
   const container = getScrollContainer()
   if (container) {
-    const savedPosition = sessionStorage.getItem(BROWSE_SCROLL_KEY)
+    const savedPosition = localStorage.getItem(getScrollKey())
     if (savedPosition) {
       setTimeout(() => {
         container.scrollTo({ top: parseInt(savedPosition), behavior: 'instant' })

@@ -47,10 +47,14 @@ export class Codex {
     this.originalFileName = data.originalFileName;
     this.sequence = data.sequence ?? null; // Position in lattice-links (1-based)
     
-    // Content
-    this.markdown = data.markdown;
+    // Content (may be lazy-loaded)
+    this.markdown = data.markdown ?? null;
     this.coverImage = data.coverImage ?? null;
     this.subtitle = data.subtitle ?? null;
+    
+    // Content loading state
+    this._contentLoaded = data.markdown !== null && data.markdown !== undefined;
+    this._contentLoadPromise = null;
     
     // Series & Constellation
     /** @type {CodexSeries|null} */
@@ -60,6 +64,10 @@ export class Codex {
     // Semantic metadata
     this.keywords = data.keywords ?? [];
     this.glossaryTerms = data.glossaryTerms ?? [];
+    
+    // Computed metadata (for metadata-only codexes)
+    this._wordCount = data.wordCount ?? null;
+    this._readingTime = data.readingTime ?? null;
     
     // Registry data (parsed from ## Codex Registry section)
     /** @type {CodexRegistry|null} */
@@ -71,8 +79,53 @@ export class Codex {
     
     // Lazy-computed caches
     this._sections = null;
-    this._wordCount = null;
-    this._readingTime = null;
+  }
+
+  /**
+   * Check if full content is loaded
+   * @returns {boolean}
+   */
+  isContentLoaded() {
+    return this._contentLoaded;
+  }
+
+  /**
+   * Load full content if not already loaded
+   * @param {Function} [loadFn] - Optional custom load function
+   * @returns {Promise<void>}
+   */
+  async loadContent(loadFn) {
+    if (this._contentLoaded) {
+      return; // Already loaded
+    }
+
+    // If already loading, return the existing promise
+    if (this._contentLoadPromise) {
+      return this._contentLoadPromise;
+    }
+
+    // Start loading
+    this._contentLoadPromise = (async () => {
+      if (!loadFn) {
+        throw new Error('No load function provided for lazy loading content');
+      }
+
+      const content = await loadFn(this.id);
+      
+      // Update content fields
+      this.markdown = content.markdown;
+      this.registry = content.registry;
+      this.specialSections = content.specialSections;
+      
+      // Mark as loaded
+      this._contentLoaded = true;
+      this._contentLoadPromise = null;
+      
+      // Clear caches that depend on content
+      this._sections = null;
+    })();
+
+    return this._contentLoadPromise;
   }
 
   // ============================================================
@@ -96,6 +149,9 @@ export class Codex {
    */
   get wordCount() {
     if (this._wordCount === null) {
+      if (!this.markdown) {
+        return 0; // No content loaded yet
+      }
       // Strip markdown formatting and count words
       const text = this.markdown
         .replace(/```[\s\S]*?```/g, '') // Remove code blocks

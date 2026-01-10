@@ -42,8 +42,8 @@ export default defineConfig({
       },
     },
     fs: {
-      // Allow serving files from md directory
-      allow: ['..', 'md']
+      // Allow serving files from md and codex-content directories
+      allow: ['..', 'md', 'public/codex-content']
     }
   },
   css: {

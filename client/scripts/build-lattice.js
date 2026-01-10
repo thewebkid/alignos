@@ -20,6 +20,8 @@ const ROOT_DIR = path.join(__dirname, '..');
 const MD_DIR = path.join(ROOT_DIR, 'public/md');
 const OUTPUT_DIR = path.join(ROOT_DIR, 'src', 'generated');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'codex-lattice.json');
+const OUTPUT_META_FILE = path.join(OUTPUT_DIR, 'codex-lattice-meta.json');
+const CODEX_CONTENT_DIR = path.join(ROOT_DIR, 'public', 'codex-content');
 
 // Import series detector (relative path)
 import { detectSeries } from '../src/lib/series-detector.js';
@@ -487,6 +489,42 @@ function parseCodex(filename, markdown, sequence) {
   return codex;
 }
 
+/**
+ * Extract only metadata from a codex (no markdown content)
+ */
+function extractMetadata(codex) {
+  // Calculate reading time and word count
+  const wordCount = codex.markdown.split(/\s+/).length;
+  const readingTime = Math.ceil(wordCount / 200); // ~200 words per minute
+
+  return {
+    id: codex.id,
+    title: codex.title,
+    originalFileName: codex.originalFileName,
+    sequence: codex.sequence,
+    coverImage: codex.coverImage,
+    subtitle: codex.subtitle,
+    series: codex.series,
+    siblingIds: codex.siblingIds,
+    keywords: codex.keywords,
+    glossaryTerms: codex.glossaryTerms,
+    wordCount,
+    readingTime
+  };
+}
+
+/**
+ * Extract only content from a codex (markdown + registry)
+ */
+function extractContent(codex) {
+  return {
+    id: codex.id,
+    markdown: codex.markdown,
+    registry: codex.registry,
+    specialSections: codex.specialSections
+  };
+}
+
 // ============================================================
 // Main Build Function
 // ============================================================
@@ -558,11 +596,30 @@ async function build() {
     return a.sequence - b.sequence;
   });
 
-  // Ensure output directory exists
+  // Ensure output directories exist
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
+  await fs.mkdir(CODEX_CONTENT_DIR, { recursive: true });
 
-  // Write output
+  // Write full lattice (for SSG build)
+  console.log('\n📝 Writing full lattice...');
   await fs.writeFile(OUTPUT_FILE, JSON.stringify(codexes, null, 2));
+  const fullSize = (await fs.stat(OUTPUT_FILE)).size;
+
+  // Write metadata-only lattice (for client-side hydration)
+  console.log('📝 Writing metadata-only lattice...');
+  const metadataLattice = codexes.map(extractMetadata);
+  await fs.writeFile(OUTPUT_META_FILE, JSON.stringify(metadataLattice, null, 2));
+  const metaSize = (await fs.stat(OUTPUT_META_FILE)).size;
+
+  // Write individual content files
+  console.log('📝 Writing individual content files...');
+  let contentFilesWritten = 0;
+  for (const codex of codexes) {
+    const contentFile = path.join(CODEX_CONTENT_DIR, `${codex.id}.json`);
+    const content = extractContent(codex);
+    await fs.writeFile(contentFile, JSON.stringify(content, null, 2));
+    contentFilesWritten++;
+  }
 
   // Calculate stats
   const totalWords = codexes.reduce((sum, c) => {
@@ -582,7 +639,11 @@ async function build() {
   console.log(`      • Total words: ~${Math.round(totalWords / 1000)}k`);
   console.log(`      • Total size: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
   console.log(`      • Build time: ${elapsed}s`);
-  console.log(`\n   📁 Output: ${OUTPUT_FILE}`);
+  console.log(`\n   📁 Outputs:`);
+  console.log(`      • Full lattice: ${OUTPUT_FILE} (${(fullSize / 1024 / 1024).toFixed(2)} MB)`);
+  console.log(`      • Meta lattice: ${OUTPUT_META_FILE} (${(metaSize / 1024).toFixed(0)} KB)`);
+  console.log(`      • Content files: ${contentFilesWritten} files in ${CODEX_CONTENT_DIR}`);
+  console.log(`      • Size reduction: ${((1 - metaSize / fullSize) * 100).toFixed(1)}%`);
   console.log('─'.repeat(50) + '\n');
 }
 

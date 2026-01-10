@@ -11,11 +11,32 @@ const codexRegistry = inject('codexRegistry')
 const glossaryManager = inject('glossaryManager')
 const progressStore = useReadingProgressStore()
 
+// Loading state
+const isLoadingContent = ref(false)
+const contentLoadError = ref(null)
+
 // Current codex
 const codex = computed(() => {
   if (!codexRegistry) return null
   return codexRegistry.codexes.get(route.params.id)
 })
+
+// Load content if needed
+watch(codex, async (newCodex) => {
+  if (newCodex && !newCodex.isContentLoaded()) {
+    isLoadingContent.value = true
+    contentLoadError.value = null
+    
+    try {
+      await codexRegistry.ensureContentLoaded(newCodex.id)
+    } catch (error) {
+      console.error('Failed to load codex content:', error)
+      contentLoadError.value = error.message
+    } finally {
+      isLoadingContent.value = false
+    }
+  }
+}, { immediate: true })
 
 // Rendered HTML content with glossary terms and codex cross-references
 const htmlContent = computed(() => {
@@ -247,7 +268,22 @@ const nextCodex = computed(() => {
     <article class="reader-content" v-if="codex">
       <div class="container">
         <div class="content-wrapper">
+          <!-- Loading indicator -->
+          <div v-if="isLoadingContent" class="loading-content">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading content...</span>
+            </div>
+            <p class="mt-3 text-muted">Loading codex content...</p>
+          </div>
+          
+          <!-- Error message -->
+          <div v-else-if="contentLoadError" class="alert alert-danger">
+            <strong>Error loading content:</strong> {{ contentLoadError }}
+          </div>
+          
+          <!-- Content -->
           <div
+            v-else
             class="codex-content"
             v-html="htmlContent"
             @click="handleContentClick"
@@ -522,6 +558,20 @@ const nextCodex = computed(() => {
 
   p {
     color: var(--cl-text-muted);
+  }
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  
+  p {
+    color: var(--cl-text-muted);
+    margin: 0;
   }
 }
 </style>

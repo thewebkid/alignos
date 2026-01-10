@@ -81,6 +81,38 @@ export class CodexRegistry {
   }
 
   /**
+   * Load full content for a codex by ID (lazy loading)
+   * @param {string} id - Codex ID
+   * @returns {Promise<Object>} Content object with markdown, registry, specialSections
+   */
+  async loadFullContent(id) {
+    // Fetch from /codex-content/{id}.json
+    const response = await fetch(`/codex-content/${id}.json`);
+    if (!response.ok) {
+      throw new Error(`Failed to load content for codex: ${id}`);
+    }
+    return await response.json();
+  }
+
+  /**
+   * Ensure a codex has full content loaded
+   * @param {string} id - Codex ID
+   * @returns {Promise<Codex>} The codex with loaded content
+   */
+  async ensureContentLoaded(id) {
+    const codex = this.get(id);
+    if (!codex) {
+      throw new Error(`Codex not found: ${id}`);
+    }
+
+    if (!codex.isContentLoaded()) {
+      await codex.loadContent(this.loadFullContent.bind(this));
+    }
+
+    return codex;
+  }
+
+  /**
    * Add a codex to the registry
    * @param {Codex} codex 
    */
