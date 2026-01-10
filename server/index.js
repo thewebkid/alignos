@@ -33,7 +33,8 @@ const clientPath = path.join(__dirname, '../client/dist');
 app.use(express.static(clientPath, {
   maxAge: '1d', // Cache static assets for 1 day
   etag: true,
-  extensions: ['html'] // Try .html extension for routes without extensions
+  extensions: ['html'], // Try .html extension for routes without extensions
+  index: false // Don't serve index.html automatically for directories
 }));
 
 // Serve .well-known directory for ACME certificate verification

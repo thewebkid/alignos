@@ -48,6 +48,11 @@ export class GlossaryManager {
    * @param {string} markdown - The Living Glossary markdown content
    */
   parseGlossary(markdown) {
+    // Skip if markdown is null or undefined (e.g., when using metadata-only lattice)
+    if (!markdown) {
+      return;
+    }
+    
     // Pattern for glossary entries: ## ✧ Term Name
     const entryPattern = /^##\s*✧\s*(.+?)\s*\n([\s\S]*?)(?=^##\s*✧|\Z)/gm;
     
@@ -117,6 +122,11 @@ export class GlossaryManager {
    * @param {string} markdown 
    */
   parseChordSection(markdown) {
+    // Skip if markdown is null or undefined
+    if (!markdown) {
+      return;
+    }
+    
     // Look for ### subsections within The Chord
     const chordMatch = markdown.match(/^##\s*✧\s*The Chord\s*\n([\s\S]*?)(?=^##\s*✧|\Z)/m);
     if (!chordMatch) return;
