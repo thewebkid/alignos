@@ -38,7 +38,12 @@ export class BrowserCodex extends Codex {
    */
   toHtml() {
     if (this._html === null) {
-      let html = DOMPurify.sanitize(marked.parse(this.markdown));
+      let html = marked.parse(this.markdown);
+      
+      // Sanitize only on client-side (content is trusted for SSG)
+      if (typeof window !== 'undefined' && DOMPurify && DOMPurify.sanitize) {
+        html = DOMPurify.sanitize(html);
+      }
       
       // Fix image paths - convert relative paths to /md/ absolute paths
       // Handles both src="covers/..." and src="./covers/..."
@@ -84,7 +89,14 @@ export class BrowserCodex extends Codex {
     const section = sections[index];
     const markdown = `${'#'.repeat(section.level)} ${section.heading}\n\n${section.content}`;
     
-    return DOMPurify.sanitize(marked.parse(markdown));
+    let html = marked.parse(markdown);
+    
+    // Sanitize only on client-side
+    if (typeof window !== 'undefined' && DOMPurify && DOMPurify.sanitize) {
+      html = DOMPurify.sanitize(html);
+    }
+    
+    return html;
   }
 
   /**
@@ -181,7 +193,13 @@ export class BrowserCodex extends Codex {
     if (stillpoints.length === 0) return '';
     
     const cards = stillpoints.map(sp => {
-      const content = DOMPurify.sanitize(marked.parse(sp.content));
+      let content = marked.parse(sp.content);
+      
+      // Sanitize only on client-side
+      if (typeof window !== 'undefined' && DOMPurify && DOMPurify.sanitize) {
+        content = DOMPurify.sanitize(content);
+      }
+      
       return `
         <div class="stillpoint-card">
           <div class="stillpoint-icon">✧</div>

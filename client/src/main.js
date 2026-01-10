@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { ViteSSG } from 'vite-ssg'
 import { createPinia } from 'pinia'
 import { createBootstrap } from 'bootstrap-vue-next'
 
@@ -6,7 +6,7 @@ import { createBootstrap } from 'bootstrap-vue-next'
 import './assets/scss/main.scss'
 
 import App from './App.vue'
-import router from './router'
+import routes from './router'
 
 // Codex Lattice imports
 import { CodexRegistry } from './lib/codex-registry.js'
@@ -24,23 +24,24 @@ console.log(`✨ Loaded ${codexRegistry.size} codexes`)
 console.log(`📚 ${codexRegistry.getSeriesNames().length} series detected`)
 console.log(`📖 ${glossaryManager.size} glossary terms loaded`)
 
-// Create Vue app
-const app = createApp(App)
+// Export for vite-ssg
+export const createApp = ViteSSG(
+  App,
+  { routes },
+  ({ app, router, routes, isClient, initialState }) => {
+    // Setup plugins
+    const pinia = createPinia()
+    app.use(pinia)
+    app.use(createBootstrap())
 
-// Use plugins
-const pinia = createPinia()
-app.use(pinia)
-app.use(router)
-app.use(createBootstrap())
+    // Provide the registry and glossary to all components
+    app.provide('codexRegistry', codexRegistry)
+    app.provide('glossaryManager', glossaryManager)
 
-// Provide the registry and glossary to all components
-app.provide('codexRegistry', codexRegistry)
-app.provide('glossaryManager', glossaryManager)
-
-// Also make them available globally for debugging
-if (typeof window !== 'undefined') {
-  window.codexRegistry = codexRegistry
-  window.glossaryManager = glossaryManager
-}
-
-app.mount('#app')
+    // Also make them available globally for debugging (client-side only)
+    if (isClient && typeof window !== 'undefined') {
+      window.codexRegistry = codexRegistry
+      window.glossaryManager = glossaryManager
+    }
+  }
+)
