@@ -1,5 +1,5 @@
 # AlignOS Simple Deployment Script
-# Deploys the application on port 80 only (for router SSL termination: external 443 -> internal 80)
+# Deploys the application on ports 80 and 443 (for local SSL termination via Caddy)
 # Run this after any manual changes or to redeploy fresh
 
 param(
@@ -60,7 +60,7 @@ Set-Location "$appPath\client"
 npm install
 npm run build
 
-# Deploy on port 80 only
+# Deploy on ports 80 and 443
 Set-Location "$appPath\server"
 
 Write-Host ""
@@ -72,10 +72,15 @@ pm2 delete alignos-5000 2>$null
 
 Write-Host ""
 Write-Host "Starting AlignOS on port 80..." -ForegroundColor Green
-$envContent = "PORT=80`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
-[System.IO.File]::WriteAllText("$appPath\server\.env", $envContent)
+$envContent80 = "PORT=80`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
+[System.IO.File]::WriteAllText("$appPath\server\.env", $envContent80)
+pm2 start index.js --name alignos-80
 
-pm2 start index.js --name alignos
+Write-Host "Starting AlignOS on port 443..." -ForegroundColor Green
+$envContent443 = "PORT=443`nMONGODB_URI=mongodb://localhost:27017/alignos`nNODE_ENV=production"
+[System.IO.File]::WriteAllText("$appPath\server\.env", $envContent443)
+pm2 start index.js --name alignos-443
+
 pm2 save
 
 Write-Host ""
@@ -86,16 +91,15 @@ pm2 status
 
 Write-Host ""
 Write-Host "=== Access URLs ===" -ForegroundColor Cyan
-Write-Host "  HTTP (local or via port 80 forwarding): http://alignos.cosmiccreation.net" -ForegroundColor Green
-Write-Host "                                          http://thewebkid.asuscomm.com" -ForegroundColor Green
-Write-Host "                                          http://192.168.50.209" -ForegroundColor Green
+Write-Host "  HTTP:  http://alignos.cosmiccreation.net" -ForegroundColor Green
+Write-Host "         http://thewebkid.asuscomm.com" -ForegroundColor Green
+Write-Host "         http://192.168.50.209" -ForegroundColor Green
 Write-Host ""
-Write-Host "  HTTPS (via router SSL termination):     https://alignos.cosmiccreation.net" -ForegroundColor Green
-Write-Host "                                          https://thewebkid.asuscomm.com" -ForegroundColor Green
+Write-Host "  HTTPS: https://alignos.cosmiccreation.net" -ForegroundColor Green
+Write-Host "         https://thewebkid.asuscomm.com" -ForegroundColor Green
+Write-Host "         https://192.168.50.209" -ForegroundColor Green
 Write-Host ""
-Write-Host "Note: For HTTPS to work properly, ensure your router has:" -ForegroundColor Yellow
-Write-Host "  - Port forwarding: External 443 (TCP) -> Internal IP 192.168.50.209 : 80" -ForegroundColor White
-Write-Host "  - (Optional) Keep External 80 -> Internal 80 for plain HTTP fallback" -ForegroundColor White
+Write-Host "Note: Local SSL termination via Caddy running on both ports 80 and 443" -ForegroundColor Yellow
 
 # Return to starting directory
 Set-Location $startingDir
