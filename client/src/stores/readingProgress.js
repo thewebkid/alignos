@@ -4,8 +4,9 @@ import { ref, computed, watch } from 'vue'
 const STORAGE_KEY = 'codex-reading-progress'
 
 export const useReadingProgressStore = defineStore('readingProgress', () => {
-  // Load initial state from localStorage
+  // Load initial state from localStorage (client-side only)
   const loadFromStorage = () => {
+    if (typeof window === 'undefined') return {}
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
       return stored ? JSON.parse(stored) : {}
@@ -17,8 +18,9 @@ export const useReadingProgressStore = defineStore('readingProgress', () => {
 
   const progress = ref(loadFromStorage())
 
-  // Save to localStorage whenever progress changes
+  // Save to localStorage whenever progress changes (client-side only)
   watch(progress, (newProgress) => {
+    if (typeof window === 'undefined') return
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newProgress))
     } catch (e) {

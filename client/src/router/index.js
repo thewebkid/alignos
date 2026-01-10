@@ -1,5 +1,3 @@
-import { createRouter, createWebHistory } from 'vue-router'
-
 const routes = [
   {
     path: '/',
@@ -37,34 +35,4 @@ const routes = [
   }
 ]
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes
-})
-
-// Update document title on navigation
-router.beforeEach((to, from, next) => {
-  const baseTitle = 'AlignOS'
-  document.title = to.meta.title ? `${to.meta.title} | ${baseTitle}` : baseTitle
-  next()
-})
-
-// Handle scroll behavior manually since the scroll container is .main-content, not window
-router.afterEach((to, from) => {
-  // Get the scrollable container
-  const container = document.querySelector('.main-content')
-  if (!container) return
-  
-  // Reader view and browse view handle their own scroll restoration
-  // Only reset scroll for other views (search, about, faq, etc.)
-  if (to.name === 'reader' || to.name === 'browse') {
-    return
-  }
-  
-  // For all other routes, reset scroll to top
-  setTimeout(() => {
-    container.scrollTo({ top: 0, behavior: 'instant' })
-  }, 0)
-})
-
-export default router
+export default routes

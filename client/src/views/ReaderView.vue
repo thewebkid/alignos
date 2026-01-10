@@ -32,9 +32,9 @@ const contentRef = ref(null)
 const scrollPercent = ref(0)
 const showCopied = ref(false)
 
-// Update document title
+// Update document title (client-side only)
 watch(codex, (newCodex) => {
-  if (newCodex) {
+  if (newCodex && typeof document !== 'undefined') {
     document.title = `${newCodex.title} | AlignOS`
   }
 }, { immediate: true })
