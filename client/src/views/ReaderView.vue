@@ -366,12 +366,8 @@ const nextCodex = computed(() => {
   padding: 0.75rem 0;
 
   @supports (backdrop-filter: blur(10px)) {
-    background: rgba(255, 253, 249, 0.9);
+    background: var(--cl-reader-bg-blur);
     backdrop-filter: blur(10px);
-
-    @media (prefers-color-scheme: dark) {
-      background: rgba(37, 42, 61, 0.9);
-    }
   }
 }
 
