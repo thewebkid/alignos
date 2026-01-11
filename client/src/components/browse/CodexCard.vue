@@ -2,11 +2,16 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useReadingProgressStore } from '../../stores/readingProgress'
+import { vBTooltip } from 'bootstrap-vue-next'
 
 const props = defineProps({
   codex: {
     type: Object,
     required: true
+  },
+  tip: {
+    type: String,
+    default: null
   }
 })
 
@@ -40,23 +45,34 @@ const seriesBadge = computed(() => {
   if (!props.codex.series) return null
   return props.codex.series.name
 })
+
+// Popover configuration - simpler approach
+const showPopover = computed(() => !!props.tip)
+
 </script>
 
 <template>
-  <RouterLink 
-    :to="{ name: 'reader', params: { id: codex.id } }" 
+  <RouterLink
+    :to="{ name: 'reader', params: { id: codex.id } }"
     class="codex-card"
-    :class="{ 
-      'is-complete': isComplete, 
+    :class="{
+      'is-complete': isComplete,
       'is-started': isStarted && !isComplete,
-      'is-unread': !isStarted 
+      'is-unread': !isStarted
     }"
   >
     <!-- Cover image -->
-    <div class="card-cover">
-      <img 
-        v-if="coverSrc" 
-        :src="coverSrc" 
+    <div
+      class="card-cover"
+      v-b-tooltip="showPopover ? {
+        title: tip,
+        customClass: 'codex-progress-tip',
+        html: false
+      } : undefined"
+    >
+      <img
+        v-if="coverSrc"
+        :src="coverSrc"
         :alt="codex.title"
         loading="lazy"
         class="cover-image"
@@ -64,17 +80,17 @@ const seriesBadge = computed(() => {
       <div v-else class="cover-placeholder">
         <span>{{ codex.title.charAt(0) }}</span>
       </div>
-      
+
       <!-- Reading progress bar -->
       <div class="progress-bar-container" v-if="isStarted">
         <div class="progress-bar" :style="{ width: scrollPercent + '%' }"></div>
       </div>
     </div>
-    
+
     <!-- Card content -->
     <div class="card-content">
       <h3 class="card-title">{{ displayTitle }}</h3>
-      
+
       <div class="card-meta" v-if="seriesBadge">
         <span class="series-badge">{{ seriesBadge }}</span>
       </div>
@@ -93,15 +109,15 @@ const seriesBadge = computed(() => {
   color: inherit;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 2px 8px var(--cl-shadow);
-  
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px var(--cl-shadow-lg);
   }
-  
+
   &.is-unread {
     opacity: var(--cl-card-unread-opacity);
-    
+
     &:hover {
       opacity: 1;
     }
@@ -113,7 +129,7 @@ const seriesBadge = computed(() => {
   aspect-ratio: 2 / 3;
   overflow: hidden;
   background: var(--cl-surface-hover);
-  
+
   @media (min-width: 640px) {
     aspect-ratio: 3 / 4;
   }
@@ -124,7 +140,7 @@ const seriesBadge = computed(() => {
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
-  
+
   .codex-card:hover & {
     transform: scale(1.03);
   }
@@ -138,7 +154,7 @@ const seriesBadge = computed(() => {
   justify-content: center;
   background: linear-gradient(135deg, var(--cl-primary), var(--cl-accent));
   color: white;
-  font-family: var(--bs-font-serif);
+  font-family: var(--bs-font-serif),serif;
   font-size: 3rem;
   font-weight: 500;
 }
@@ -163,21 +179,21 @@ const seriesBadge = computed(() => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  
+
   @media (min-width: 640px) {
     padding: 1rem;
   }
 }
 
 .card-title {
-  font-family: var(--bs-font-serif);
+  font-family: var(--bs-font-serif),serif;
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--cl-text-heading);
   margin: 0;
   line-height: 1.4;
   flex: 1;
-  
+
   @media (min-width: 640px) {
     font-size: 1rem;
   }
@@ -196,5 +212,91 @@ const seriesBadge = computed(() => {
   background: var(--cl-surface-hover);
   border-radius: var(--bs-border-radius-pill);
   color: var(--cl-text-muted);
+}
+</style>
+
+<style lang="scss">
+// Global styles for tooltip (not scoped because tip is rendered outside component)
+.codex-progress-tip {
+  --bs-popover-bg: var(--cl-surface) !important;
+  --bs-popover-border-color: var(--cl-border) !important;
+  --bs-popover-body-color: var(--cl-text) !important;
+
+  border: 1px solid var(--cl-border) !important;
+  box-shadow: 0 4px 12px var(--cl-shadow-lg) !important;
+  background-color: var(--cl-surface) !important;
+  border-radius: 0.5rem !important;
+  max-width: 300px !important;
+
+  // Hide the header if it's showing
+  .popover-header {
+    display: none !important;
+  }
+
+  .popover-body {
+    padding: 0.5rem 0.75rem !important;
+    background-color: var(--cl-surface) !important;
+    color: var(--cl-text) !important;
+    font-size: 0.875rem !important;
+    border-radius: 0.5rem !important;
+    line-height: 1.5 !important;
+    &:before{content:''}
+  }
+
+  // Arrow positioning for top placement
+  &.bs-popover-top,
+  &[data-popper-placement^="top"] {
+    > .popover-arrow {
+      &::before {
+        border-top-color: var(--cl-border) !important;
+      }
+
+      &::after {
+        border-top-color: var(--cl-surface) !important;
+      }
+    }
+  }
+
+  // Arrow positioning for bottom placement
+  &.bs-popover-bottom,
+  &[data-popper-placement^="bottom"] {
+    > .popover-arrow {
+      &::before {
+        border-bottom-color: var(--cl-border) !important;
+      }
+
+      &::after {
+        border-bottom-color: var(--cl-surface) !important;
+      }
+    }
+  }
+
+  // Arrow positioning for left placement
+  &.bs-popover-start,
+  &[data-popper-placement^="left"] {
+    > .popover-arrow {
+      &::before {
+        border-left-color: var(--cl-border) !important;
+      }
+
+      &::after {
+        border-left-color: var(--cl-surface) !important;
+      }
+    }
+  }
+
+  // Arrow positioning for right placement
+  &.bs-popover-end,
+  &[data-popper-placement^="right"] {
+    > .popover-arrow {
+      &::before {
+        border-right-color: var(--cl-border) !important;
+      }
+
+      &::after {
+        border-right-color: var(--cl-surface) !important;
+      }
+    }
+  }
 }
 </style>

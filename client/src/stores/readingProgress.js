@@ -33,7 +33,8 @@ export const useReadingProgressStore = defineStore('readingProgress', () => {
     return progress.value[codexId] || null
   }
   const getLastRead = (codexId) => {
-    return progress.value[codexId]?.lastRead || null;
+    return progress.value[codexId]?.lastRead ||
+      'unopened';
   }
   // Get scroll percentage for a codex
   const getScrollPercent = (codexId) => {
