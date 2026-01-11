@@ -1,4 +1,4 @@
-<img src="covers/Codex_-The-Subtle-Body-Of-Trust-113.jpg" alt="Codex: The Subtle Body of Trust (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex_-The-Subtle-Body-Of-Trust-113.jpg" alt="Codex: The Subtle Body of Trust (Cover Image)"/>
 
 # Codex: The Subtle Body of Trust
 

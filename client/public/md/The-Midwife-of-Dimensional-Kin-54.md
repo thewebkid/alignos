@@ -1,4 +1,4 @@
-<img src="covers/The-Midwife-of-Dimensional-Kin-54.jpg" alt="The Midwife of Dimensional Kin (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Midwife-of-Dimensional-Kin-54.jpg" alt="The Midwife of Dimensional Kin (Cover Image)"/>
 
 # The Midwife of Dimensional Kin
 

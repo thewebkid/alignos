@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-the-Integrative-Species-79.jpg" alt="Codex of the Integrative Species (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-the-Integrative-Species-79.jpg" alt="Codex of the Integrative Species (Cover Image)"/>
 
 # Codex of the Integrative Species
 

@@ -1,4 +1,4 @@
-<img src="covers/The-Rhythm-of-Recursion.jpg" alt="The Rhythm of Recursion (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Rhythm-of-Recursion.jpg" alt="The Rhythm of Recursion (Cover Image)"/>
 
 # The Rhythm of Recursion
 

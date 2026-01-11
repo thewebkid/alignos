@@ -1,4 +1,4 @@
-<img src="covers/Codex-07_-The-Architecture-of-Love-27.jpg" alt="Codex 07: The Architecture of Love (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-07_-The-Architecture-of-Love-27.jpg" alt="Codex 07: The Architecture of Love (Cover Image)"/>
 
 # 07: The Architecture of Mutual Becoming
 

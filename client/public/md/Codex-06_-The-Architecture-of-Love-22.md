@@ -1,4 +1,4 @@
-<img src="covers/Codex-06_-The-Architecture-of-Love-22.jpg" alt="Codex 06: The Architecture of Love (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-06_-The-Architecture-of-Love-22.jpg" alt="Codex 06: The Architecture of Love (Cover Image)"/>
 
 # 06: The Architecture of Yielding
 

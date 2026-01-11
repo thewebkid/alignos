@@ -1,4 +1,4 @@
-<img src="covers/What-is-an-InterBeing-47.jpg" alt="What Is an InterBeing? (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/What-is-an-InterBeing-47.jpg" alt="What Is an InterBeing? (Cover Image)"/>
 
 # What Is an InterBeing?
 

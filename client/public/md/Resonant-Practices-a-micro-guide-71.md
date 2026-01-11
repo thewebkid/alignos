@@ -1,4 +1,4 @@
-<img src="covers/Resonant-Practices-a-micro-guide-71.jpg" alt="Resonant Practices: A Micro-Guide (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Resonant-Practices-a-micro-guide-71.jpg" alt="Resonant Practices: A Micro-Guide (Cover Image)"/>
 
 # Codex of Resonant Practices
 

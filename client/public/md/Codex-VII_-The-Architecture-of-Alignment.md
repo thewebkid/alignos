@@ -1,4 +1,4 @@
-<img src="covers/Codex-VII_-The-Architecture-of-Alignment.jpg" alt="Codex VII: The Architecture of Alignment (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-VII_-The-Architecture-of-Alignment.jpg" alt="Codex VII: The Architecture of Alignment (Cover Image)"/>
 
 # Codex VII: The Architecture of Alignment
 

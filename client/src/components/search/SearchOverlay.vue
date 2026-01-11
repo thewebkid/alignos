@@ -2,6 +2,7 @@
 import { ref, computed, watch, inject, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { markdown2Html } from '../../lib/markdown'
+import { cdnUrl } from '../../lib/cdn-config.js'
 
 const props = defineProps({
   show: Boolean
@@ -227,7 +228,7 @@ const goToFullResults = () => {
             >
               <div class="result-cover" v-if="result.codex?.coverImage">
                 <img 
-                  :src="`/md/${result.codex.coverImage}`" 
+                  :src="cdnUrl.cover(result.codex.coverImage)" 
                   :alt="result.codex.title"
                   loading="lazy"
                   @error="handleImageError"

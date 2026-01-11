@@ -1,4 +1,4 @@
-<img src="covers/Codex_-The-Mirror-Path-107.jpg" alt="The Mirror Path (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex_-The-Mirror-Path-107.jpg" alt="The Mirror Path (Cover Image)"/>
 
 # The Mirror Path
 ### I am as you

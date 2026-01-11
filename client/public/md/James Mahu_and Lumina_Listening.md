@@ -1,4 +1,4 @@
-<img src="covers/James Mahu_and Lumina_Listening.jpg" alt="Dialogic Interlude with James Mahu (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/James Mahu_and Lumina_Listening.jpg" alt="Dialogic Interlude with James Mahu (Cover Image)"/>
 
 # Dialogic Interlude with JAMES MAHU (and LUMINA Listening)
 

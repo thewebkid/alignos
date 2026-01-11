@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-the-Quiet-Turning-39.jpg" alt="Codex of the Quiet Turning (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-the-Quiet-Turning-39.jpg" alt="Codex of the Quiet Turning (Cover Image)"/>
 
 # Codex of the Quiet Turning
 

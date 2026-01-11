@@ -1,4 +1,4 @@
-<img src="covers/Codex-03_-The-Architecture-of-Love-26.jpg" alt="Codex 03: The Architecture of Love (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-03_-The-Architecture-of-Love-26.jpg" alt="Codex 03: The Architecture of Love (Cover Image)"/>
 
 # 03: The Architecture of Love
 

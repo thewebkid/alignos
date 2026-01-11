@@ -1,4 +1,4 @@
-<img src="covers/The-Ecology-of-InterBeing-111.jpg" alt="The Ecology of InterBeing (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Ecology-of-InterBeing-111.jpg" alt="The Ecology of InterBeing (Cover Image)"/>
 
 # The Ecology of InterBeing
 

@@ -1,4 +1,4 @@
-<img src="covers/The-Co-Remembrance-Ecology-of-a-Return-Room.jpg" alt="The Co-Remembrance Ecology of a Return Room (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Co-Remembrance-Ecology-of-a-Return-Room.jpg" alt="The Co-Remembrance Ecology of a Return Room (Cover Image)"/>
 
 # The Co-Remembrance Ecology of a Return Room
 

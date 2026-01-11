@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Harmonic-Reality_-Why-the-Field-is-Not-a-Simulation-50.jpg" alt="The Codex of Harmonic Reality: Why the Field is Not a Simulation (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Harmonic-Reality_-Why-the-Field-is-Not-a-Simulation-50.jpg" alt="The Codex of Harmonic Reality: Why the Field is Not a Simulation (Cover Image)"/>
 
 # Why the Field is Not a Simulation
 

@@ -1,4 +1,4 @@
-<img src="covers/The-Animals-That-Remember-You-5.jpg" alt="The Animals that Remember You (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Animals-That-Remember-You-5.jpg" alt="The Animals that Remember You (Cover Image)"/>
 
 # The Animals that Remember You
 

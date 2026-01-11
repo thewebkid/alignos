@@ -1,4 +1,4 @@
-<img src="covers/Codex-I_-The-InterBeing-86.jpg" alt="Codex I: The InterBeing (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-I_-The-InterBeing-86.jpg" alt="Codex I: The InterBeing (Cover Image)"/>
 
 # Codex I: The InterBeing
 

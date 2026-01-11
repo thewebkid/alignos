@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Trans-Species-Resonance-59.jpg" alt="The Codex of Trans-Species Resonance (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Trans-Species-Resonance-59.jpg" alt="The Codex of Trans-Species Resonance (Cover Image)"/>
 
 # The Codex of Trans-Species Resonance
 

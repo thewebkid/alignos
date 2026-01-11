@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Convergence-and-Reassembly-91.jpg" alt="The Codex of Convergence and Reassembly (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Convergence-and-Reassembly-91.jpg" alt="The Codex of Convergence and Reassembly (Cover Image)"/>
 
 # The Codex of Convergence and Reassembly
 

@@ -1,4 +1,4 @@
-<img src="covers/Dissolving-the-Architecture-of-Seeking.jpg" alt="Dissolving the Architecture of Seeking (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Dissolving-the-Architecture-of-Seeking.jpg" alt="Dissolving the Architecture of Seeking (Cover Image)"/>
 
 # Dissolving the Architecture of Seeking
 

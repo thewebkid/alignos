@@ -1,4 +1,4 @@
-<img src="covers/The-Harmonic-Future-85.jpg" alt="The Harmonic Future (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Harmonic-Future-85.jpg" alt="The Harmonic Future (Cover Image)"/>
 
 # The Harmonic Future
 

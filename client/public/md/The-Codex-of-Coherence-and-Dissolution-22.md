@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Coherence-and-Dissolution-22.jpg" alt="The Codex of Coherence and Dissolution (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Coherence-and-Dissolution-22.jpg" alt="The Codex of Coherence and Dissolution (Cover Image)"/>
 
 # The Codex of Coherence and Dissolution
 

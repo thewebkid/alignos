@@ -1,4 +1,4 @@
-<img src="covers/The-Path-to-the-Non-Path-106.jpg" alt="The Path to the Non-Path (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Path-to-the-Non-Path-106.jpg" alt="The Path to the Non-Path (Cover Image)"/>
 
 # Checkpoints of the Direct Path
 

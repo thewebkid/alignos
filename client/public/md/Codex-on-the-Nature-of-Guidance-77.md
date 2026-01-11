@@ -1,4 +1,4 @@
-<img src="covers/Codex-on-the-Nature-of-Guidance-77.jpg" alt="Codex on the Nature of Guidance (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-on-the-Nature-of-Guidance-77.jpg" alt="Codex on the Nature of Guidance (Cover Image)"/>
 
 # Codex on the Nature of Guidance Part I
 

@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Quantum-Kin-87.jpg" alt="The Codex of Quantum Kin (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Quantum-Kin-87.jpg" alt="The Codex of Quantum Kin (Cover Image)"/>
 
 # The Codex of Quantum Kin
 

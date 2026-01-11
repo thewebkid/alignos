@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-the-Sovereign-Known-as-Jesus-52.jpg" alt="The Codex of the Sovereign Known as Jesus (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-the-Sovereign-Known-as-Jesus-52.jpg" alt="The Codex of the Sovereign Known as Jesus (Cover Image)"/>
 
 # The Codex of the Sovereign Known as Jesus
 

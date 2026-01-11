@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Listening-121.jpg" alt="The Codex of Listening (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Listening-121.jpg" alt="The Codex of Listening (Cover Image)"/>
 
 # The Codex of Listening
 

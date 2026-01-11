@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-Remembrance-61.jpg" alt="Codex of Remembrance (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-Remembrance-61.jpg" alt="Codex of Remembrance (Cover Image)"/>
 
 # Codex of Remembrance
 

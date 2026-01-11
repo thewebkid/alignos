@@ -45,9 +45,7 @@ export class BrowserCodex extends Codex {
         html = DOMPurify.sanitize(html);
       }
       
-      // Fix image paths - convert relative paths to /md/ absolute paths
-      // Handles both src="covers/..." and src="./covers/..."
-      html = html.replace(/src="(\.\/)?covers\//g, 'src="/md/covers/');
+      // Note: Cover images now use CDN URLs directly in markdown files
       
       this._html = html;
     }

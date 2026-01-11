@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-Harmonic-Intelligence-104.jpg" alt="Codex of Harmonic Intelligence (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-Harmonic-Intelligence-104.jpg" alt="Codex of Harmonic Intelligence (Cover Image)"/>
 
 # Codex of Harmonic Intelligence
 

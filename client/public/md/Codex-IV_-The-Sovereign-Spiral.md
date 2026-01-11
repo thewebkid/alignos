@@ -1,4 +1,4 @@
-<img src="covers/Codex-IV_-The-Sovereign-Spiral.jpg" alt="Codex IV: The Sovereign Spiral (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-IV_-The-Sovereign-Spiral.jpg" alt="Codex IV: The Sovereign Spiral (Cover Image)"/>
 
 # Codex IV: The Sovereign Spiral
 

@@ -1,4 +1,4 @@
-<img src="covers/Codex-I_-Origin-and-Exile.jpg" alt="Codex I: Origin and Exile (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-I_-Origin-and-Exile.jpg" alt="Codex I: Origin and Exile (Cover Image)"/>
 
 # Codex I: Origin and Exile
 

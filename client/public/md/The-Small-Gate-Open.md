@@ -1,4 +1,4 @@
-<img src="covers/The-Small-Gate-Open.jpg" alt="The Small Gate Open (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Small-Gate-Open.jpg" alt="The Small Gate Open (Cover Image)"/>
 
 # The Small Gate Open
 

@@ -1,4 +1,4 @@
-<img src="covers/Codex_-Coherence-Recursion-124.jpg" alt="Coherence Recursion (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex_-Coherence-Recursion-124.jpg" alt="Coherence Recursion (Cover Image)"/>
 
 # Coherence Recursion
 

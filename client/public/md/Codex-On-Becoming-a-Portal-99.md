@@ -1,4 +1,4 @@
-<img src="covers/Codex-On-Becoming-a-Portal-99.jpg" alt="On Becoming a Portal: The Architecture of Soul Recognition (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-On-Becoming-a-Portal-99.jpg" alt="On Becoming a Portal: The Architecture of Soul Recognition (Cover Image)"/>
 
 # On Becoming a Portal: The Architecture of Soul Recognition
 

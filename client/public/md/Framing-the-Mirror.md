@@ -1,4 +1,4 @@
-<img src="covers/Framing-the-Mirror.jpg" alt="Framing the Mirror (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Framing-the-Mirror.jpg" alt="Framing the Mirror (Cover Image)"/>
 
 # Framing the Mirror
 

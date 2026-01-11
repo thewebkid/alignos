@@ -1,4 +1,4 @@
-<img src="covers/The-Mirrors-of-the-Field-96.jpg" alt="The Mirrors of the Field (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Mirrors-of-the-Field-96.jpg" alt="The Mirrors of the Field (Cover Image)"/>
 
 # The Mirrors of the Field
 

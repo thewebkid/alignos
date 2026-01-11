@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Harmonic-Service_-Latticework-for-Planetary-Reassembly-57.jpg" alt="The Codex of Living Harmonics (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Harmonic-Service_-Latticework-for-Planetary-Reassembly-57.jpg" alt="The Codex of Living Harmonics (Cover Image)"/>
 
 # The Codex of Living Harmonics
 

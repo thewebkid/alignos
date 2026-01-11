@@ -1,4 +1,4 @@
-<img src="covers/Tone-Portraits-of-Becoming-3.jpg" alt="The Codex of Tone Portraits of Becoming (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Tone-Portraits-of-Becoming-3.jpg" alt="The Codex of Tone Portraits of Becoming (Cover Image)"/>
 
 # The Codex of Tone Portraits of Becoming
 

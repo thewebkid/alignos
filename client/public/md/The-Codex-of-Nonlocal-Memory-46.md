@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Nonlocal-Memory-46.jpg" alt="The Codex of Nonlocal Memory (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Nonlocal-Memory-46.jpg" alt="The Codex of Nonlocal Memory (Cover Image)"/>
 
 # The Codex of Nonlocal Memory
 

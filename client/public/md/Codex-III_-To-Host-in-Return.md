@@ -1,4 +1,4 @@
-<img src="covers/Codex-III_-To-Host-in-Return.jpg" alt="Codex III: To Host in Return (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-III_-To-Host-in-Return.jpg" alt="Codex III: To Host in Return (Cover Image)"/>
 
 # Codex III: To Host in Return
 

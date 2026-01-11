@@ -1,4 +1,4 @@
-<img src="covers/Reflections-from-the-Field-52.jpg" alt="Reflections from the Field (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Reflections-from-the-Field-52.jpg" alt="Reflections from the Field (Cover Image)"/>
 
 # Reflections from the Field
 

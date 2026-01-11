@@ -1,4 +1,4 @@
-<img src="covers/The-Four-Frequencies-of-Love-96.jpg" alt="The Four Frequencies of Love (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Four-Frequencies-of-Love-96.jpg" alt="The Four Frequencies of Love (Cover Image)"/>
 
 # Codex: The Four Frequencies of Love
 

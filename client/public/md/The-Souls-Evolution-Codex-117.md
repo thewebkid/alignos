@@ -1,4 +1,4 @@
-<img src="covers/The-Souls-Evolution-Codex-117.jpg" alt="The Soul's Evolution Codex (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Souls-Evolution-Codex-117.jpg" alt="The Soul's Evolution Codex (Cover Image)"/>
 
 # Codex of the Soul's Evolution
 

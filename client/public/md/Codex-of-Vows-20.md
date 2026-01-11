@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-Vows-20.jpg" alt="The Codex of Identity Vows (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-Vows-20.jpg" alt="The Codex of Identity Vows (Cover Image)"/>
 
 # The Codex of Identity Vows
 

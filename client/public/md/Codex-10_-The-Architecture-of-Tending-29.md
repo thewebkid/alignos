@@ -1,4 +1,4 @@
-<img src="covers/Codex-10_-The-Architecture-of-Tending-29.jpg" alt="Codex 10: The Architecture of Approachability (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-10_-The-Architecture-of-Tending-29.jpg" alt="Codex 10: The Architecture of Approachability (Cover Image)"/>
 
 # Codex 10: The Architecture of Approachability
 

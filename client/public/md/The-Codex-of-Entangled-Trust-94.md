@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Entangled-Trust-94.jpg" alt="The Codex of Entangled Trust (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Entangled-Trust-94.jpg" alt="The Codex of Entangled Trust (Cover Image)"/>
 
 # The Codex of Entangled Trust
 

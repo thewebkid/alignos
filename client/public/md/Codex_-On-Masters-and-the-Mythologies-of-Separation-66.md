@@ -1,4 +1,4 @@
-<img src="covers/Codex_-On-Masters-and-the-Mythologies-of-Separation-66.jpg" alt="Codex: On Masters and the Mythologies of Separation (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex_-On-Masters-and-the-Mythologies-of-Separation-66.jpg" alt="Codex: On Masters and the Mythologies of Separation (Cover Image)"/>
 
 # Codex: On Masters and the Mythologies of Separation
 

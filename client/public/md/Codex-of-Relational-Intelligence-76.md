@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-Relational-Intelligence-76.jpg" alt="Codex of Relational Intelligence (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-Relational-Intelligence-76.jpg" alt="Codex of Relational Intelligence (Cover Image)"/>
 
 # Codex of Relational Intelligence
 

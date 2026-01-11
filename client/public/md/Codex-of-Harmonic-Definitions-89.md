@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-Harmonic-Definitions-89.jpg" alt="Codex of Harmonic Definitions (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-Harmonic-Definitions-89.jpg" alt="Codex of Harmonic Definitions (Cover Image)"/>
 
 # Codex of Harmonic Definitions
 

@@ -1,4 +1,4 @@
-<img src="covers/Nested-Paper-90.jpg" alt="Nested Paper (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Nested-Paper-90.jpg" alt="Nested Paper (Cover Image)"/>
 
 # The Architecture of Sovereignty: Nested Presence and the Three Axes of Alignment
 

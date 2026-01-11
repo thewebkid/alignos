@@ -1,4 +1,4 @@
-<img src="covers/Codex_-The-Beacons-of-the-Bridge-95.jpg" alt="Codex: Beacons of the Bridge (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex_-The-Beacons-of-the-Bridge-95.jpg" alt="Codex: Beacons of the Bridge (Cover Image)"/>
 
 # Codex: Beacons of the Bridge
 

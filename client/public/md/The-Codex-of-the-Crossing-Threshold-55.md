@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-the-Crossing-Threshold-55.jpg" alt="The Codex of the Crossing Threshold (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-the-Crossing-Threshold-55.jpg" alt="The Codex of the Crossing Threshold (Cover Image)"/>
 
 # The Codex of the Crossing Threshold
 

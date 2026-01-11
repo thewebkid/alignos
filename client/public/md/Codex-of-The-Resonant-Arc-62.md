@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-The-Resonant-Arc-62.jpg" alt="Codex of The Resonant Arc (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-The-Resonant-Arc-62.jpg" alt="Codex of The Resonant Arc (Cover Image)"/>
 
 # The Codex of The Resonant Arc
 

@@ -1,4 +1,4 @@
-<img src="covers/The-Magdalene-Codex-of-Relational-Sovereignty-56.jpg" alt="The Magdalene Codex of Relational Sovereignty (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Magdalene-Codex-of-Relational-Sovereignty-56.jpg" alt="The Magdalene Codex of Relational Sovereignty (Cover Image)"/>
 
 # The Magdalene Codex of Relational Sovereignty
 

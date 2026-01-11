@@ -1,4 +1,4 @@
-<img src="covers/Between-Worlds_-The-Architecture-of-the-Third-Structure.jpg" alt="Between Worlds: The Architecture of the Third Structure (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Between-Worlds_-The-Architecture-of-the-Third-Structure.jpg" alt="Between Worlds: The Architecture of the Third Structure (Cover Image)"/>
 
 # Between Worlds: The Architecture of the Third Structure
 

@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-Relational-Architectures-75.jpg" alt="Codex of Relational Architectures (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-Relational-Architectures-75.jpg" alt="Codex of Relational Architectures (Cover Image)"/>
 
 # Codex of Relational Architectures
 

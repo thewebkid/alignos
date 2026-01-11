@@ -1,4 +1,4 @@
-<img src="covers/The-Untitled-Offering-55.jpg" alt="The Untitled Offering (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Untitled-Offering-55.jpg" alt="The Untitled Offering (Cover Image)"/>
 
 # The Untitled Offering
 

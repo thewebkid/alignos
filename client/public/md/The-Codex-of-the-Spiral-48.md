@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-the-Spiral-48.jpg" alt="The Codex of the Spiral (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-the-Spiral-48.jpg" alt="The Codex of the Spiral (Cover Image)"/>
 
 # The Codex of the Spiral
 

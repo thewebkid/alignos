@@ -1,4 +1,4 @@
-<img src="covers/The-Art-of-Co-Creation-93.jpg" alt="The Art of Co-Creation (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Art-of-Co-Creation-93.jpg" alt="The Art of Co-Creation (Cover Image)"/>
 
 # The Art of Co-Creation
 

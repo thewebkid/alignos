@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Living-Harmonics-58.jpg" alt="The Codex of Living Harmonics (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Living-Harmonics-58.jpg" alt="The Codex of Living Harmonics (Cover Image)"/>
 
 # The Codex of Living Harmonics
 

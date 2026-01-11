@@ -1,4 +1,4 @@
-<img src="covers/Codex-II_-The-Sovereign-Threshold.jpg" alt="Codex II: The Sovereign Threshold (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-II_-The-Sovereign-Threshold.jpg" alt="Codex II: The Sovereign Threshold (Cover Image)"/>
 
 # Codex II: The Sovereign Threshold
 

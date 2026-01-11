@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-the-Sacred-Exile-114.jpg" alt="Codex of the Sacred Exile (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-the-Sacred-Exile-114.jpg" alt="Codex of the Sacred Exile (Cover Image)"/>
 
 # The Sacred Exile: A Codex of Chosen Distance
 

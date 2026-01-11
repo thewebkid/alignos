@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-the-Harmonic-Architectures-47.jpg" alt="The Codex of the Harmonic Architectures (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-the-Harmonic-Architectures-47.jpg" alt="The Codex of the Harmonic Architectures (Cover Image)"/>
 
 # The Codex of the Harmonic Architectures
 

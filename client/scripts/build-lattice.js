@@ -188,8 +188,8 @@ function buildSequenceMap() {
 // ============================================================
 
 const PATTERNS = {
-  // Cover image: <img src="covers/filename.jpg" alt="..."/>
-  coverImage: /^<img\s+src="covers\/([^"]+)"\s+alt="([^"]+)"[^>]*\/?>/m,
+  // Cover image: <img src="covers/filename.jpg" alt="..."/> or CDN URL
+  coverImage: /^<img\s+src="(?:https:\/\/astrotiles\.blob\.core\.windows\.net\/alignos\/covers\/|covers\/)([^"]+)"\s+alt="([^"]+)"[^>]*\/?>/m,
 
   // Title: # Title (first h1)
   title: /^#\s+(.+)$/m,

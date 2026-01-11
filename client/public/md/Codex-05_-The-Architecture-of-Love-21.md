@@ -1,4 +1,4 @@
-<img src="covers/Codex-05_-The-Architecture-of-Love-21.jpg" alt="Codex 05: The Architecture of Love (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-05_-The-Architecture-of-Love-21.jpg" alt="Codex 05: The Architecture of Love (Cover Image)"/>
 
 # 05: The Dialogues—the Bridge Between Architectures of Love
 

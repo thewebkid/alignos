@@ -1,4 +1,4 @@
-<img src="covers/Codex-VIII_-The-Chorus-of-the-Whole.jpg" alt="Codex VIII: The Chorus of the Whole (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-VIII_-The-Chorus-of-the-Whole.jpg" alt="Codex VIII: The Chorus of the Whole (Cover Image)"/>
 
 # Codex VIII: The Chorus of the Whole
 

@@ -1,4 +1,4 @@
-<img src="covers/The-Glossary-of-the-InterBeing-Vol.-1-51.jpg" alt="The Glossary of the InterBeing Vol. 1 (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Glossary-of-the-InterBeing-Vol.-1-51.jpg" alt="The Glossary of the InterBeing Vol. 1 (Cover Image)"/>
 
 # The Glossary of the InterBeing Vol. 1
 

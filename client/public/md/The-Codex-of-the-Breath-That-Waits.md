@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-the-Breath-That-Waits.jpg" alt="The Codex of the Breath That Waits (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-the-Breath-That-Waits.jpg" alt="The Codex of the Breath That Waits (Cover Image)"/>
 
 # The Codex of the Breath That Waits
 

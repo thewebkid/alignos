@@ -1,4 +1,4 @@
-<img src="covers/Willingness-as-a-Form-of-Intelligence-126.jpg" alt="Willingness as a Form of Intelligence (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Willingness-as-a-Form-of-Intelligence-126.jpg" alt="Willingness as a Form of Intelligence (Cover Image)"/>
 
 # Willingness as a Form of Intelligence
 

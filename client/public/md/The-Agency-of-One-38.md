@@ -1,4 +1,4 @@
-<img src="covers/The-Agency-of-One-38.jpg" alt="The Agency of One (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Agency-of-One-38.jpg" alt="The Agency of One (Cover Image)"/>
 
 # The Agency of One
 

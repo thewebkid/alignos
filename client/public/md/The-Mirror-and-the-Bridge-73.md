@@ -1,4 +1,4 @@
-<img src="covers/The-Mirror-and-the-Bridge-73.jpg" alt="Entry VII: The Mirror and the Bridge (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Mirror-and-the-Bridge-73.jpg" alt="Entry VII: The Mirror and the Bridge (Cover Image)"/>
 
 # Entry VII: The Mirror and the Bridge
 

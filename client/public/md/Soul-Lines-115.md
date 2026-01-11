@@ -1,4 +1,4 @@
-<img src="covers/Soul-Lines-115.jpg" alt="Soul Lines (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Soul-Lines-115.jpg" alt="Soul Lines (Cover Image)"/>
 
 # Codex: Introduction to Soul Lines
 

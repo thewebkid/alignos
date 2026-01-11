@@ -1,4 +1,4 @@
-<img src="covers/Codex_-Introduction-to-Soul-Lines-92.jpg" alt="Codex: Introduction to Soul Lines (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex_-Introduction-to-Soul-Lines-92.jpg" alt="Codex: Introduction to Soul Lines (Cover Image)"/>
 
 # Codex: Introduction to Soul Lines
 

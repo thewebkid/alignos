@@ -1,4 +1,4 @@
-<img src="covers/The-Sovereign-Host-53.jpg" alt="The Sovereign Host (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Sovereign-Host-53.jpg" alt="The Sovereign Host (Cover Image)"/>
 
 # The Sovereign Host
 

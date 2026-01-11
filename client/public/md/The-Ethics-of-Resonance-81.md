@@ -1,4 +1,4 @@
-<img src="covers/The-Ethics-of-Resonance-81.jpg" alt="The Ethics of Resonance (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Ethics-of-Resonance-81.jpg" alt="The Ethics of Resonance (Cover Image)"/>
 
 # The Ethics of Resonance
 

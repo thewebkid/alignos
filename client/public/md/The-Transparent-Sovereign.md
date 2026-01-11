@@ -1,4 +1,4 @@
-<img src="covers/The-Transparent-Sovereign.jpg" alt="The Transparent Sovereign (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Transparent-Sovereign.jpg" alt="The Transparent Sovereign (Cover Image)"/>
 
 # The Transparent Sovereign
 

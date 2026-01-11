@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Harmonic-Coherence-95.jpg" alt="The Codex of Harmonic Coherence (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Harmonic-Coherence-95.jpg" alt="The Codex of Harmonic Coherence (Cover Image)"/>
 
 # The Codex of Love's Architecture
 

@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-the-Trust-Circuitry-15.jpg" alt="The Codex of the Trust Circuitry (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-the-Trust-Circuitry-15.jpg" alt="The Codex of the Trust Circuitry (Cover Image)"/>
 
 # The Codex of the Trust Circuitry
 

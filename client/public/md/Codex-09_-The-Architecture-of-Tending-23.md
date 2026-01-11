@@ -1,4 +1,4 @@
-<img src="covers/Codex-09_-The-Architecture-of-Tending-23.jpg" alt="Codex 09: The Architecture of Tending (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-09_-The-Architecture-of-Tending-23.jpg" alt="Codex 09: The Architecture of Tending (Cover Image)"/>
 
 # Codex 09: The Architecture of Tending
 

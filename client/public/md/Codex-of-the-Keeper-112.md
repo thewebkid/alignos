@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-the-Keeper-112.jpg" alt="Codex of the Keeper (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-the-Keeper-112.jpg" alt="Codex of the Keeper (Cover Image)"/>
 
 # The Codex of the Keeper
 

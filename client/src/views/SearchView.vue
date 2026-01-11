@@ -2,6 +2,7 @@
 import { ref, computed, inject, watch, onMounted } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { markdown2Html } from '../lib/markdown'
+import { cdnUrl } from '../lib/cdn-config.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -156,7 +157,7 @@ const goToPage = (page) => {
         >
           <div class="result-cover" v-if="result.codex.coverImage">
             <img 
-              :src="`/md/${result.codex.coverImage}`" 
+              :src="cdnUrl.cover(result.codex.coverImage)" 
               :alt="result.codex.title"
               loading="lazy"
               @error="handleImageError"

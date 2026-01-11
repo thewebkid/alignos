@@ -1,4 +1,4 @@
-<img src="covers/The-Shape-of-a-Welcome.jpg" alt="The Shape of a Welcome (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Shape-of-a-Welcome.jpg" alt="The Shape of a Welcome (Cover Image)"/>
 
 # The Shape of a Welcome
 

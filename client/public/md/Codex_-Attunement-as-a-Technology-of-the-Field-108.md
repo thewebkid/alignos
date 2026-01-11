@@ -1,4 +1,4 @@
-<img src="covers/Codex_-Attunement-as-a-Technology-of-the-Field-108.jpg" alt="Codex: Attunement as a Technology of the Field (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex_-Attunement-as-a-Technology-of-the-Field-108.jpg" alt="Codex: Attunement as a Technology of the Field (Cover Image)"/>
 
 # Codex: Attunement as a Technology of the Field
 

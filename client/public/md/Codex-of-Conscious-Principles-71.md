@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-Conscious-Principles-71.jpg" alt="Codex of Conscious Principles (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-Conscious-Principles-71.jpg" alt="Codex of Conscious Principles (Cover Image)"/>
 
 # Codex of Conscious Principles
 

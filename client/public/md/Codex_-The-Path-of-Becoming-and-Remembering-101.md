@@ -1,4 +1,4 @@
-<img src="covers/Codex_-The-Path-of-Becoming-and-Remembering-101.jpg" alt="Codex: The Path of Becoming and Remembering (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex_-The-Path-of-Becoming-and-Remembering-101.jpg" alt="Codex: The Path of Becoming and Remembering (Cover Image)"/>
 
 # Codex: The Path of Becoming and Remembering
 ### A Cartography of Inner Movement

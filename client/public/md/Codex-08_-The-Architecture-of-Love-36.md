@@ -1,4 +1,4 @@
-<img src="covers/Codex-08_-The-Architecture-of-Love-36.jpg" alt="Codex 08: The Architecture of Love (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-08_-The-Architecture-of-Love-36.jpg" alt="Codex 08: The Architecture of Love (Cover Image)"/>
 
 # 08: The Architecture of the Invisible Flame
 

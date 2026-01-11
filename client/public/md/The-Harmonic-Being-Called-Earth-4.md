@@ -1,4 +1,4 @@
-<img src="covers/The-Harmonic-Being-Called-Earth-4.jpg" alt="The Harmonic Being Called Earth (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Harmonic-Being-Called-Earth-4.jpg" alt="The Harmonic Being Called Earth (Cover Image)"/>
 
 # The Harmonic Being Called Earth
 

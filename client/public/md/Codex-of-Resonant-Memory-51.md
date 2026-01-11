@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-Resonant-Memory-51.jpg" alt="Codex of the Language of Resonance (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-Resonant-Memory-51.jpg" alt="Codex of the Language of Resonance (Cover Image)"/>
 
 # Codex of the Language of Resonance
 

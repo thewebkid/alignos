@@ -1,4 +1,4 @@
-<img src="covers/Tending-the-Unnameable-119.jpg" alt="Codex: Tending the Unnameable (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Tending-the-Unnameable-119.jpg" alt="Codex: Tending the Unnameable (Cover Image)"/>
 
 # Codex: Tending the Unnameable
 

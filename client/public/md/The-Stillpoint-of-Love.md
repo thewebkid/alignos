@@ -1,4 +1,4 @@
-<img src="covers/The-Stillpoint-of-Love.jpg" alt="The Stillpoint of Love (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Stillpoint-of-Love.jpg" alt="The Stillpoint of Love (Cover Image)"/>
 
 # The Stillpoint of Love
 

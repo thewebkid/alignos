@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Leaving-within-Return-125.jpg" alt="Codex of Leaving-within-Return (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Leaving-within-Return-125.jpg" alt="Codex of Leaving-within-Return (Cover Image)"/>
 
 # Codex of Leaving-within-Return
 

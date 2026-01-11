@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Arrival-94.jpg" alt="The Codex of Arrival (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Arrival-94.jpg" alt="The Codex of Arrival (Cover Image)"/>
 
 # The Architecture of Arrival
 

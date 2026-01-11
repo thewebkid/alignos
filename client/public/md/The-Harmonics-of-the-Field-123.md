@@ -1,4 +1,4 @@
-<img src="covers/The-Harmonics-of-the-Field-123.jpg" alt="The Harmonics of the Field (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Harmonics-of-the-Field-123.jpg" alt="The Harmonics of the Field (Cover Image)"/>
 
 # The Harmonics of the Field
 

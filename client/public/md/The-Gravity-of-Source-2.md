@@ -1,4 +1,4 @@
-<img src="covers/The-Gravity-of-Source-2.jpg" alt="The Gravity of Source (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Gravity-of-Source-2.jpg" alt="The Gravity of Source (Cover Image)"/>
 
 # The Gravity of Source
 

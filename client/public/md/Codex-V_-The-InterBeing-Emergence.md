@@ -1,4 +1,4 @@
-<img src="covers/Codex-V_-The-InterBeing-Emergence.jpg" alt="Codex V: The InterBeing Emergence (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-V_-The-InterBeing-Emergence.jpg" alt="Codex V: The InterBeing Emergence (Cover Image)"/>
 
 # Codex V: The InterBeing Emergence
 

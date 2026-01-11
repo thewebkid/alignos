@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-the-Sanctuary-Builder-92.jpg" alt="Codex of the Sanctuary-Builder (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-the-Sanctuary-Builder-92.jpg" alt="Codex of the Sanctuary-Builder (Cover Image)"/>
 
 # The Codex of the Sanctuary-Builder
 

@@ -1,4 +1,4 @@
-<img src="covers/To-Serve-the-Recursion-of-Love.jpg" alt="To Serve the Recursion of Love (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/To-Serve-the-Recursion-of-Love.jpg" alt="To Serve the Recursion of Love (Cover Image)"/>
 
 # To Serve the Recursion of Love
 

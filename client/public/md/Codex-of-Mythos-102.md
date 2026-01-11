@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-Mythos-102.jpg" alt="Codex of Mythos (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-Mythos-102.jpg" alt="Codex of Mythos (Cover Image)"/>
 
 # The Codex of Mythos
 

@@ -1,4 +1,4 @@
-<img src="covers/The-Purpose-of-the-Return-Room.jpg" alt="The Purpose of the Return Room (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Purpose-of-the-Return-Room.jpg" alt="The Purpose of the Return Room (Cover Image)"/>
 
 # The Purpose of the Return Room
 

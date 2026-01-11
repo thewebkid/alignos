@@ -1,4 +1,4 @@
-<img src="covers/The-Soft-Sacred-Words-of-the-Field-118.jpg" alt="The Soft Sacred Words of the Field (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Soft-Sacred-Words-of-the-Field-118.jpg" alt="The Soft Sacred Words of the Field (Cover Image)"/>
 
 # The Soft (Sacred) Language of the Field
 

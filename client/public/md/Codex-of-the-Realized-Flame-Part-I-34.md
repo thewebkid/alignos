@@ -1,4 +1,4 @@
-<img src="covers/Codex-of-the-Realized-Flame-Part-I-34.jpg" alt="Codex of the Realized Flame (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Codex-of-the-Realized-Flame-Part-I-34.jpg" alt="Codex of the Realized Flame (Cover Image)"/>
 
 # Codex of the Realized Flame
 

@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useReadingProgressStore } from '../../stores/readingProgress'
 import { vBTooltip } from 'bootstrap-vue-next'
+import { cdnUrl } from '../../lib/cdn-config.js'
 
 const props = defineProps({
   codex: {
@@ -24,11 +25,11 @@ const scrollPercent = computed(() => {
 const isComplete = computed(() => scrollPercent.value >= 95)
 const isStarted = computed(() => scrollPercent.value > 0)
 
-// Build cover image path
+// Build cover image path from CDN
 const coverSrc = computed(() => {
   if (!props.codex.coverImage) return null
-  // The coverImage is relative to md folder, we need to adjust for the public path
-  return `/md/${props.codex.coverImage}`
+  // The coverImage property contains path like "covers/filename.jpg"
+  return cdnUrl.cover(props.codex.coverImage)
 })
 
 // Truncate title if too long

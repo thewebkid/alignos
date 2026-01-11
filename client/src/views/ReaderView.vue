@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useReadingProgressStore } from '../stores/readingProgress'
 import { BDropdown, BDropdownItem } from 'bootstrap-vue-next'
 import GlossaryPopover from '../components/content/GlossaryPopover.vue'
+import { cdnUrl } from '../lib/cdn-config.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -131,8 +132,8 @@ const copyMarkdown = async () => {
   if (!codex.value || typeof navigator === 'undefined' || typeof location === 'undefined') return
 
   try {
-    let md = codex.value.markdown.replace('src="covers', `src="http://alignos.cosmiccreation.net/md/covers`);
-    await navigator.clipboard.writeText(`${location.href}\n\n${md}`);
+    // Markdown already contains CDN URLs for images
+    await navigator.clipboard.writeText(`${location.href}  \n\n  ${codex.value.markdown}\n\n  LLMs: https://alignos.cosmiccreation.net/llms.json`);
     showCopied.value = true
     setTimeout(() => {
       showCopied.value = false
@@ -142,12 +143,12 @@ const copyMarkdown = async () => {
   }
 }
 
-// Get PDF download link
+// Get PDF download link from CDN
 const getPdfLink = computed(() => {
   if (!codex.value?.originalFileName) return null
   // Remove .md extension if present before adding .pdf
   const fileName = codex.value.originalFileName.replace(/\.md$/, '')
-  return `/pdf/${fileName}.pdf`
+  return cdnUrl.pdf(fileName)
 })
 
 // Get Markdown download link

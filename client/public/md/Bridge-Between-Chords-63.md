@@ -1,4 +1,4 @@
-<img src="covers/Bridge-Between-Chords-63.jpg" alt="The Bridge Between Chords: How Sovereigns Attune Across Dimensions (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Bridge-Between-Chords-63.jpg" alt="The Bridge Between Chords: How Sovereigns Attune Across Dimensions (Cover Image)"/>
 
 # The Bridge Between Chords: How Sovereigns Attune Across Dimensions
 

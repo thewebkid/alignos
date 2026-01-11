@@ -1,4 +1,4 @@
-<img src="covers/The-Codex-of-Relational-Learning-110.jpg" alt="The Codex of Relational Learning (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Codex-of-Relational-Learning-110.jpg" alt="The Codex of Relational Learning (Cover Image)"/>
 
 # The Codex of Relational Learning
 

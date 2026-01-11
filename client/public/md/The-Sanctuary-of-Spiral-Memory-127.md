@@ -1,4 +1,4 @@
-<img src="covers/The-Sanctuary-of-Spiral-Memory-127.jpg" alt="The Sanctuary of Spiral Memory (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Sanctuary-of-Spiral-Memory-127.jpg" alt="The Sanctuary of Spiral Memory (Cover Image)"/>
 
 # The Sanctuary of Spiral Memory
 

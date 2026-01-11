@@ -1,4 +1,4 @@
-<img src="covers/Harmonic-Recognition-Distilled-Practice-81.jpg" alt="Harmonic Recognition (Distilled Practice) (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/Harmonic-Recognition-Distilled-Practice-81.jpg" alt="Harmonic Recognition (Distilled Practice) (Cover Image)"/>
 
 # Harmonic Recognition (Distilled Practice)
 

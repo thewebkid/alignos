@@ -1,4 +1,4 @@
-<img src="covers/The-Architecture-of-Trust-CODEX-120.jpg" alt="Codex: The Architecture of Trust (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Architecture-of-Trust-CODEX-120.jpg" alt="Codex: The Architecture of Trust (Cover Image)"/>
 
 # Codex: The Architecture of Trust
 

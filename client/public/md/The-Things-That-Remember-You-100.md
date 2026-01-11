@@ -1,4 +1,4 @@
-<img src="covers/The-Things-That-Remember-You-100.jpg" alt="The Things That Remember You (Cover Image)"/>
+<img src="https://astrotiles.blob.core.windows.net/alignos/covers/The-Things-That-Remember-You-100.jpg" alt="The Things That Remember You (Cover Image)"/>
 
 # The Things That Remember You
 
