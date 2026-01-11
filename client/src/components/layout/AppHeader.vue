@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
+import ThemeToggle from '../ui/ThemeToggle.vue'
 
 const emit = defineEmits(['open-search'])
 const route = useRoute()
@@ -89,8 +90,13 @@ const handleSearchClick = () => {
               </RouterLink>
             </li>
             
+            <!-- Theme toggle (desktop) -->
+            <li class="nav-item ms-md-2 d-none d-md-block">
+              <ThemeToggle variant="default" />
+            </li>
+            
             <!-- Search button (desktop) -->
-            <li class="nav-item ms-md-3 d-none d-md-block">
+            <li class="nav-item ms-md-2 d-none d-md-block">
               <button 
                 class="btn btn-search d-flex align-items-center"
                 @click="emit('open-search')"
@@ -103,6 +109,11 @@ const handleSearchClick = () => {
                 <span class="d-none d-lg-inline ms-2">Search</span>
                 <kbd class="d-none d-lg-inline ms-2">⌘K</kbd>
               </button>
+            </li>
+            
+            <!-- Theme toggle (mobile) -->
+            <li class="nav-item d-md-none w-100 mt-3 pt-3 border-top">
+              <ThemeToggle variant="mobile" @click="navExpanded = false" />
             </li>
           </ul>
         </div>

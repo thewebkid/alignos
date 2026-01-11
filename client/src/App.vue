@@ -1,9 +1,15 @@
 <script setup>
-import { provide, ref } from 'vue'
+import { provide, ref, onBeforeMount } from 'vue'
 import { RouterView } from 'vue-router'
 import AppHeader from './components/layout/AppHeader.vue'
 import AppFooter from './components/layout/AppFooter.vue'
 import SearchOverlay from './components/search/SearchOverlay.vue'
+import { initThemeEarly } from './composables/useTheme'
+
+// Initialize theme as early as possible to prevent flash
+onBeforeMount(() => {
+  initThemeEarly()
+})
 
 // Search overlay state
 const showSearch = ref(false)

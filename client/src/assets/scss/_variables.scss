@@ -143,7 +143,7 @@ $transition-fade: opacity 0.2s ease-in-out;
   --cl-glossary-highlight: rgba(74, 124, 126, 0.12);
 }
 
-// Dark mode
+// Dark mode - system preference (fallback)
 @media (prefers-color-scheme: dark) {
   :root {
     --cl-bg: #{$dark-bg};
@@ -174,6 +174,67 @@ $transition-fade: opacity 0.2s ease-in-out;
     // Glossary highlighting
     --cl-glossary-highlight: rgba(93, 163, 165, 0.15);
   }
+}
+
+// Manual theme override - Dark mode (highest priority)
+[data-theme='dark'] {
+  --cl-bg: #{$dark-bg};
+  --cl-bg-elevated: #{$dark-surface-elevated};
+  --cl-surface: #{$dark-surface};
+  --cl-surface-hover: #{$dark-surface-elevated};
+  --cl-text: #e8e4df;
+  --cl-text-muted: #9a9590;
+  --cl-text-heading: #f5f2ef;
+  --cl-primary: #{$teal-400};
+  --cl-primary-hover: #{$teal-300};
+  --cl-accent: #{$gold-400};
+  --cl-accent-hover: #{$gold-300};
+  --cl-border: #{$dark-border};
+  --cl-border-light: #{lighten($dark-border, 5%)};
+  --cl-shadow: rgba(0, 0, 0, 0.3);
+  --cl-shadow-lg: rgba(0, 0, 0, 0.4);
+  --cl-overlay: rgba(0, 0, 0, 0.7);
+  
+  --cl-reader-bg: #{$dark-surface};
+  --cl-reader-text: #e8e4df;
+  --cl-progress-track: #{$dark-border};
+  --cl-progress-fill: #{$teal-400};
+  
+  --cl-card-unread-opacity: 0.7;
+  --cl-card-complete-glow: #{$gold-500};
+  
+  // Glossary highlighting
+  --cl-glossary-highlight: rgba(93, 163, 165, 0.15);
+}
+
+// Manual theme override - Light mode (highest priority)
+[data-theme='light'] {
+  --cl-bg: #{$warm-100};
+  --cl-bg-elevated: #{$warm-50};
+  --cl-surface: #ffffff;
+  --cl-surface-hover: #{$warm-200};
+  --cl-text: #{$warm-800};
+  --cl-text-muted: #{$warm-600};
+  --cl-text-heading: #{$warm-900};
+  --cl-primary: #{$teal-500};
+  --cl-primary-hover: #{$teal-600};
+  --cl-accent: #{$gold-600};
+  --cl-accent-hover: #{$gold-700};
+  --cl-border: #{$warm-300};
+  --cl-border-light: #{$warm-200};
+  --cl-shadow: rgba(31, 27, 24, 0.08);
+  --cl-shadow-lg: rgba(31, 27, 24, 0.12);
+  --cl-overlay: rgba(31, 27, 24, 0.5);
+  
+  --cl-reader-bg: #fffdf9;
+  --cl-reader-text: #{$warm-800};
+  --cl-progress-track: #{$warm-200};
+  --cl-progress-fill: #{$teal-400};
+  
+  --cl-card-unread-opacity: 0.85;
+  --cl-card-complete-glow: #{$gold-400};
+  
+  --cl-glossary-highlight: rgba(74, 124, 126, 0.12);
 }
 
 // =============================================================================
