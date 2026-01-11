@@ -125,15 +125,22 @@ onUnmounted(() => {
 // Using !important to override Bootstrap inline styles
 .popover.glossary-popover,
 .glossary-popover.popover {
-  // Wider popovers for verbose definitions - force with !important
-  max-width: 450px !important;
-  min-width: 350px !important;
+  // Responsive width handling
+  // Mobile: limit to viewport width with padding
+  max-width: calc(100vw - 2rem) !important;
+  min-width: 280px !important;
   width: max-content !important;
   border: 1px solid var(--cl-border) !important;
   box-shadow: 0 4px 24px var(--cl-shadow-lg) !important;
   background: var(--cl-surface) !important;
   border-radius: 0.5rem !important;
   color: var(--cl-text) !important;
+  
+  // Desktop: wider popovers for verbose definitions
+  @media (min-width: 768px) {
+    max-width: 450px !important;
+    min-width: 350px !important;
+  }
   
   .popover-header {
     background: var(--cl-bg-elevated) !important;

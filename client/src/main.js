@@ -35,6 +35,16 @@ export const createApp = ViteSSG(
     }
     
     const codexRegistry = new CodexRegistry().loadFromData(latticeData, BrowserCodex)
+    
+    // On client-side, ensure Living Glossary content is loaded for term definitions
+    if (isClient) {
+      const glossaryCodex = codexRegistry.getByFilename('The-Living-Glossary-of-the-Field.md')
+      if (glossaryCodex && !glossaryCodex.isContentLoaded()) {
+        console.log('🔮 Loading Living Glossary content for term definitions...')
+        await codexRegistry.ensureContentLoaded(glossaryCodex.id)
+      }
+    }
+    
     const glossaryManager = createGlossaryFromRegistry(codexRegistry)
     
     console.log(`✨ Loaded ${codexRegistry.size} codexes`)

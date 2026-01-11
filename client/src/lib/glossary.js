@@ -290,12 +290,12 @@ export class GlossaryManager {
       onlyKnownTerms = false,
       className = 'glossary-term'
     } = options;
-    
+
     // Build regex pattern for all highlightable terms
-    const termsToHighlight = onlyKnownTerms 
+    const termsToHighlight = onlyKnownTerms
       ? Array.from(this.terms.keys())
       : Array.from(this.highlightableTerms);
-    
+
     if (termsToHighlight.length === 0) return html;
     
     // Sort by length (longest first) to avoid partial matches
@@ -313,17 +313,17 @@ export class GlossaryManager {
     return html.replace(/>([^<]+)</g, (match, textContent) => {
       // Skip if already contains glossary-term spans
       if (textContent.includes('glossary-term')) return match;
-      
+
       const processed = textContent.replace(regex, (term) => {
         const key = term.toLowerCase();
         // Check both direct terms and aliases for definitions
         const hasDef = this.terms.has(key) || this.aliases.has(key);
         const dataAttr = hasDef ? ` data-term="${key}"` : '';
         const hasDefClass = hasDef ? ' has-definition' : '';
-        
+
         return `<span class="${className}${hasDefClass}"${dataAttr}>${term}</span>`;
       });
-      
+
       return `>${processed}<`;
     });
   }
@@ -388,21 +388,21 @@ export class GlossaryManager {
  */
 export function createGlossaryFromRegistry(registry) {
   const manager = new GlossaryManager();
-  
+
   // Find the Living Glossary codex
   const glossaryCodex = registry.getByFilename('The-Living-Glossary-of-the-Field.md');
-  
+
   if (glossaryCodex) {
     manager.parseGlossary(glossaryCodex.markdown);
   }
-  
+
   // Track term usage across all codexes
   for (const codex of registry) {
     if (codex.glossaryTerms.length > 0) {
       manager.trackUsage(codex.id, codex.glossaryTerms);
     }
   }
-  
+
   return manager;
 }
 

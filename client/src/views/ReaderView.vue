@@ -41,7 +41,7 @@ watch(codex, async (newCodex) => {
 
 // Rendered HTML content with glossary terms and codex cross-references
 const htmlContent = computed(() => {
-  if (!codex.value) return ''
+  if (!codex.value || !codex.value.isContentLoaded()) return ''
   // Use toHtmlWithGlossary with both glossary and registry for full processing
   if (codex.value.toHtmlWithGlossary) {
     return codex.value.toHtmlWithGlossary(glossaryManager, codexRegistry)
@@ -332,7 +332,7 @@ const nextCodex = computed(() => {
     </div>
 
     <!-- Glossary popover handler -->
-    <GlossaryPopover v-if="codex" />
+    <GlossaryPopover v-if="codex && !isLoadingContent && !contentLoadError" />
   </div>
 </template>
 

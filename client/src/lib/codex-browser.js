@@ -61,17 +61,17 @@ export class BrowserCodex extends Codex {
   toHtmlWithGlossary(glossaryManager, registry = null) {
     // Get base HTML
     let html = this.toHtml();
-    
+
     // Inject codex cross-reference links (before glossary to avoid spans inside links)
     if (registry) {
       html = injectCodexLinks(html, registry);
     }
-    
+
     // Inject glossary term highlighting
     if (glossaryManager) {
       html = glossaryManager.injectLinks(html);
     }
-    
+
     return html;
   }
 
