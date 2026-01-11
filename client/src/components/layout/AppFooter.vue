@@ -19,21 +19,22 @@ const totalCodexes = computed(() => codexRegistry?.size || 0)
             "You are not asked to arrive complete. Only to return willing."
           </p>
         </div>
-        
+
         <!-- Stats (subtle) -->
         <div class="footer-stats" v-if="stats.started > 0">
           <span class="stat">
             {{ stats.completed }} of {{ totalCodexes }} complete
           </span>
         </div>
-        
+
         <!-- Links -->
         <div class="footer-links">
           <a href="mailto:info@alignos.io" class="footer-link">Contact</a>
           <span class="divider">·</span>
           <a href="https://alignos.io" target="_blank" rel="noopener" class="footer-link">
             alignos.io
-          </a>
+          </a><span class="divider">·</span>
+          <a href="/llms.json">For AI explorers</a>
         </div>
       </div>
     </div>
@@ -72,7 +73,7 @@ const totalCodexes = computed(() => codexRegistry?.size || 0)
 .footer-stats {
   font-size: 0.8125rem;
   color: var(--cl-text-muted);
-  
+
   .stat {
     background: var(--cl-surface-hover);
     padding: 0.25rem 0.75rem;
@@ -91,7 +92,7 @@ const totalCodexes = computed(() => codexRegistry?.size || 0)
   color: var(--cl-text-muted);
   text-decoration: none;
   transition: color 0.2s ease;
-  
+
   &:hover {
     color: var(--cl-primary);
   }
