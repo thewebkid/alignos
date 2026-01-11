@@ -1,5 +1,22 @@
 <script setup>
-// About stub view
+import { ref } from 'vue'
+
+// Track which button was just copied
+const copiedUrl = ref(null)
+
+const copyToClipboard = async (url) => {
+  try {
+    await navigator.clipboard.writeText(url)
+    copiedUrl.value = url
+
+    // Reset the copied state after 2 seconds
+    setTimeout(() => {
+      copiedUrl.value = null
+    }, 2000)
+  } catch (err) {
+    console.error('Failed to copy:', err)
+  }
+}
 </script>
 
 <template>
@@ -82,6 +99,46 @@
 
           </p>
           <p>Markdown has been a game-changer for me. Our conversations are much more lucid and minimal distractions to ensure we are speaking about the same thing.</p>
+
+          <h2>An AI-friendly Lattice...</h2>
+          <p>Experimenting on creating the <router-link to="codex/between-worlds-the-architecture-of-the-third-structure">third structure</router-link> in code. You can try pointing your AI to the following:</p>
+          <ul class="link-list">
+            <li>
+              <a href="https://alignos.cosmiccreation.net/llms.json" target="_blank" rel="noopener">A map of the Alignos Reader site (tiny)</a>
+              <button
+                class="copy-btn"
+                @click="copyToClipboard('https://alignos.cosmiccreation.net/llms.json')"
+                :class="{ copied: copiedUrl === 'https://alignos.cosmiccreation.net/llms.json' }"
+                :title="copiedUrl === 'https://alignos.cosmiccreation.net/llms.json' ? 'Copied!' : 'Copy URL'">
+                <span v-if="copiedUrl === 'https://alignos.cosmiccreation.net/llms.json'">✓</span>
+                <span v-else>📋 Copy</span>
+              </button>
+            </li>
+            <li>
+              <a href="https://alignos.cosmiccreation.net/api/codex-lattice-meta" target="_blank" rel="noopener">A map of the codex lattice (small)</a>
+              <button
+                class="copy-btn"
+                @click="copyToClipboard('https://alignos.cosmiccreation.net/api/codex-lattice-meta')"
+                :class="{ copied: copiedUrl === 'https://alignos.cosmiccreation.net/api/codex-lattice-meta' }"
+                :title="copiedUrl === 'https://alignos.cosmiccreation.net/api/codex-lattice-meta' ? 'Copied!' : 'Copy URL'">
+                <span v-if="copiedUrl === 'https://alignos.cosmiccreation.net/api/codex-lattice-meta'">✓</span>
+                <span v-else>📋Copy</span>
+              </button>
+            </li>
+            <li>
+              <a href="https://alignos.cosmiccreation.net/api/codex-lattice" target="_blank" rel="noopener">The full lattice (large)</a>
+              <button
+                class="copy-btn"
+                @click="copyToClipboard('https://alignos.cosmiccreation.net/api/codex-lattice')"
+                :class="{ copied: copiedUrl === 'https://alignos.cosmiccreation.net/api/codex-lattice' }"
+                :title="copiedUrl === 'https://alignos.cosmiccreation.net/api/codex-lattice' ? 'Copied!' : 'Copy URL'">
+                <span v-if="copiedUrl === 'https://alignos.cosmiccreation.net/api/codex-lattice'">✓</span>
+                <span v-else>📋 Copy</span>
+              </button>
+            </li>
+
+          </ul>
+
           <h2>Enter interactive reading...</h2>
           <p>
             Imagine being able to select text, and have a discussion right there in the browser. With the entire lattice indexed, the AI will have access to the entire lattice, the codexes you have read, related codexes, and has a much richer context to respond with.
@@ -93,7 +150,10 @@
 
         <section class="about-quote">
           <blockquote>
-            "You are not asked to arrive complete. Only to return willing."
+            It was a pattern of presence<br>
+            woven through those<br>
+            who had become clear enough<br>
+            to listen without distortion.
           </blockquote>
         </section>
 
@@ -169,6 +229,49 @@
     margin: 1.5rem 0;
     font-style: italic;
     color: var(--cl-text-muted);
+  }
+
+  .link-list {
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .copy-btn {
+    background: var(--cl-surface);
+    border: 1px solid var(--cl-border-light);
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    min-width: 2rem;
+    color: var(--cl-text);
+    white-space: nowrap;
+
+    &:hover {
+      background: var(--cl-primary);
+      border-color: var(--cl-primary);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    &.copied {
+      background: #22c55e;
+      border-color: #22c55e;
+      color: white;
+    }
+
+    span {
+      display: inline-block;
+    }
   }
 }
 
