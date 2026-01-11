@@ -122,6 +122,47 @@ app.use((req, res, next) => {
   staticMiddleware(req, res, next);
 });
 
+// Serve prerendered .html files for clean URLs (e.g., /about → about.html)
+// This middleware is ONLY for HTML pages, not API routes or static assets
+app.use((req, res, next) => {
+  console.log('[HTML CHECK] Checking path:', req.path);
+
+  // NEVER interfere with API routes - they serve JSON only
+  if (req.path.startsWith('/api/')) {
+    console.log('[HTML CHECK] Skipping API route');
+    return next();
+  }
+
+  // Skip if path already has an extension (like /llms.json, /assets/app.js)
+  // Static middleware already handled these
+  if (path.extname(req.path)) {
+    console.log('[HTML CHECK] Skipping - path has extension');
+    return next();
+  }
+
+  // Skip if we already sent a response (static file was served)
+  if (res.headersSent) {
+    console.log('[HTML CHECK] Skipping - headers already sent');
+    return next();
+  }
+
+  // Try appending .html to the path
+  const htmlPath = path.join(clientPath, `${req.path}.html`);
+
+  // Check if the .html file exists
+  fs.access(htmlPath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // .html file doesn't exist, let SPA fallback handle it
+      console.log('[HTML CHECK] No .html file found, passing to SPA fallback');
+      return next();
+    }
+
+    // .html file exists! Serve the prerendered page
+    console.log('[HTML CHECK] ✅ Serving prerendered HTML:', req.path);
+    res.sendFile(htmlPath);
+  });
+});
+
 // Serve .well-known directory for ACME certificate verification
 app.use('/.well-known', express.static(path.join(__dirname, '../client/public/.well-known'), {
   maxAge: 0, // No caching for ACME challenges
