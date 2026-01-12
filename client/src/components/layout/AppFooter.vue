@@ -46,7 +46,8 @@ const totalCodexes = computed(() => codexRegistry?.size || 0)
   background: var(--cl-surface);
   border-top: 1px solid var(--cl-border-light);
   padding: 2rem 0;
-  margin-top: 3rem;
+  margin-top: 1rem;
+
 }
 
 .footer-content {
@@ -86,6 +87,10 @@ const totalCodexes = computed(() => codexRegistry?.size || 0)
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
+
+  //@media (max-width: 576px) {
+    margin-bottom: 100px;
+  //}
 }
 
 .footer-link {
