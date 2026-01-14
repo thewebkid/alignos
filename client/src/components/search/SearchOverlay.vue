@@ -19,6 +19,7 @@ const results = ref([])
 const selectedIndex = ref(0)
 const titleOnly = ref(false)
 const totalResultCount = ref(0)
+const isLatticeReady = ref(true) // Assume lattice is loaded (it loads in background on app init)
 
 // Track mousedown target to prevent drag-select from closing modal
 const mouseDownTarget = ref(null)
@@ -50,8 +51,10 @@ const performSearch = () => {
       ? ['title'] 
       : ['title', 'keyword', 'content']
     
+    // Search with higher limit to show more results in overlay
+    // All results now have instant snippets since full lattice is loaded
     const searchResults = codexRegistry.search(q, { 
-      limit: 20, 
+      limit: 50, 
       searchIn,
       includeMatchCount: true
     })

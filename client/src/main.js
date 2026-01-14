@@ -18,33 +18,24 @@ export const createApp = ViteSSG(
   App,
   { routes },
   async ({ app, router, routes, isClient, initialState }) => {
-    // Dynamically import the appropriate lattice based on context
-    // SSG (server-side) needs full content, client-side only needs metadata
-    const latticeType = isClient ? 'metadata only' : 'full content for SSG'
+    // SSG (server-side) needs full content for pre-rendering
+    // Client-side loads full lattice in background for instant search
+    const latticeType = isClient ? 'full content (async)' : 'full content for SSG'
     console.log(`🔮 Initializing Codex Lattice (${latticeType})...`)
     
     let latticeData
     if (isClient) {
-      // Client-side: load metadata-only (127 KB)
-      const module = await import('./generated/codex-lattice-meta.json')
+      // Client-side: load full lattice (3.3 MB) for instant search with all previews
+      // This loads asynchronously in the background after initial render
+      const module = await import('./generated/codex-lattice.json')
       latticeData = module.default
     } else {
-      // SSG build: load full lattice (3.17 MB) - only used during pre-rendering
+      // SSG build: load full lattice (3.3 MB) - only used during pre-rendering
       const module = await import('./generated/codex-lattice.json')
       latticeData = module.default
     }
     
     const codexRegistry = new CodexRegistry().loadFromData(latticeData, BrowserCodex)
-    
-    // On client-side, ensure Living Glossary content is loaded for term definitions
-    if (isClient) {
-      const glossaryCodex = codexRegistry.getByFilename('The-Living-Glossary-of-the-Field.md')
-      if (glossaryCodex && !glossaryCodex.isContentLoaded()) {
-        console.log('🔮 Loading Living Glossary content for term definitions...')
-        await codexRegistry.ensureContentLoaded(glossaryCodex.id)
-      }
-    }
-    
     const glossaryManager = createGlossaryFromRegistry(codexRegistry)
     
     console.log(`✨ Loaded ${codexRegistry.size} codexes`)

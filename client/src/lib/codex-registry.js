@@ -70,6 +70,10 @@ export class CodexRegistry {
   loadFromData(data, CodexClass = Codex) {
     for (const item of data) {
       const codex = new CodexClass(item);
+      // Mark content as loaded if markdown is present (full lattice)
+      if (codex.markdown) {
+        codex._contentLoaded = true;
+      }
       this.addCodex(codex);
     }
     
@@ -368,13 +372,13 @@ export class CodexRegistry {
       for (const codex of this.codexes.values()) {
         if (codex.containsText(query)) {
           const snippet = codex.getSnippet(query);
-          // Count matches if requested
-          let matchCount = null;
-          if (includeMatchCount) {
-            matchCount = this.countMatches(codex, query);
-          }
-          // Content matches with snippets get higher score than keyword-only matches
-          addResult(codex, 45, 'content', snippet, matchCount);
+          // Always count matches for better ranking
+          const matchCount = this.countMatches(codex, query);
+          // Score based on match count: base 45 + bonus for multiple matches
+          // More matches = higher relevance (up to +50 bonus)
+          const matchBonus = Math.min(50, matchCount * 2);
+          const score = 45 + matchBonus;
+          addResult(codex, score, 'content', snippet, matchCount);
         }
       }
     }
