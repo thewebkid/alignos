@@ -446,7 +446,8 @@ const goToFullResults = () => {
 .result-content {
   flex: 1;
   min-width: 0;
-  img{
+  
+  :deep(img) {
     display: none;
   }
 }
@@ -477,9 +478,11 @@ const goToFullResults = () => {
   font-size: 0.875rem;
   color: var(--cl-text-muted);
   line-height: 1.5;
-  img{
+  
+  :deep(img) {
     display: none !important;
   }
+  
   // Normalize all HTML elements to consistent small text
   :deep(h1), :deep(h2), :deep(h3), :deep(h4), :deep(h5), :deep(h6) {
     font-size: 0.875rem;
