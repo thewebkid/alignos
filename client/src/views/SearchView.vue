@@ -13,6 +13,8 @@ const currentPage = ref(1)
 
 const query = computed(() => route.query.q || '')
 const titleOnly = computed(() => route.query.titleOnly === 'true')
+const enhancedResults = ref([])
+const isEnhancing = ref(false)
 
 // Get all results without limit
 const allResults = computed(() => {
@@ -29,13 +31,61 @@ const allResults = computed(() => {
   })
 })
 
+// Enhance keyword matches by loading content
+const enhanceKeywordMatches = async (results) => {
+  if (!results || results.length === 0) return results
+  
+  isEnhancing.value = true
+  const enhanced = [...results]
+  
+  // Find keyword matches that need content loaded
+  const keywordMatches = enhanced.filter(r => 
+    r.match === 'keyword' && !r.codex.isContentLoaded()
+  )
+  
+  // Load content for top keyword matches (limit to avoid overwhelming)
+  const toLoad = keywordMatches.slice(0, 20)
+  
+  for (const result of toLoad) {
+    try {
+      // Load the content
+      await codexRegistry.ensureContentLoaded(result.codex.id)
+      
+      // Re-check if it's actually a content match
+      if (result.codex.containsText(query.value)) {
+        result.match = 'content'
+        result.snippet = result.codex.getSnippet(query.value, 150)
+        result.matchCount = codexRegistry.countMatches(result.codex, query.value)
+        result.score = 45 // Upgrade score to content match level
+      }
+    } catch (err) {
+      console.warn(`Failed to load content for ${result.codex.id}:`, err)
+    }
+  }
+  
+  // Re-sort by score after enhancement
+  enhanced.sort((a, b) => b.score - a.score)
+  
+  isEnhancing.value = false
+  return enhanced
+}
+
+// Watch for search changes and enhance results
+watch([allResults], async ([newResults]) => {
+  enhancedResults.value = await enhanceKeywordMatches(newResults)
+}, { immediate: true })
+
 // Paginated results
 const paginatedResults = computed(() => {
+  const results = enhancedResults.value.length > 0 ? enhancedResults.value : allResults.value
   const start = (currentPage.value - 1) * PAGE_SIZE
-  return allResults.value.slice(start, start + PAGE_SIZE)
+  return results.slice(start, start + PAGE_SIZE)
 })
 
-const totalPages = computed(() => Math.ceil(allResults.value.length / PAGE_SIZE))
+const totalPages = computed(() => {
+  const results = enhancedResults.value.length > 0 ? enhancedResults.value : allResults.value
+  return Math.ceil(results.length / PAGE_SIZE)
+})
 
 // Reset to page 1 when query or filter changes
 watch([query, titleOnly], () => {
@@ -131,7 +181,8 @@ const goToPage = (page) => {
       <header class="search-header">
         <h1>Search Results</h1>
         <p v-if="query" class="result-count">
-          {{ allResults.length }} result{{ allResults.length !== 1 ? 's' : '' }} for "<strong>{{ query }}</strong>"
+          {{ (enhancedResults.length > 0 ? enhancedResults : allResults).length }} result{{ (enhancedResults.length > 0 ? enhancedResults : allResults).length !== 1 ? 's' : '' }} for "<strong>{{ query }}</strong>"
+          <span v-if="isEnhancing" class="loading-indicator">Loading previews...</span>
         </p>
         
         <!-- Filter toggle -->
@@ -173,7 +224,7 @@ const goToPage = (page) => {
                 {{ result.matchCount }} {{ result.matchCount === 1 ? 'match' : 'matches' }}
               </span>
               <span v-else-if="result.match === 'title'" class="match-type">Title match</span>
-              <span v-else-if="result.match === 'keyword'" class="match-type">Keyword match</span>
+              <span v-else-if="result.match === 'content' && getHighlightedSnippet(result)" class="match-type">Found in content</span>
               <span v-if="result.codex.series" class="series-name">
                 {{ result.codex.series.name }}
               </span>
@@ -183,6 +234,12 @@ const goToPage = (page) => {
               v-if="getHighlightedSnippet(result)"
               v-html="getHighlightedSnippet(result)"
             ></div>
+            <div 
+              class="result-snippet no-preview" 
+              v-else-if="result.match === 'keyword' && isEnhancing"
+            >
+              Loading preview...
+            </div>
           </div>
         </button>
         
@@ -244,6 +301,13 @@ const goToPage = (page) => {
     
     strong {
       color: var(--cl-text);
+    }
+    
+    .loading-indicator {
+      margin-left: 0.5rem;
+      font-size: 0.875rem;
+      font-style: italic;
+      opacity: 0.7;
     }
   }
 }
@@ -362,6 +426,11 @@ const goToPage = (page) => {
   font-size: 0.875rem;
   color: var(--cl-text-muted);
   line-height: 1.6;
+  
+  &.no-preview {
+    font-style: italic;
+    opacity: 0.7;
+  }
   
   :deep(mark) {
     background: var(--cl-accent);

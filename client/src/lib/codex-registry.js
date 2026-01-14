@@ -326,11 +326,20 @@ export class CodexRegistry {
     const queryLower = query.toLowerCase();
     const addedIds = new Set();
     
-    // Helper to add result without duplicates
+    // Helper to add result without duplicates (or upgrade existing)
     const addResult = (codex, score, match, snippet = null, matchCount = null) => {
       if (!addedIds.has(codex.id)) {
         addedIds.add(codex.id);
         results.push({ codex, score, match, snippet, matchCount });
+      } else {
+        // Upgrade existing result if new score is higher
+        const existingResult = results.find(r => r.codex.id === codex.id);
+        if (existingResult && score > existingResult.score) {
+          existingResult.score = score;
+          existingResult.match = match;
+          existingResult.snippet = snippet;
+          existingResult.matchCount = matchCount;
+        }
       }
     };
     
@@ -354,14 +363,32 @@ export class CodexRegistry {
       }
     }
     
-    // Keyword search
+    // Content search (do this BEFORE keyword search so we get snippets)
+    if (searchIn.includes('content')) {
+      for (const codex of this.codexes.values()) {
+        if (codex.containsText(query)) {
+          const snippet = codex.getSnippet(query);
+          // Count matches if requested
+          let matchCount = null;
+          if (includeMatchCount) {
+            matchCount = this.countMatches(codex, query);
+          }
+          // Content matches with snippets get higher score than keyword-only matches
+          addResult(codex, 45, 'content', snippet, matchCount);
+        }
+      }
+    }
+    
+    // Keyword search (lower priority, only adds if no content match)
     if (searchIn.includes('keyword')) {
       for (const [keyword, codexIds] of this.keywordIndex) {
         if (keyword.includes(queryLower) || queryLower.includes(keyword)) {
-          const matchScore = keyword === queryLower ? 60 : 40;
+          const matchScore = keyword === queryLower ? 25 : 20;
           for (const id of codexIds) {
             const codex = this.get(id);
-            if (codex) addResult(codex, matchScore, 'keyword');
+            if (codex && !addedIds.has(codex.id)) {
+              addResult(codex, matchScore, 'keyword');
+            }
           }
         }
       }
@@ -372,23 +399,10 @@ export class CodexRegistry {
       for (const [seriesName, codexes] of this.series) {
         if (seriesName.toLowerCase().includes(queryLower)) {
           for (const codex of codexes) {
-            addResult(codex, 35, 'series');
+            if (!addedIds.has(codex.id)) {
+              addResult(codex, 15, 'series');
+            }
           }
-        }
-      }
-    }
-    
-    // Content search (lowest priority, most expensive)
-    if (searchIn.includes('content')) {
-      for (const codex of this.codexes.values()) {
-        if (!addedIds.has(codex.id) && codex.containsText(query)) {
-          const snippet = codex.getSnippet(query);
-          // Count matches if requested
-          let matchCount = null;
-          if (includeMatchCount) {
-            matchCount = this.countMatches(codex, query);
-          }
-          addResult(codex, 10, 'content', snippet, matchCount);
         }
       }
     }
@@ -406,6 +420,7 @@ export class CodexRegistry {
    * @returns {number}
    */
   countMatches(codex, query) {
+    if (!codex.markdown) return 0;
     const lower = codex.markdown.toLowerCase();
     const queryLower = query.toLowerCase();
     let count = 0;

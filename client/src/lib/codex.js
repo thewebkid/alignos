@@ -234,6 +234,7 @@ export class Codex {
    * @returns {boolean}
    */
   containsText(query) {
+    if (!this.markdown) return false;
     const lower = query.toLowerCase();
     return this.markdown.toLowerCase().includes(lower);
   }
@@ -245,6 +246,7 @@ export class Codex {
    * @returns {string|null}
    */
   getSnippet(query, contextChars = 100) {
+    if (!this.markdown) return null;
     const lower = this.markdown.toLowerCase();
     const idx = lower.indexOf(query.toLowerCase());
     if (idx === -1) return null;
@@ -269,6 +271,7 @@ export class Codex {
    * @returns {Array<{index: number, snippet: string}>}
    */
   getAllMatches(query, contextChars = 100, maxMatches = 5) {
+    if (!this.markdown) return [];
     const matches = [];
     const lower = this.markdown.toLowerCase();
     const queryLower = query.toLowerCase();
