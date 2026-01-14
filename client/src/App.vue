@@ -6,6 +6,7 @@ import AppFooter from './components/layout/AppFooter.vue'
 import SearchOverlay from './components/search/SearchOverlay.vue'
 import { initThemeEarly } from './composables/useTheme'
 import { BrowserCodex } from './lib/codex-browser.js'
+import { createGlossaryFromRegistry } from './lib/glossary.js'
 
 // Initialize theme as early as possible to prevent flash
 onBeforeMount(() => {
@@ -25,6 +26,10 @@ const closeSearch = () => {
   showSearch.value = false
 }
 
+// Inject codexRegistry and glossaryManager at setup level
+const codexRegistry = inject('codexRegistry')
+const glossaryManager = inject('glossaryManager')
+
 // Provide search control and lattice state to children
 provide('searchControls', { openSearch, closeSearch })
 provide('isLatticeLoaded', isLatticeLoaded)
@@ -35,7 +40,6 @@ onMounted(async () => {
   // Only run on client-side
   if (typeof window === 'undefined') return
   
-  const codexRegistry = inject('codexRegistry')
   if (!codexRegistry) {
     console.warn('CodexRegistry not found in App.vue')
     return
@@ -51,6 +55,32 @@ onMounted(async () => {
     // Replace the metadata-only codexes with full content codexes
     codexRegistry.codexes.clear()
     codexRegistry.loadFromData(fullLatticeData, BrowserCodex)
+    
+    // Refresh glossary manager with full content (metadata-only had no markdown)
+    if (glossaryManager) {
+      console.log('📖 Refreshing glossary manager with full content...')
+      const newGlossaryManager = createGlossaryFromRegistry(codexRegistry)
+      
+      // Update the existing glossaryManager object in-place
+      glossaryManager.terms = newGlossaryManager.terms
+      glossaryManager.aliases = newGlossaryManager.aliases
+      glossaryManager.highlightableTerms = newGlossaryManager.highlightableTerms
+      glossaryManager.termUsage = newGlossaryManager.termUsage
+      
+      console.log(`✨ Glossary refreshed! ${glossaryManager.size} terms loaded`)
+      
+      // Clear HTML caches on all codexes so they re-render with glossary terms
+      for (const codex of codexRegistry.codexes.values()) {
+        if (codex.clearCache) {
+          codex.clearCache()
+        }
+      }
+      
+      // Update window reference for debugging
+      if (typeof window !== 'undefined') {
+        window.glossaryManager = glossaryManager
+      }
+    }
     
     isLatticeLoaded.value = true
     console.log('✨ Full lattice loaded! Search now has instant previews for all results.')
