@@ -1,10 +1,11 @@
 <script setup>
-import { provide, ref, onBeforeMount } from 'vue'
+import { provide, ref, inject, onBeforeMount, onMounted } from 'vue'
 import { RouterView } from 'vue-router'
 import AppHeader from './components/layout/AppHeader.vue'
 import AppFooter from './components/layout/AppFooter.vue'
 import SearchOverlay from './components/search/SearchOverlay.vue'
 import { initThemeEarly } from './composables/useTheme'
+import { BrowserCodex } from './lib/codex-browser.js'
 
 // Initialize theme as early as possible to prevent flash
 onBeforeMount(() => {
@@ -13,6 +14,8 @@ onBeforeMount(() => {
 
 // Search overlay state
 const showSearch = ref(false)
+const isLatticeLoaded = ref(false)
+const latticeLoadError = ref(null)
 
 const openSearch = () => {
   showSearch.value = true
@@ -22,8 +25,40 @@ const closeSearch = () => {
   showSearch.value = false
 }
 
-// Provide search control to children
+// Provide search control and lattice state to children
 provide('searchControls', { openSearch, closeSearch })
+provide('isLatticeLoaded', isLatticeLoaded)
+provide('latticeLoadError', latticeLoadError)
+
+// Load full lattice in background after app mounts (client-side only)
+onMounted(async () => {
+  // Only run on client-side
+  if (typeof window === 'undefined') return
+  
+  const codexRegistry = inject('codexRegistry')
+  if (!codexRegistry) {
+    console.warn('CodexRegistry not found in App.vue')
+    return
+  }
+  
+  try {
+    console.log('🔮 Loading full lattice in background for instant search...')
+    
+    // Load full lattice (3.3 MB) asynchronously via dynamic import
+    const module = await import('./generated/codex-lattice.json')
+    const fullLatticeData = module.default
+    
+    // Replace the metadata-only codexes with full content codexes
+    codexRegistry.codexes.clear()
+    codexRegistry.loadFromData(fullLatticeData, BrowserCodex)
+    
+    isLatticeLoaded.value = true
+    console.log('✨ Full lattice loaded! Search now has instant previews for all results.')
+  } catch (error) {
+    console.error('Failed to load full lattice:', error)
+    latticeLoadError.value = error.message
+  }
+})
 
 // Global keyboard shortcuts
 const handleKeydown = (e) => {

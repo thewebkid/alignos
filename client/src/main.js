@@ -19,15 +19,15 @@ export const createApp = ViteSSG(
   { routes },
   async ({ app, router, routes, isClient, initialState }) => {
     // SSG (server-side) needs full content for pre-rendering
-    // Client-side loads full lattice in background for instant search
-    const latticeType = isClient ? 'full content (async)' : 'full content for SSG'
+    // Client-side loads metadata only initially, full lattice loads in App.vue
+    const latticeType = isClient ? 'metadata only (full loads in App.vue)' : 'full content for SSG'
     console.log(`🔮 Initializing Codex Lattice (${latticeType})...`)
     
     let latticeData
     if (isClient) {
-      // Client-side: load full lattice (3.3 MB) for instant search with all previews
-      // This loads asynchronously in the background after initial render
-      const module = await import('./generated/codex-lattice.json')
+      // Client-side: load metadata-only initially (127 KB)
+      // Full lattice will be loaded asynchronously in App.vue for search
+      const module = await import('./generated/codex-lattice-meta.json')
       latticeData = module.default
     } else {
       // SSG build: load full lattice (3.3 MB) - only used during pre-rendering

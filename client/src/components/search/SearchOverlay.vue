@@ -12,6 +12,8 @@ const emit = defineEmits(['close'])
 
 const router = useRouter()
 const codexRegistry = inject('codexRegistry')
+const isLatticeLoaded = inject('isLatticeLoaded')
+const latticeLoadError = inject('latticeLoadError')
 
 const searchInput = ref(null)
 const query = ref('')
@@ -19,7 +21,6 @@ const results = ref([])
 const selectedIndex = ref(0)
 const titleOnly = ref(false)
 const totalResultCount = ref(0)
-const isLatticeReady = ref(true) // Assume lattice is loaded (it loads in background on app init)
 
 // Track mousedown target to prevent drag-select from closing modal
 const mouseDownTarget = ref(null)
@@ -264,9 +265,22 @@ const goToFullResults = () => {
             <p>No codexes found for "{{ query }}"</p>
           </div>
           
+          <!-- Loading state -->
+          <div class="search-loading" v-else-if="!isLatticeLoaded && !latticeLoadError">
+            <p>Loading full search index...</p>
+            <p class="loading-subtext">This only happens once, then it's cached.</p>
+          </div>
+          
+          <!-- Error state -->
+          <div class="search-error" v-else-if="latticeLoadError">
+            <p>Failed to load search index: {{ latticeLoadError }}</p>
+            <button class="retry-button" @click="() => window.location.reload()">Retry</button>
+          </div>
+          
           <!-- Initial state -->
           <div class="search-initial" v-else>
             <p>Start typing to search through all codexes...</p>
+            <p class="search-hint-text" v-if="!isLatticeLoaded">Full search index loading in background...</p>
           </div>
           
           <!-- Footer with results count -->
@@ -432,6 +446,9 @@ const goToFullResults = () => {
 .result-content {
   flex: 1;
   min-width: 0;
+  img{
+    display: none;
+  }
 }
 
 .result-title {
@@ -460,7 +477,9 @@ const goToFullResults = () => {
   font-size: 0.875rem;
   color: var(--cl-text-muted);
   line-height: 1.5;
-  
+  img{
+    display: none !important;
+  }
   // Normalize all HTML elements to consistent small text
   :deep(h1), :deep(h2), :deep(h3), :deep(h4), :deep(h5), :deep(h6) {
     font-size: 0.875rem;
@@ -492,13 +511,50 @@ const goToFullResults = () => {
 }
 
 .search-empty,
-.search-initial {
+.search-initial,
+.search-loading,
+.search-error {
   padding: 2rem;
   text-align: center;
   color: var(--cl-text-muted);
   
   p {
     margin: 0;
+  }
+  
+  .loading-subtext,
+  .search-hint-text {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    opacity: 0.7;
+  }
+}
+
+.search-loading {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.search-error {
+  color: var(--cl-text);
+  
+  .retry-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: var(--cl-accent);
+    color: white;
+    border: none;
+    border-radius: var(--bs-border-radius);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    
+    &:hover {
+      opacity: 0.9;
+    }
   }
 }
 
