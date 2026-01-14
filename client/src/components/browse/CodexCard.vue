@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useReadingProgressStore } from '../../stores/readingProgress'
-import { vBTooltip } from 'bootstrap-vue-next'
+import { BTooltip } from 'bootstrap-vue-next'
 import { cdnUrl } from '../../lib/cdn-config.js'
 
 const props = defineProps({
@@ -47,8 +47,6 @@ const seriesBadge = computed(() => {
   return props.codex.series.name
 })
 
-// Popover configuration - simpler approach
-const showPopover = computed(() => !!props.tip)
 
 </script>
 
@@ -61,23 +59,27 @@ const showPopover = computed(() => !!props.tip)
       'is-started': isStarted && !isComplete,
       'is-unread': !isStarted
     }"
-  >
+  ><BTooltip placement="bottom"  :target="`thumb${codex.id}`">
+    <div v-if="tip">{{tip.split('|')[0]}}<br/>{{tip.split('|')[1]}}</div>
+    <div v-else>
+      Not started
+    </div>
+    <em>~{{codex.readingTime}} minute read</em>
+  </BTooltip>
     <!-- Cover image -->
-    <div
+    <div :id="`thumb${codex.id}`"
       class="card-cover"
-      v-b-tooltip="showPopover ? {
-        title: tip,
-        customClass: 'codex-progress-tip',
-        html: false
-      } : undefined"
     >
-      <img
-        v-if="coverSrc"
-        :src="coverSrc"
-        :alt="codex.title"
-        loading="lazy"
-        class="cover-image"
-      />
+
+        <img
+
+          v-if="coverSrc"
+          :src="coverSrc"
+          :alt="codex.title"
+          loading="lazy"
+          class="cover-image"
+        />
+
       <div v-else class="cover-placeholder">
         <span>{{ codex.title.charAt(0) }}</span>
       </div>

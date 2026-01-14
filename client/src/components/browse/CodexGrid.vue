@@ -21,7 +21,7 @@ const getTooltipText = (codex) => {
 
   const date = new Date(lastRead).toLocaleDateString();
   const time = new Date(lastRead).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  return `${percent}% complete<br/>Last read: ${date} ${time}`
+  return `${percent}% complete | Last read: ${date} ${time}`
 }
 </script>
 
