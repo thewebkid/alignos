@@ -72,7 +72,6 @@ const seriesBadge = computed(() => {
     >
 
         <img
-
           v-if="coverSrc"
           :src="coverSrc"
           :alt="codex.title"

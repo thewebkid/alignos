@@ -27,7 +27,7 @@ watch(codex, async (newCodex) => {
   if (newCodex && !newCodex.isContentLoaded()) {
     isLoadingContent.value = true
     contentLoadError.value = null
-    
+
     try {
       await codexRegistry.ensureContentLoaded(newCodex.id)
     } catch (error) {
@@ -106,14 +106,12 @@ onMounted(async () => {
 
   if (codex.value) {
     const savedPosition = progressStore.getScrollPosition(codex.value.id)
-    //debugger
-    if (savedPosition > 0) {
-      await nextTick()
-      // Small delay to ensure content is rendered
-      setTimeout(() => {
-        container.scrollTo({ top: savedPosition, behavior: 'instant' })
-      }, 100)
-    }
+    // Small delay to ensure content is rendered
+    await nextTick()
+    setTimeout(() => {
+      container.scrollTo({ top: savedPosition, behavior: 'instant' })
+    }, 100)
+
   }
 
   container.addEventListener('scroll', handleScroll, { passive: true })
@@ -277,12 +275,12 @@ const nextCodex = computed(() => {
             </div>
             <p class="mt-3 text-muted">Loading codex content...</p>
           </div>
-          
+
           <!-- Error message -->
           <div v-else-if="contentLoadError" class="alert alert-danger">
             <strong>Error loading content:</strong> {{ contentLoadError }}
           </div>
-          
+
           <!-- Content -->
           <div
             v-else
@@ -566,7 +564,7 @@ const nextCodex = computed(() => {
   justify-content: center;
   padding: 4rem 2rem;
   text-align: center;
-  
+
   p {
     color: var(--cl-text-muted);
     margin: 0;

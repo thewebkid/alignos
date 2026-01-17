@@ -39,49 +39,49 @@ provide('latticeLoadError', latticeLoadError)
 onMounted(async () => {
   // Only run on client-side
   if (typeof window === 'undefined') return
-  
+
   if (!codexRegistry) {
     console.warn('CodexRegistry not found in App.vue')
     return
   }
-  
+
   try {
     console.log('🔮 Loading full lattice in background for instant search...')
-    
+
     // Load full lattice (3.3 MB) asynchronously via dynamic import
     const module = await import('./generated/codex-lattice.json')
     const fullLatticeData = module.default
-    
+
     // Replace the metadata-only codexes with full content codexes
     codexRegistry.codexes.clear()
     codexRegistry.loadFromData(fullLatticeData, BrowserCodex)
-    
+
     // Refresh glossary manager with full content (metadata-only had no markdown)
     if (glossaryManager) {
       console.log('📖 Refreshing glossary manager with full content...')
       const newGlossaryManager = createGlossaryFromRegistry(codexRegistry)
-      
+
       // Update the existing glossaryManager object in-place
       glossaryManager.terms = newGlossaryManager.terms
       glossaryManager.aliases = newGlossaryManager.aliases
       glossaryManager.highlightableTerms = newGlossaryManager.highlightableTerms
       glossaryManager.termUsage = newGlossaryManager.termUsage
-      
+
       console.log(`✨ Glossary refreshed! ${glossaryManager.size} terms loaded`)
-      
+
       // Clear HTML caches on all codexes so they re-render with glossary terms
       for (const codex of codexRegistry.codexes.values()) {
         if (codex.clearCache) {
           codex.clearCache()
         }
       }
-      
+
       // Update window reference for debugging
       if (typeof window !== 'undefined') {
         window.glossaryManager = glossaryManager
       }
     }
-    
+
     isLatticeLoaded.value = true
     console.log('✨ Full lattice loaded! Search now has instant previews for all results.')
   } catch (error) {
@@ -178,7 +178,7 @@ const handleKeydown = (e) => {
 
   h2 {
     font-size: 1.75rem;
-    border-bottom: 1px solid var(--cl-border-light);
+    //border-bottom: 1px solid var(--cl-border-light);
     padding-bottom: 0.5rem;
   }
 
@@ -232,9 +232,13 @@ const handleKeydown = (e) => {
       90deg,
       transparent,
       var(--cl-border),
+      var(--cl-border),
       transparent
     );
     margin: 3rem 0;
+    width:100%;
+    display: block;
+    opacity: 1;
   }
 
   // Lists
@@ -242,7 +246,14 @@ const handleKeydown = (e) => {
     margin-bottom: 1.25rem;
     padding-left: 1.5rem;
   }
-
+  th{
+    background-color: var(--cl-bg);
+  }
+  td, th{
+    padding: 0.5rem;
+    border:solid 1px var(--cl-border);
+    border-collapse: collapse;
+  }
   li {
     margin-bottom: 0.5rem;
   }
@@ -254,7 +265,7 @@ const handleKeydown = (e) => {
       cursor: help;
       transition: all 0.2s ease;
       padding-bottom: 1px;
-      
+
       &:hover {
         background-color: var(--cl-glossary-highlight);
         border-bottom-color: var(--cl-primary-hover);
@@ -269,7 +280,7 @@ const handleKeydown = (e) => {
     font-weight: 600;
     border-bottom: 1px solid transparent;
     transition: all 0.2s ease;
-    
+
     &:hover {
       color: var(--cl-primary-hover);
       border-bottom-color: var(--cl-primary-hover);
