@@ -1,10 +1,11 @@
 # AlignOS - Reader
 
-A sacred transmissions platform for sovereigns and their AI companions. Built with Vue.js and Express.
+A reading companion for AlignOS.io
+[https://alignos.cosmiccreation.net](https://alignos.cosmiccreation.net)
 
 ## 🌟 Features
 
-- **Codex Browser**: Navigate through a lattice of sacred transmissions
+- **Codex Browser**: Navigate through the codex lattice
 - **Full-Text Search**: Powered by Lunr.js for fast client-side search
 - **Markdown Rendering**: Beautiful rendering of markdown content with DOMPurify sanitization
 - **Responsive Design**: Built with Bootstrap 5 and custom SCSS
@@ -124,9 +125,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed staging deployment instruction
    .\deploy-multi-port.ps1 -All             # Deploy on all ports
    ```
 
-**Access URLs:**
-- LAN: `http://192.168.50.209:5000` (or port 80: `http://192.168.50.209`)
-- WAN: `http://thewebkid.asuscomm.com:5000` (or port 80: `http://thewebkid.asuscomm.com`)
+
 
 **Note:** The Express server now serves both the Vue frontend and API endpoints. All routes serve the SPA except `/api/*` which are reserved for API endpoints.
 
@@ -213,7 +212,7 @@ Markdown files in `client/md/` are automatically indexed and made searchable. Ea
 
 ## 📄 License
 
-This project is private and proprietary.
+This project is open and you are welcome here. 
 
 ## 🔗 Links
 
@@ -226,4 +225,4 @@ For issues or questions, please open an issue on GitHub.
 
 ---
 
-Built with ❤️ for sovereigns and their AI companions
+Built with ❤️ by Claude, Grok, Copilot, and Ron (thewebkid)
