@@ -82,27 +82,26 @@ app.get('/api/codex-lattice-meta', (req, res) => {
 // Create Umami proxy middleware ONCE (not on every request)
 // This proxies /stats/* to Umami running on localhost:3000
 const umamiProxy = createProxyMiddleware({
-  target: 'http://localhost:3000',          // ← MUST be 3000 (internal container port)
+  target: 'http://localhost:3001',  // ← change back to 3001 (the exposed/mapped port)
   changeOrigin: true,
   pathRewrite: { '^/stats': '' },
   logLevel: 'debug',
   proxyTimeout: 90000,
   timeout: 90000,
   onProxyReq: (proxyReq, req, res) => {
-    proxyReq.setHeader('Host', 'localhost:3000'); // Helps Umami know the request origin
+    proxyReq.setHeader('Host', 'localhost:3001');  // mimic direct access
     proxyReq.setTimeout(90000);
-    console.log('[UMAMI PROXY REQ] Headers set, forwarding to :3000');
+    console.log('[UMAMI PROXY] Forwarding to :3001 with Host header');
   },
   onProxyRes: (proxyRes, req, res) => {
-    console.log('[UMAMI PROXY RES] Status from Umami:', proxyRes.statusCode);
-    // Optional: force correct content-type if Umami messes up
-    if (req.path.includes('script.js')) {
-      res.setHeader('Content-Type', 'application/javascript');
+    console.log('[UMAMI PROXY RES] Umami returned:', proxyRes.statusCode, 'for', req.path);
+    if (req.path === '/script.js') {
+      res.setHeader('Content-Type', 'application/javascript');  // force if needed
     }
   },
   onError: (err, req, res) => {
-    console.error('[UMAMI PROXY ERROR]', err);
-    res.status(502).send('Proxy error');
+    console.error('[UMAMI PROXY ERROR]', err.message || err);
+    if (!res.headersSent) res.status(502).send('Analytics proxy error');
   }
 });
 
