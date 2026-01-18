@@ -129,11 +129,14 @@ app.get('/api/codex/:id', (req, res) => {
 // Proxy Umami tracking script (GET)
 app.get('/stats/script.js', (req, res) => {
   if (req.hostname.includes('alignos.cosmiccreation.net')) {
-    console.log('[UMAMI PROXY] Proxying script.js to localhost:3001');
+    console.log('[UMAMI PROXY] Proxying script.js to localhost:3001/script.js');
+    
+    // Manually rewrite path since http-proxy doesn't support pathRewrite
+    req.url = '/script.js';
+    
     proxy.web(req, res, {
       target: 'http://localhost:3001',
-      changeOrigin: true,
-      pathRewrite: { '^/stats/script.js': '/script.js' }  // Ensures Umami sees the correct path
+      changeOrigin: true
     });
   } else {
     console.log('[UMAMI PROXY] Dev mode - returning empty script');
