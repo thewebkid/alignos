@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const httpProxy = require('http-proxy');
 require('dotenv').config();
 
 const app = express();
+const proxy = httpProxy.createProxyServer();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/alignos';
 
@@ -78,6 +80,20 @@ app.get('/api/codex-lattice-meta', (req, res) => {
   }
 });
 
+// Proxy Umami event submission (POST) - MUST come before /api/codex/:id to prevent route capture
+app.all('/api/send', (req, res) => {
+  if (req.hostname.includes('alignos.cosmiccreation.net')) {
+    console.log('[UMAMI PROXY] Proxying analytics event to localhost:3001');
+    proxy.web(req, res, {
+      target: 'http://localhost:3001',
+      changeOrigin: true
+    });
+  } else {
+    console.log('[UMAMI PROXY] Dev mode - ignoring analytics event');
+    res.status(200).json({});
+  }
+});
+
 // Individual codex content by ID
 app.get('/api/codex/:id', (req, res) => {
   console.log('[API] Codex by ID endpoint HIT! ID:', req.params.id);
@@ -107,6 +123,32 @@ app.get('/api/codex/:id', (req, res) => {
       error: 'Failed to load codex data',
       message: error.message
     });
+  }
+});
+
+// Proxy Umami tracking script (GET)
+app.get('/stats/script.js', (req, res) => {
+  if (req.hostname.includes('alignos.cosmiccreation.net')) {
+    console.log('[UMAMI PROXY] Proxying script.js to localhost:3001');
+    proxy.web(req, res, {
+      target: 'http://localhost:3001',
+      changeOrigin: true
+    });
+  } else {
+    console.log('[UMAMI PROXY] Dev mode - returning empty script');
+    res.setHeader('Content-Type', 'text/javascript');
+    res.send('');
+  }
+});
+
+// Error handling for proxy
+proxy.on('error', (err, req, res) => {
+  console.error('[UMAMI PROXY] Error:', err.message);
+  if (req.path === '/stats/script.js') {
+    res.setHeader('Content-Type', 'text/javascript');
+    res.send(''); // Return empty script if Umami is down
+  } else {
+    res.status(200).json({}); // Silent success for events
   }
 });
 
