@@ -79,26 +79,41 @@ app.get('/api/codex-lattice-meta', (req, res) => {
   }
 });
 
-// Proxy ALL /stats/* requests to Umami (script + events + dashboard)
-// This handles: /stats/script.js, /stats/api/send, and optionally /stats (dashboard)
+// Create Umami proxy middleware ONCE (not on every request)
+// This proxies /stats/* to Umami running on localhost:3000
+const umamiProxy = createProxyMiddleware({
+  target: 'http://localhost:3000',
+  changeOrigin: true,
+  pathRewrite: { '^/stats': '' },  // /stats/script.js → /script.js, /stats/api/send → /api/send
+  logLevel: 'debug',
+  proxyTimeout: 90 * 1000,         // 90 seconds server timeout
+  timeout: 90 * 1000,              // 90 seconds client timeout
+  onProxyReq: (proxyReq, req, res) => {
+    proxyReq.setTimeout(90000);    // socket-level timeout
+    console.log('[UMAMI PROXY] → Forwarding:', req.method, req.path);
+  },
+  onProxyRes: (proxyRes, req, res) => {
+    console.log('[UMAMI PROXY] ← Response:', proxyRes.statusCode, req.path);
+  },
+  onError: (err, req, res) => {
+    console.error('[UMAMI PROXY ERROR]', {
+      message: err.message,
+      code: err.code,
+      path: req.path,
+      method: req.method
+    });
+    // Don't send response if headers already sent
+    if (!res.headersSent) {
+      res.status(502).json({ error: 'Analytics proxy failed' });
+    }
+  }
+});
+
+// Use the proxy for production, return empty responses for dev
 app.use('/stats', (req, res, next) => {
   if (req.hostname.includes('alignos.cosmiccreation.net')) {
-    console.log('[UMAMI PROXY] Proxying', req.path, 'to localhost:3001');
-    createProxyMiddleware({
-      target: 'http://localhost:3001',
-      changeOrigin: true,
-      pathRewrite: { '^/stats': '' },  // /stats/script.js → /script.js, /stats/api/send → /api/send
-      logLevel: 'info',
-      onError: (err, req, res) => {
-        console.error('[UMAMI PROXY] Error:', err.message);
-        if (req.path.includes('script.js')) {
-          res.setHeader('Content-Type', 'text/javascript');
-          res.send('');
-        } else {
-          res.status(200).json({});
-        }
-      }
-    })(req, res, next);
+    console.log('[UMAMI PROXY] Handling request:', req.method, req.path);
+    umamiProxy(req, res, next);
   } else {
     // Dev mode - return empty responses
     if (req.path === '/script.js') {
