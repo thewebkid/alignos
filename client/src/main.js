@@ -22,7 +22,7 @@ export const createApp = ViteSSG(
     // Client-side loads metadata only initially, full lattice loads in App.vue
     const latticeType = isClient ? 'metadata only (full loads in App.vue)' : 'full content for SSG'
     console.log(`🔮 Initializing Codex Lattice (${latticeType})...`)
-    
+
     let latticeData
     if (isClient) {
       // Client-side: load metadata-only initially (127 KB)
@@ -34,14 +34,14 @@ export const createApp = ViteSSG(
       const module = await import('./generated/codex-lattice.json')
       latticeData = module.default
     }
-    
+
     const codexRegistry = new CodexRegistry().loadFromData(latticeData, BrowserCodex)
     const glossaryManager = createGlossaryFromRegistry(codexRegistry)
-    
+
     console.log(`✨ Loaded ${codexRegistry.size} codexes`)
     console.log(`📚 ${codexRegistry.getSeriesNames().length} series detected`)
     console.log(`📖 ${glossaryManager.size} glossary terms loaded`)
-    
+
     // Setup plugins
     const pinia = createPinia()
     app.use(pinia)
@@ -61,8 +61,12 @@ export const createApp = ViteSSG(
     if (isClient && router) {
       router.afterEach((to) => {
         // Track page views with Umami (if available)
-        if (typeof window !== 'undefined' && window.umami) {
-          window.umami.track({ url: to.fullPath });
+        if (typeof window !== 'undefined' && window.umami && location.hostname === 'alignos.cosmiccreation.net') {
+          window.umami.track({
+            url: to.fullPath/*,
+            website: '775e8dde-5362-4ec0-8c15-6ce5d88b7312',
+            hostname: 'alignos.cosmiccreation.net'*/
+          });
         }
       });
     }
