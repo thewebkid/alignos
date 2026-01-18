@@ -62,7 +62,7 @@ export const createApp = ViteSSG(
       router.afterEach((to) => {
         // Track page views with Umami (if available)
         if (typeof window !== 'undefined' && window.umami) {
-          window.umami.trackView(to.fullPath);
+          window.umami.track({ url: to.fullPath });
         }
       });
     }
