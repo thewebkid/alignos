@@ -132,7 +132,8 @@ app.get('/stats/script.js', (req, res) => {
     console.log('[UMAMI PROXY] Proxying script.js to localhost:3001');
     proxy.web(req, res, {
       target: 'http://localhost:3001',
-      changeOrigin: true
+      changeOrigin: true,
+      pathRewrite: { '^/stats/script.js': '/script.js' }  // Ensures Umami sees the correct path
     });
   } else {
     console.log('[UMAMI PROXY] Dev mode - returning empty script');

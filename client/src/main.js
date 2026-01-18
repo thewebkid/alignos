@@ -56,5 +56,15 @@ export const createApp = ViteSSG(
       window.codexRegistry = codexRegistry
       window.glossaryManager = glossaryManager
     }
+
+    // Analytics tracking for route changes (client-side only)
+    if (isClient && router) {
+      router.afterEach((to) => {
+        // Track page views with Umami (if available)
+        if (typeof window !== 'undefined' && window.umami) {
+          window.umami.trackView(to.fullPath);
+        }
+      });
+    }
   }
 )
