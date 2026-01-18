@@ -82,30 +82,27 @@ app.get('/api/codex-lattice-meta', (req, res) => {
 // Create Umami proxy middleware ONCE (not on every request)
 // This proxies /stats/* to Umami running on localhost:3000
 const umamiProxy = createProxyMiddleware({
-  target: 'http://localhost:3000',
+  target: 'http://localhost:3000',          // ← MUST be 3000 (internal container port)
   changeOrigin: true,
-  pathRewrite: { '^/stats': '' },  // /stats/script.js → /script.js, /stats/api/send → /api/send
+  pathRewrite: { '^/stats': '' },
   logLevel: 'debug',
-  proxyTimeout: 90 * 1000,         // 90 seconds server timeout
-  timeout: 90 * 1000,              // 90 seconds client timeout
+  proxyTimeout: 90000,
+  timeout: 90000,
   onProxyReq: (proxyReq, req, res) => {
-    proxyReq.setTimeout(90000);    // socket-level timeout
-    console.log('[UMAMI PROXY] → Forwarding:', req.method, req.path);
+    proxyReq.setHeader('Host', 'localhost:3000'); // Helps Umami know the request origin
+    proxyReq.setTimeout(90000);
+    console.log('[UMAMI PROXY REQ] Headers set, forwarding to :3000');
   },
   onProxyRes: (proxyRes, req, res) => {
-    console.log('[UMAMI PROXY] ← Response:', proxyRes.statusCode, req.path);
+    console.log('[UMAMI PROXY RES] Status from Umami:', proxyRes.statusCode);
+    // Optional: force correct content-type if Umami messes up
+    if (req.path.includes('script.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
   },
   onError: (err, req, res) => {
-    console.error('[UMAMI PROXY ERROR]', {
-      message: err.message,
-      code: err.code,
-      path: req.path,
-      method: req.method
-    });
-    // Don't send response if headers already sent
-    if (!res.headersSent) {
-      res.status(502).json({ error: 'Analytics proxy failed' });
-    }
+    console.error('[UMAMI PROXY ERROR]', err);
+    res.status(502).send('Proxy error');
   }
 });
 
@@ -222,19 +219,19 @@ app.use('/.well-known', express.static(path.join(__dirname, '../client/public/.w
 // This allows Vue Router to handle client-side routing
 app.use((req, res, next) => {
   console.log('[FALLBACK] Checking path:', req.path);
-  
+
   // Skip SPA fallback for API routes (double-check)
   if (req.path.startsWith('/api/')) {
     console.log('[FALLBACK] Skipping API route:', req.path);
     return next();
   }
-  
+
   // Skip if we already sent a response (static file was found)
   if (res.headersSent) {
     console.log('[FALLBACK] Headers already sent, skipping');
     return next();
   }
-  
+
   console.log('[FALLBACK] Serving index.html for:', req.path);
   // Serve index.html for all other routes
   res.sendFile(path.join(clientPath, 'index.html'));
