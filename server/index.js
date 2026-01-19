@@ -86,22 +86,21 @@ const umamiProxy = createProxyMiddleware({
   changeOrigin: true,
   pathRewrite: { '^/stats': '' },
   logLevel: 'debug',
-  proxyTimeout: 90000,
-  timeout: 90000,
+  proxyTimeout: 300000,  // 5 minutes
+  timeout: 300000,
   onProxyReq: (proxyReq, req, res) => {
-    proxyReq.setHeader('Host', 'localhost:3001');  // mimic direct access
-    proxyReq.setTimeout(90000);
-    console.log('[UMAMI PROXY] Forwarding to :3001 with Host header');
+    proxyReq.setTimeout(300000);
+    console.log('[UMAMI PROXY REQ] Method:', req.method, 'Path:', req.path, 'Headers:', req.headers);
+    // If body is parsed, log it (requires body-parser middleware earlier in app)
+    if (req.body) console.log('[UMAMI PROXY REQ] Body:', JSON.stringify(req.body));
   },
   onProxyRes: (proxyRes, req, res) => {
-    console.log('[UMAMI PROXY RES] Umami returned:', proxyRes.statusCode, 'for', req.path);
-    if (req.path === '/script.js') {
-      res.setHeader('Content-Type', 'application/javascript');  // force if needed
-    }
+    console.log('[UMAMI PROXY RES] Status:', proxyRes.statusCode, proxyRes.statusMessage, 'for', req.path);
+    console.log('[UMAMI PROXY RES] Headers:', proxyRes.headers);
   },
   onError: (err, req, res) => {
-    console.error('[UMAMI PROXY ERROR]', err.message || err);
-    if (!res.headersSent) res.status(502).send('Analytics proxy error');
+    console.error('[UMAMI PROXY ERROR FULL]', err.message, err.code, err.stack || err);
+    if (!res.headersSent) res.status(502).send('Umami proxy failed - check logs');
   }
 });
 
