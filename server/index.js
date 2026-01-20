@@ -16,11 +16,55 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/alignos';
 
+
+app.set('trust proxy', true);
+// Create Umami proxy middleware ONCE (not on every request)
+// This proxies /stats/* to Umami running on localhost:3000
+const umamiProxy = createProxyMiddleware({
+  target: 'http://localhost:3001',  // ← change back to 3001 (the exposed/mapped port)
+  changeOrigin: true,
+  pathRewrite: { '^/stats': '' },
+  logLevel: 'debug',
+  secure: false,
+  proxyTimeout: 300000,  // 5 minutes
+  timeout: 300000,
+  onProxyReq: (proxyReq, req, res) => {
+    proxyReq.setTimeout(300000);
+    console.log('[UMAMI PROXY REQ] Method:', req.method, 'Path:', req.path, 'Headers:', req.headers);
+    // If body is parsed, log it (requires body-parser middleware earlier in app)
+    if (req.body) console.log('[UMAMI PROXY REQ] Body:', JSON.stringify(req.body));
+  },
+  onProxyRes: (proxyRes, req, res) => {
+    console.log('[UMAMI PROXY RES] Status:', proxyRes.statusCode, proxyRes.statusMessage, 'for', req.path);
+    console.log('[UMAMI PROXY RES] Headers:', proxyRes.headers);
+  },
+  onError: (err, req, res) => {
+    console.error('[UMAMI PROXY ERROR FULL]', err.message, err.code, err.stack || err);
+    if (!res.headersSent) res.status(502).send('Umami proxy failed - check logs');
+  }
+});
+
+// Use the proxy for production, return empty responses for dev
+app.use('/stats', (req, res, next) => {
+  if (isProd) {
+
+    console.log('[UMAMI PROXY] Handling request:', req.method, req.path);
+    umamiProxy(req, res, next);
+  } else {
+    // Dev mode - return empty responses
+    if (req.path === '/script.js') {
+      console.log('[UMAMI PROXY] Dev mode - returning empty script');
+      res.setHeader('Content-Type', 'text/javascript');
+      res.send('');
+    } else {
+      console.log('[UMAMI PROXY] Dev mode - ignoring analytics event');
+      res.status(200).json({});
+    }
+  }
+});
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.set('trust proxy', true);
-
 // Log all incoming requests
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${req.ip}`);
@@ -85,59 +129,7 @@ app.get('/api/codex-lattice-meta', (req, res) => {
   }
 });
 
-// Create Umami proxy middleware ONCE (not on every request)
-// This proxies /stats/* to Umami running on localhost:3000
-const umamiProxy = createProxyMiddleware({
-  target: 'http://localhost:3001',  // ← change back to 3001 (the exposed/mapped port)
-  changeOrigin: true,
-  pathRewrite: { '^/stats': '' },
-  logLevel: 'debug',
-  secure: false,
-  proxyTimeout: 300000,  // 5 minutes
-  timeout: 300000,
-  onProxyReq: (proxyReq, req, res) => {
-    proxyReq.setTimeout(300000);
-    console.log('[UMAMI PROXY REQ] Method:', req.method, 'Path:', req.path, 'Headers:', req.headers);
-    // If body is parsed, log it (requires body-parser middleware earlier in app)
-    if (req.body) console.log('[UMAMI PROXY REQ] Body:', JSON.stringify(req.body));
-  },
-  onProxyRes: (proxyRes, req, res) => {
-    console.log('[UMAMI PROXY RES] Status:', proxyRes.statusCode, proxyRes.statusMessage, 'for', req.path);
-    console.log('[UMAMI PROXY RES] Headers:', proxyRes.headers);
-  },
-  onError: (err, req, res) => {
-    console.error('[UMAMI PROXY ERROR FULL]', err.message, err.code, err.stack || err);
-    if (!res.headersSent) res.status(502).send('Umami proxy failed - check logs');
-  }
-});
 
-// Use the proxy for production, return empty responses for dev
-app.use('/stats', (req, res, next) => {
-  if (isProd) {
-    console.log("---- INCOMING REQUEST ----");
-    console.log("Method:", req.method);
-    console.log("URL:", req.originalUrl);
-    console.log("Hostname:", req.hostname);
-    console.log("Headers:");
-    console.log("  Host:", req.headers.host);
-    console.log("  X-Forwarded-Host:", req.headers['x-forwarded-host']);
-    console.log("  X-Forwarded-Proto:", req.headers['x-forwarded-proto']);
-    console.log("  X-Forwarded-For:", req.headers['x-forwarded-for']);
-    console.log("--------------------------");
-    console.log('[UMAMI PROXY] Handling request:', req.method, req.path);
-    umamiProxy(req, res, next);
-  } else {
-    // Dev mode - return empty responses
-    if (req.path === '/script.js') {
-      console.log('[UMAMI PROXY] Dev mode - returning empty script');
-      res.setHeader('Content-Type', 'text/javascript');
-      res.send('');
-    } else {
-      console.log('[UMAMI PROXY] Dev mode - ignoring analytics event');
-      res.status(200).json({});
-    }
-  }
-});
 
 // Individual codex content by ID
 app.get('/api/codex/:id', (req, res) => {
