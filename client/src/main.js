@@ -56,19 +56,5 @@ export const createApp = ViteSSG(
       window.codexRegistry = codexRegistry
       window.glossaryManager = glossaryManager
     }
-
-    // Analytics tracking for route changes (client-side only)
-    if (isClient && router) {
-      router.afterEach((to) => {
-        // Track page views with Umami (if available)
-        if (typeof window !== 'undefined' && window.umami && location.hostname === 'alignos.cosmiccreation.net') {
-          window.umami.track({
-            url: to.fullPath/*,
-            website: '775e8dde-5362-4ec0-8c15-6ce5d88b7312',
-            hostname: 'alignos.cosmiccreation.net'*/
-          });
-        }
-      });
-    }
   }
 )
