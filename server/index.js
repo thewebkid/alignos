@@ -97,6 +97,17 @@ const umamiProxy = createProxyMiddleware({
   timeout: 300000,
   onProxyReq: (proxyReq, req, res) => {
     proxyReq.setTimeout(300000);
+    console.log("---- INCOMING REQUEST ----");
+    console.log("Method:", req.method);
+    console.log("URL:", req.originalUrl);
+    console.log("Hostname:", req.hostname);
+    console.log("Headers:");
+    console.log("  Host:", req.headers.host);
+    console.log("  X-Forwarded-Host:", req.headers['x-forwarded-host']);
+    console.log("  X-Forwarded-Proto:", req.headers['x-forwarded-proto']);
+    console.log("  X-Forwarded-For:", req.headers['x-forwarded-for']);
+    console.log("--------------------------");
+
     console.log('[UMAMI PROXY REQ] Method:', req.method, 'Path:', req.path, 'Headers:', req.headers);
     // If body is parsed, log it (requires body-parser middleware earlier in app)
     if (req.body) console.log('[UMAMI PROXY REQ] Body:', JSON.stringify(req.body));
