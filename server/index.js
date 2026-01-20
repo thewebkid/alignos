@@ -6,6 +6,12 @@ const fs = require('fs');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 require('dotenv').config();
 
+const certDir = path.join('C:', 'inetpub', 'alignos', 'certs');
+const isProd = fs.existsSync(certDir);
+
+console.log("Environment:", isProd ? "PRODUCTION" : "DEVELOPMENT");
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/alignos';
@@ -106,7 +112,7 @@ const umamiProxy = createProxyMiddleware({
 
 // Use the proxy for production, return empty responses for dev
 app.use('/stats', (req, res, next) => {
-  if (req.hostname.includes('alignos.cosmiccreation.net')) {
+  if (isProd) {
     console.log('[UMAMI PROXY] Handling request:', req.method, req.path);
     umamiProxy(req, res, next);
   } else {
