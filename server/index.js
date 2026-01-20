@@ -92,6 +92,7 @@ const umamiProxy = createProxyMiddleware({
   changeOrigin: true,
   pathRewrite: { '^/stats': '' },
   logLevel: 'debug',
+  secure: false,
   proxyTimeout: 300000,  // 5 minutes
   timeout: 300000,
   onProxyReq: (proxyReq, req, res) => {
