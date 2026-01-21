@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const promClient = require('prom-client');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 require('dotenv').config();
 
@@ -13,6 +14,37 @@ console.log("Environment:", isProd ? "PRODUCTION" : "DEVELOPMENT");
 
 
 const app = express();
+// Default metrics (CPU, memory, event loop lag, etc.)
+promClient.collectDefaultMetrics();
+
+// Custom metrics (you can add more later)
+const httpRequestDuration = new promClient.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route', 'status'],
+  buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2]
+});
+
+// Middleware to measure request duration
+app.use((req, res, next) => {
+  const end = httpRequestDuration.startTimer();
+  res.on('finish', () => {
+    end({ method: req.method, route: req.path, status: res.statusCode });
+  });
+  next();
+});
+
+// Prometheus metrics endpoint
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', promClient.register.contentType);
+  res.end(await promClient.register.metrics());
+});
+
+app.listen(8080, () => console.log('Prometheus Server running on 8080'));
+
+
+
+
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/alignos';
 
