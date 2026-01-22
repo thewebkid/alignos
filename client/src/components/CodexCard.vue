@@ -1,9 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useReadingProgressStore } from '../../stores/readingProgress'
+import { useReadingProgressStore } from '../stores/readingProgress.js'
 import { BTooltip } from 'bootstrap-vue-next'
-import { cdnUrl } from '../../lib/cdn-config.js'
+import { cdnUrl } from '../lib/cdn-config.js'
 
 const props = defineProps({
   codex: {

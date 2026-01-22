@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed, watch, inject, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { markdown2Html } from '../../lib/markdown'
-import { cdnUrl } from '../../lib/cdn-config.js'
+import { markdown2Html } from '../lib/markdown.js'
+import { cdnUrl } from '../lib/cdn-config.js'
 
 const props = defineProps({
   show: Boolean
@@ -38,6 +38,7 @@ watch(() => props.show, async (newShow) => {
   }
 })
 
+
 // Perform search with current settings
 const performSearch = () => {
   const q = query.value.trim()
@@ -46,20 +47,20 @@ const performSearch = () => {
     totalResultCount.value = 0
     return
   }
-  
+
   if (codexRegistry) {
-    const searchIn = titleOnly.value 
-      ? ['title'] 
+    const searchIn = titleOnly.value
+      ? ['title']
       : ['title', 'keyword', 'content']
-    
+
     // Search with higher limit to show more results in overlay
     // All results now have instant snippets since full lattice is loaded
-    const searchResults = codexRegistry.search(q, { 
-      limit: 50, 
+    const searchResults = codexRegistry.search(q, {
+      limit: 50,
       searchIn,
       includeMatchCount: true
     })
-    
+
     results.value = searchResults.map(result => {
       // search returns { codex, score, match, snippet, matchCount }
       return {
@@ -72,9 +73,10 @@ const performSearch = () => {
       }
     })
     selectedIndex.value = 0
-    
+
     // Get total count for "see more" link
     totalResultCount.value = codexRegistry.getTotalResultCount(q, { searchIn })
+
   }
 }
 
@@ -89,30 +91,30 @@ const getSnippet = (codex, searchQuery) => {
   if (!codex) return ''
   let snippet = codex.getSnippet(searchQuery, 120)
   if (!snippet) return ''
-  
+
   // Remove cover image markdown (e.g., ![alt](path) or ![](path)) - must be done first
   snippet = snippet.replace(/!\[[^\]]*\]\([^)]*\)/g, '')
-  
+
   // Remove any remaining image-like patterns (broken markdown)
   snippet = snippet.replace(/!\[[^\]]*\]/g, '')
-  
+
   // Remove heading markdown (# ## ### etc.) and just keep the text
   snippet = snippet.replace(/^#{1,6}\s+/gm, '')
-  
+
   // Remove "(Cover Image)" text that might appear
   snippet = snippet.replace(/\(Cover Image\)/gi, '')
-  
+
   // Clean up multiple spaces and trim
   snippet = snippet.replace(/\s+/g, ' ').trim()
-  
+
   if (!snippet) return ''
-  
+
   // Convert markdown to HTML
   let html = markdown2Html(snippet) || snippet
-  
+
   // Remove any <img> tags that may have been generated
   html = html.replace(/<img[^>]*>/gi, '')
-  
+
   // Highlight matching text
   const regex = new RegExp(`(${escapeRegex(searchQuery)})`, 'gi')
   return html.replace(regex, '<mark>$1</mark>')
@@ -140,7 +142,19 @@ const handleKeydown = (e) => {
 
 // Select a result
 const selectResult = (result) => {
-  if (result?.codex) {
+  if (result?.codex){
+    try{
+      if (window.umami){
+        umami.track('searchResultChosen', {
+          q: query.value.trim(),
+          codex: result.codex.id,
+          searchPage: false,
+          titleOnly: titleOnly.value
+        });
+      }
+    }catch(ex){
+      console.warn('umami track search error');
+    }
     router.push({ name: 'reader', params: { id: result.codex.id } })
     emit('close')
   }
@@ -155,6 +169,15 @@ const handleMouseDown = (e) => {
 const handleBackdropClick = (e) => {
   // Only close if both mousedown and mouseup happened on the backdrop
   if (e.target === e.currentTarget && mouseDownTarget.value === e.currentTarget) {
+    try{
+      if (window.umami){
+        const eventName = titleOnly.value ? 'closeSearchTitle' : 'closeSearchAll'
+        umami.track(eventName, { q: query.value.trim() });
+      }
+    }catch(ex){
+      console.warn('umami track search error');
+    }
+
     emit('close')
   }
   mouseDownTarget.value = null
@@ -183,8 +206,8 @@ const goToFullResults = () => {
 <template>
   <Teleport to="body">
     <Transition name="overlay">
-      <div 
-        v-if="show" 
+      <div
+        v-if="show"
         class="search-overlay"
         @mousedown="handleMouseDown"
         @click="handleBackdropClick"
@@ -206,8 +229,8 @@ const goToFullResults = () => {
               autocomplete="off"
             />
             <label class="title-only-toggle">
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 v-model="titleOnly"
               />
               <span>Titles only</span>
@@ -219,7 +242,7 @@ const goToFullResults = () => {
               </svg>
             </button>
           </div>
-          
+
           <!-- Results -->
           <div class="search-results" v-if="results.length > 0">
             <button
@@ -231,8 +254,8 @@ const goToFullResults = () => {
               @mouseenter="selectedIndex = index"
             >
               <div class="result-cover" v-if="result.codex?.coverImage">
-                <img 
-                  :src="cdnUrl.cover(result.codex.coverImage)" 
+                <img
+                  :src="cdnUrl.cover(result.codex.coverImage)"
                   :alt="result.codex.title"
                   loading="lazy"
                   @error="handleImageError"
@@ -241,8 +264,8 @@ const goToFullResults = () => {
               <div class="result-content">
                 <div class="result-title">{{ result.codex?.title }}</div>
                 <div class="result-meta">
-                  <span 
-                    v-if="result.matchCount && result.match === 'content'" 
+                  <span
+                    v-if="result.matchCount && result.match === 'content'"
                     class="match-count"
                   >
                     {{ result.matchCount }} {{ result.matchCount === 1 ? 'match' : 'matches' }}
@@ -250,39 +273,39 @@ const goToFullResults = () => {
                   <span v-else-if="result.match === 'title'" class="match-type">Title match</span>
                   <span v-else-if="result.match === 'keyword'" class="match-type">Keyword match</span>
                 </div>
-                <div 
-                  class="result-snippet" 
+                <div
+                  class="result-snippet"
                   v-if="result.snippet"
                   v-html="result.snippet"
                 ></div>
               </div>
             </button>
-            
+
           </div>
-          
+
           <!-- Empty state -->
           <div class="search-empty" v-else-if="query.trim()">
             <p>No codexes found for "{{ query }}"</p>
           </div>
-          
+
           <!-- Loading state -->
           <div class="search-loading" v-else-if="!isLatticeLoaded && !latticeLoadError">
             <p>Loading full search index...</p>
             <p class="loading-subtext">This only happens once, then it's cached.</p>
           </div>
-          
+
           <!-- Error state -->
           <div class="search-error" v-else-if="latticeLoadError">
             <p>Failed to load search index: {{ latticeLoadError }}</p>
             <button class="retry-button" @click="() => window.location.reload()">Retry</button>
           </div>
-          
+
           <!-- Initial state -->
           <div class="search-initial" v-else>
             <p>Start typing to search through all codexes...</p>
             <p class="search-hint-text" v-if="!isLatticeLoaded">Full search index loading in background...</p>
           </div>
-          
+
           <!-- Footer with results count -->
           <div class="search-footer" v-if="results.length > 0">
             <span class="results-count">
@@ -340,7 +363,7 @@ const goToFullResults = () => {
   font-size: 1.125rem;
   color: var(--cl-text);
   outline: none;
-  
+
   &::placeholder {
     color: var(--cl-text-muted);
   }
@@ -367,12 +390,12 @@ const goToFullResults = () => {
   border-radius: 4px;
   transition: all 0.2s ease;
   user-select: none;
-  
+
   &:hover {
     background: var(--cl-surface-hover);
     color: var(--cl-text);
   }
-  
+
   input {
     accent-color: var(--cl-accent);
     cursor: pointer;
@@ -391,12 +414,12 @@ const goToFullResults = () => {
   border-radius: 4px;
   transition: all 0.2s ease;
   flex-shrink: 0;
-  
+
   &:hover {
     background: var(--cl-surface-hover);
     color: var(--cl-text);
   }
-  
+
   &:active {
     transform: scale(0.95);
   }
@@ -418,12 +441,12 @@ const goToFullResults = () => {
   background: transparent;
   cursor: pointer;
   transition: background-color 0.1s ease;
-  
+
   &:hover,
   &.selected {
     background: var(--cl-surface-hover);
   }
-  
+
   & + & {
     border-top: 1px solid var(--cl-border-light);
   }
@@ -435,7 +458,7 @@ const goToFullResults = () => {
   border-radius: var(--bs-border-radius-sm);
   overflow: hidden;
   flex-shrink: 0;
-  
+
   img {
     width: 100%;
     height: 100%;
@@ -446,7 +469,7 @@ const goToFullResults = () => {
 .result-content {
   flex: 1;
   min-width: 0;
-  
+
   :deep(img) {
     display: none;
   }
@@ -478,11 +501,11 @@ const goToFullResults = () => {
   font-size: 0.875rem;
   color: var(--cl-text-muted);
   line-height: 1.5;
-  
+
   :deep(img) {
     display: none !important;
   }
-  
+
   // Normalize all HTML elements to consistent small text
   :deep(h1), :deep(h2), :deep(h3), :deep(h4), :deep(h5), :deep(h6) {
     font-size: 0.875rem;
@@ -490,21 +513,21 @@ const goToFullResults = () => {
     margin: 0;
     display: inline;
   }
-  
+
   :deep(p) {
     font-size: 0.875rem;
     margin: 0;
     display: inline;
   }
-  
+
   :deep(strong), :deep(b) {
     font-weight: 600;
   }
-  
+
   :deep(em), :deep(i) {
     font-style: italic;
   }
-  
+
   :deep(mark) {
     background: var(--cl-accent);
     color: white;
@@ -520,11 +543,11 @@ const goToFullResults = () => {
   padding: 2rem;
   text-align: center;
   color: var(--cl-text-muted);
-  
+
   p {
     margin: 0;
   }
-  
+
   .loading-subtext,
   .search-hint-text {
     margin-top: 0.5rem;
@@ -544,7 +567,7 @@ const goToFullResults = () => {
 
 .search-error {
   color: var(--cl-text);
-  
+
   .retry-button {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
@@ -554,7 +577,7 @@ const goToFullResults = () => {
     border-radius: var(--bs-border-radius);
     cursor: pointer;
     transition: opacity 0.2s ease;
-    
+
     &:hover {
       opacity: 0.9;
     }
@@ -569,12 +592,12 @@ const goToFullResults = () => {
   padding: 0.75rem;
   background: var(--cl-surface-hover);
   border-top: 1px solid var(--cl-border-light);
-  
+
   .results-count {
     font-size: 0.875rem;
     color: var(--cl-text-muted);
   }
-  
+
   .see-all-button {
     background: transparent;
     border: none;
@@ -585,12 +608,12 @@ const goToFullResults = () => {
     padding: 0.25rem 0.5rem;
     border-radius: var(--bs-border-radius);
     transition: all 0.2s ease;
-    
+
     &:hover {
       background: var(--cl-surface);
       text-decoration: underline;
     }
-    
+
     &::after {
       content: ' →';
     }
@@ -601,7 +624,7 @@ const goToFullResults = () => {
 .overlay-enter-active,
 .overlay-leave-active {
   transition: opacity 0.2s ease;
-  
+
   .search-modal {
     transition: transform 0.2s ease, opacity 0.2s ease;
   }
@@ -610,7 +633,7 @@ const goToFullResults = () => {
 .overlay-enter-from,
 .overlay-leave-to {
   opacity: 0;
-  
+
   .search-modal {
     transform: scale(0.95) translateY(-10px);
     opacity: 0;

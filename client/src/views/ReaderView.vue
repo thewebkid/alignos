@@ -3,7 +3,7 @@ import { ref, computed, inject, onMounted, onUnmounted, watch, nextTick } from '
 import { useRoute, useRouter } from 'vue-router'
 import { useReadingProgressStore } from '../stores/readingProgress'
 import { BDropdown, BDropdownItem } from 'bootstrap-vue-next'
-import GlossaryPopover from '../components/content/GlossaryPopover.vue'
+import GlossaryPopover from '../components/GlossaryPopover.vue'
 import { cdnUrl } from '../lib/cdn-config.js'
 
 const route = useRoute()

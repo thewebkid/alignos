@@ -17,14 +17,14 @@ const titleOnly = computed(() => route.query.titleOnly === 'true')
 // Get all results without limit - all content is instantly available
 const allResults = computed(() => {
   if (!query.value.trim() || !codexRegistry) return []
-  
-  const searchIn = titleOnly.value 
-    ? ['title'] 
+
+  const searchIn = titleOnly.value
+    ? ['title']
     : ['title', 'keyword', 'content']
-  
+
   // Search with high limit to get all results
   // All results now have instant snippets and match counts
-  return codexRegistry.search(query.value, { 
+  return codexRegistry.search(query.value, {
     limit: 1000, // High limit for full results
     searchIn,
     includeMatchCount: true
@@ -58,35 +58,47 @@ const toggleTitleOnly = () => {
 
 // Navigate to a codex
 const navigateToCodex = (codexId) => {
+  try{
+    if (window.umami){
+      umami.track('searchResultChosen', {
+        q: query.value.trim(),
+        codex: codexId,
+        searchPage: true,
+        titleOnly: titleOnly.value
+      });
+    }
+  }catch(ex){
+    console.warn('umami track search error');
+  }
   router.push({ name: 'reader', params: { id: codexId } })
 }
 
 // Clean snippet of markdown artifacts
 const cleanSnippet = (snippet) => {
   if (!snippet) return ''
-  
+
   // Remove cover image markdown (e.g., ![alt](path) or ![](path)) - must be done first
   snippet = snippet.replace(/!\[[^\]]*\]\([^)]*\)/g, '')
-  
+
   // Remove any remaining image-like patterns (broken markdown)
   snippet = snippet.replace(/!\[[^\]]*\]/g, '')
-  
+
   // Remove heading markdown (# ## ### etc.) and just keep the text
   snippet = snippet.replace(/^#{1,6}\s+/gm, '')
-  
+
   // Remove "(Cover Image)" text that might appear
   snippet = snippet.replace(/\(Cover Image\)/gi, '')
-  
+
   // Clean up multiple spaces and trim
   snippet = snippet.replace(/\s+/g, ' ').trim()
-  
+
   return snippet
 }
 
 // Get snippet with highlighting
 const getHighlightedSnippet = (result) => {
   let snippet = result.snippet
-  
+
   if (!snippet) {
     // Generate snippet for title/keyword matches
     const codex = result.codex
@@ -94,20 +106,20 @@ const getHighlightedSnippet = (result) => {
       snippet = codex.getSnippet(query.value, 150)
     }
   }
-  
+
   if (!snippet) return ''
-  
+
   // Clean the snippet first (before any HTML conversion)
   snippet = cleanSnippet(snippet)
-  
+
   if (!snippet) return ''
-  
+
   // Convert markdown to HTML
   let html = markdown2Html(snippet) || snippet
-  
+
   // Remove any <img> tags that may have been generated
   html = html.replace(/<img[^>]*>/gi, '')
-  
+
   // Highlight matching text
   const regex = new RegExp(`(${escapeRegex(query.value)})`, 'gi')
   return html.replace(regex, '<mark>$1</mark>')
@@ -137,12 +149,12 @@ const goToPage = (page) => {
         <p v-if="query" class="result-count">
           {{ allResults.length }} result{{ allResults.length !== 1 ? 's' : '' }} for "<strong>{{ query }}</strong>"
         </p>
-        
+
         <!-- Filter toggle -->
         <div class="search-filters" v-if="query">
           <label class="filter-toggle">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               :checked="titleOnly"
               @change="toggleTitleOnly"
             />
@@ -150,7 +162,7 @@ const goToPage = (page) => {
           </label>
         </div>
       </header>
-      
+
       <!-- Results list -->
       <div class="search-results" v-if="paginatedResults.length > 0">
         <button
@@ -160,8 +172,8 @@ const goToPage = (page) => {
           @click="navigateToCodex(result.codex.id)"
         >
           <div class="result-cover" v-if="result.codex.coverImage">
-            <img 
-              :src="cdnUrl.cover(result.codex.coverImage)" 
+            <img
+              :src="cdnUrl.cover(result.codex.coverImage)"
               :alt="result.codex.title"
               loading="lazy"
               @error="handleImageError"
@@ -170,8 +182,8 @@ const goToPage = (page) => {
           <div class="result-content">
             <h2 class="result-title">{{ result.codex.title }}</h2>
             <div class="result-meta">
-              <span 
-                v-if="result.matchCount && result.match === 'content'" 
+              <span
+                v-if="result.matchCount && result.match === 'content'"
                 class="match-count"
               >
                 {{ result.matchCount }} {{ result.matchCount === 1 ? 'match' : 'matches' }}
@@ -182,30 +194,30 @@ const goToPage = (page) => {
                 {{ result.codex.series.name }}
               </span>
             </div>
-            <div 
-              class="result-snippet" 
+            <div
+              class="result-snippet"
               v-if="getHighlightedSnippet(result)"
               v-html="getHighlightedSnippet(result)"
             ></div>
           </div>
         </button>
-        
+
         <!-- Pagination -->
         <div class="pagination" v-if="totalPages > 1">
-          <button 
-            class="page-btn" 
+          <button
+            class="page-btn"
             :disabled="currentPage === 1"
             @click="goToPage(currentPage - 1)"
           >
             Previous
           </button>
-          
+
           <span class="page-info">
             Page {{ currentPage }} of {{ totalPages }}
           </span>
-          
-          <button 
-            class="page-btn" 
+
+          <button
+            class="page-btn"
             :disabled="currentPage === totalPages"
             @click="goToPage(currentPage + 1)"
           >
@@ -213,15 +225,15 @@ const goToPage = (page) => {
           </button>
         </div>
       </div>
-      
+
       <div class="no-results" v-else-if="query">
         <p>No codexes found matching your search.</p>
-        <RouterLink to="/" class="btn btn-primary">Browse All Codexes</RouterLink>
+        <RouterLink to="/" class="btn btn-primary">Codex Lattice</RouterLink>
       </div>
-      
+
       <div class="no-query" v-else>
         <p>Enter a search term to find codexes.</p>
-        <RouterLink to="/" class="btn btn-primary">Browse All Codexes</RouterLink>
+        <RouterLink to="/" class="btn btn-primary">Codex Lattice</RouterLink>
       </div>
     </div>
   </div>
@@ -235,17 +247,17 @@ const goToPage = (page) => {
 .search-header {
   text-align: center;
   margin-bottom: 2rem;
-  
+
   h1 {
     font-family: var(--bs-font-serif);
     color: var(--cl-text-heading);
     margin-bottom: 0.5rem;
   }
-  
+
   .result-count {
     color: var(--cl-text-muted);
     margin-bottom: 1rem;
-    
+
     strong {
       color: var(--cl-text);
     }
@@ -270,12 +282,12 @@ const goToPage = (page) => {
   background: var(--cl-surface);
   border: 1px solid var(--cl-border-light);
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: var(--cl-surface-hover);
     color: var(--cl-text);
   }
-  
+
   input {
     accent-color: var(--cl-accent);
     cursor: pointer;
@@ -300,7 +312,7 @@ const goToPage = (page) => {
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 1rem;
-  
+
   &:hover {
     background: var(--cl-surface-hover);
     transform: translateY(-2px);
@@ -314,7 +326,7 @@ const goToPage = (page) => {
   border-radius: var(--bs-border-radius-sm);
   overflow: hidden;
   flex-shrink: 0;
-  
+
   img {
     width: 100%;
     height: 100%;
@@ -355,7 +367,7 @@ const goToPage = (page) => {
 
 .series-name {
   color: var(--cl-text-muted);
-  
+
   &::before {
     content: '•';
     margin-right: 0.5rem;
@@ -366,22 +378,22 @@ const goToPage = (page) => {
   font-size: 0.875rem;
   color: var(--cl-text-muted);
   line-height: 1.6;
-  
-  
+
+
   :deep(mark) {
     background: var(--cl-accent);
     color: white;
     padding: 0 0.125rem;
     border-radius: 2px;
   }
-  
+
   :deep(h1), :deep(h2), :deep(h3), :deep(h4), :deep(h5), :deep(h6) {
     font-size: 0.875rem;
     font-weight: 500;
     margin: 0;
     display: inline;
   }
-  
+
   :deep(p) {
     font-size: 0.875rem;
     margin: 0;
@@ -408,11 +420,11 @@ const goToPage = (page) => {
   border-radius: var(--bs-border-radius);
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover:not(:disabled) {
     background: var(--cl-surface-hover);
   }
-  
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -428,7 +440,7 @@ const goToPage = (page) => {
 .no-query {
   text-align: center;
   padding: 4rem 2rem;
-  
+
   p {
     color: var(--cl-text-muted);
     margin-bottom: 1.5rem;
@@ -443,11 +455,11 @@ const goToPage = (page) => {
   text-decoration: none;
   border-radius: var(--bs-border-radius);
   transition: all 0.2s ease;
-  
+
   &.btn-primary {
     background: var(--cl-accent);
     color: white;
-    
+
     &:hover {
       opacity: 0.9;
     }

@@ -1,6 +1,6 @@
 <script setup>
 import CodexCard from './CodexCard.vue'
-import { useReadingProgressStore } from '../../stores/readingProgress.js'
+import { useReadingProgressStore } from '../stores/readingProgress.js'
 
 defineProps({
   codexes: {

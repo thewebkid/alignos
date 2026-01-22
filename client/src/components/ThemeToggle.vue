@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useTheme } from '../../composables/useTheme'
+import { useTheme } from '../composables/useTheme.js'
 
 const props = defineProps({
   variant: {

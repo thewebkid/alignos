@@ -1,9 +1,9 @@
 <script setup>
 import { provide, ref, inject, onBeforeMount, onMounted } from 'vue'
 import { RouterView } from 'vue-router'
-import AppHeader from './components/layout/AppHeader.vue'
-import AppFooter from './components/layout/AppFooter.vue'
-import SearchOverlay from './components/search/SearchOverlay.vue'
+import AppHeader from './components/AppHeader.vue'
+import AppFooter from './components/AppFooter.vue'
+import SearchOverlay from './components/SearchOverlay.vue'
 import { initThemeEarly } from './composables/useTheme'
 import { BrowserCodex } from './lib/codex-browser.js'
 import { createGlossaryFromRegistry } from './lib/glossary.js'

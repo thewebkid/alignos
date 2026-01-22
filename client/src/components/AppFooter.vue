@@ -1,5 +1,5 @@
 <script setup>
-import { useReadingProgressStore } from '../../stores/readingProgress'
+import { useReadingProgressStore } from '../stores/readingProgress.js'
 import { computed, inject } from 'vue'
 
 const progressStore = useReadingProgressStore()

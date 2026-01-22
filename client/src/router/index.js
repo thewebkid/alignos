@@ -2,7 +2,7 @@ const routes = [
   {
     path: '/',
     name: 'browse',
-    component: () => import('../views/BrowseView.vue'),
+    component: () => import('../views/CodexLattice.vue'),
     meta: { title: 'Codex Lattice' }
   },
   {
@@ -16,12 +16,6 @@ const routes = [
     name: 'search',
     component: () => import('../views/SearchView.vue'),
     meta: { title: 'Search' }
-  },
-  {
-    path: '/faq',
-    name: 'faq',
-    component: () => import('../views/FaqView.vue'),
-    meta: { title: 'FAQ' }
   },
   {
     path: '/about',

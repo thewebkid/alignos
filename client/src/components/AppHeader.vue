@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import ThemeToggle from '../ui/ThemeToggle.vue'
+import ThemeToggle from './ThemeToggle.vue'
 
 const emit = defineEmits(['open-search'])
 const route = useRoute()
@@ -40,10 +40,10 @@ const handleSearchClick = () => {
                 <stop offset="100%" style="stop-color:var(--cl-primary)" />
               </linearGradient>
             </defs>
-            <path 
+            <path
               d="M20 4 C28 4 34 10 34 18 C34 26 28 32 20 32 C14 32 9 28 8 22 C7 17 10 12 15 10 C19 9 23 11 25 15 C26 18 25 21 22 23 C20 24 17 23 16 21 C15 19 16 17 18 16"
-              fill="none" 
-              stroke="url(#spiralGradient)" 
+              fill="none"
+              stroke="url(#spiralGradient)"
               stroke-width="2.5"
               stroke-linecap="round"
             />
@@ -54,7 +54,7 @@ const handleSearchClick = () => {
         <!-- Mobile controls -->
         <div class="mobile-controls d-flex d-md-none align-items-center gap-2">
           <!-- Search button (always visible on mobile) -->
-          <button 
+          <button
             class="btn btn-search-mobile d-flex align-items-center justify-content-center"
             @click="handleSearchClick"
             title="Search (⌘K or /)"
@@ -66,8 +66,8 @@ const handleSearchClick = () => {
           </button>
 
           <!-- Mobile toggle -->
-          <button 
-            class="navbar-toggler border-0" 
+          <button
+            class="navbar-toggler border-0"
             type="button"
             @click="navExpanded = !navExpanded"
             :aria-expanded="navExpanded"
@@ -80,8 +80,8 @@ const handleSearchClick = () => {
         <div class="collapse navbar-collapse" :class="{ show: navExpanded }">
           <ul class="navbar-nav ms-auto align-items-center">
             <li v-for="item in navItems" :key="item.path" class="nav-item">
-              <RouterLink 
-                :to="item.path" 
+              <RouterLink
+                :to="item.path"
                 class="nav-link"
                 :class="{ active: isActive(item) }"
                 @click="navExpanded = false"
@@ -89,15 +89,15 @@ const handleSearchClick = () => {
                 {{ item.name }}
               </RouterLink>
             </li>
-            
+
             <!-- Theme toggle (desktop) -->
             <li class="nav-item ms-md-2 d-none d-md-block">
               <ThemeToggle variant="default" />
             </li>
-            
+
             <!-- Search button (desktop) -->
             <li class="nav-item ms-md-2 d-none d-md-block">
-              <button 
+              <button
                 class="btn btn-search d-flex align-items-center"
                 @click="emit('open-search')"
                 title="Search (⌘K or /)"
@@ -110,7 +110,7 @@ const handleSearchClick = () => {
                 <kbd class="d-none d-lg-inline ms-2">⌘K</kbd>
               </button>
             </li>
-            
+
             <!-- Theme toggle (mobile) -->
             <li class="nav-item d-md-none w-100 mt-3 pt-3 border-top">
               <ThemeToggle variant="mobile" @click="navExpanded = false" />
@@ -130,7 +130,7 @@ const handleSearchClick = () => {
   background: var(--cl-surface);
   border-bottom: 1px solid var(--cl-border-light);
   backdrop-filter: blur(10px);
-  
+
   @supports (backdrop-filter: blur(10px)) {
     background: rgba(var(--cl-surface), 0.9);
   }
@@ -146,7 +146,7 @@ const handleSearchClick = () => {
   font-weight: 500;
   color: var(--cl-text-heading);
   transition: opacity 0.2s ease;
-  
+
   &:hover {
     opacity: 0.8;
   }
@@ -154,7 +154,7 @@ const handleSearchClick = () => {
 
 .brand-logo {
   transition: transform 0.3s ease;
-  
+
   .navbar-brand:hover & {
     transform: rotate(90deg);
   }
@@ -174,12 +174,12 @@ const handleSearchClick = () => {
   padding: 0.5rem 1rem !important;
   border-radius: var(--bs-border-radius);
   transition: color 0.2s ease, background-color 0.2s ease;
-  
+
   &:hover {
     color: var(--cl-primary);
     background-color: var(--cl-surface-hover);
   }
-  
+
   &.active {
     color: var(--cl-primary);
     background-color: var(--cl-surface-hover);
@@ -196,12 +196,12 @@ const handleSearchClick = () => {
     height: 40px;
     border-radius: var(--bs-border-radius);
     transition: all 0.2s ease;
-    
+
     &:hover {
       background: var(--cl-surface-hover);
       color: var(--cl-primary);
     }
-    
+
     &:active {
       transform: scale(0.95);
     }
@@ -216,14 +216,14 @@ const handleSearchClick = () => {
   border-radius: var(--bs-border-radius);
   font-size: 0.875rem;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: var(--cl-surface);
     border-color: var(--cl-border);
     color: var(--cl-text);
     box-shadow: var(--cl-shadow);
   }
-  
+
   kbd {
     background: var(--cl-bg);
     border: 1px solid var(--cl-border-light);

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, inject, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
-import CodexGrid from '../components/browse/CodexGrid.vue'
+import CodexGrid from '../components/CodexGrid.vue'
 import { useReadingProgressStore } from '../stores/readingProgress'
 
 const codexRegistry = inject('codexRegistry')
@@ -65,6 +65,15 @@ const allCodexes = computed(() => {
 
 // Filtered codexes
 const filteredCodexes = computed(() => {
+  try{
+    if (window.umami){
+      umami.track('filterLattice', {
+        filter: activeFilter.value
+      });
+    }
+  }catch(ex){
+    console.warn('umami track filter error');
+  }
   if (activeFilter.value === 'all') {
     return allCodexes.value
   }
