@@ -135,7 +135,14 @@ const copyMarkdown = async () => {
     showCopied.value = true
     setTimeout(() => {
       showCopied.value = false
-    }, 2000)
+    }, 2000);
+    try{
+      if (window.umami){
+        window.umami.track('copyMarkdown', {codex: codex.value.originalFileName})
+    }
+    }catch(ex){
+      console.warn('umami copy markdown exception', ex);
+    }
   } catch (err) {
     console.error('Failed to copy:', err)
   }
@@ -151,7 +158,14 @@ const getPdfLink = computed(() => {
 
 // Get Markdown download link
 const getMdLink = computed(() => {
-  if (!codex.value?.originalFileName) return null
+  if (!codex.value?.originalFileName) return null;
+  try{
+    if (window.umami){
+      window.umami.track('downloadMarkdown', {codex: codex.value.originalFileName})
+    }
+  }catch(ex){
+    console.warn('umami download markdown exception', ex);
+  }
   return `/md/${codex.value.originalFileName}`
 })
 

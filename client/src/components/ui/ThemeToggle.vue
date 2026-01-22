@@ -38,7 +38,16 @@ const currentIcon = computed(() => {
 })
 
 const handleClick = () => {
-  cycleTheme()
+  cycleTheme();
+  setTimeout(()=>{
+    try{
+      if (window.umami){
+        window.umami.track('setTheme', {theme: themeLabel.value})
+      }
+    }catch(ex){
+      console.warn('umami setTheme exception', ex);
+    }
+  }, 1);
 }
 </script>
 
@@ -129,17 +138,17 @@ const handleClick = () => {
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  
+
   &:hover {
     background: var(--cl-surface-hover);
     border-color: var(--cl-border);
     color: var(--cl-text);
   }
-  
+
   &:active {
     transform: scale(0.95);
   }
-  
+
   &:focus-visible {
     outline: 2px solid var(--cl-primary);
     outline-offset: 2px;
@@ -151,7 +160,7 @@ const handleClick = () => {
   width: 40px;
   height: 40px;
   padding: 0;
-  
+
   .theme-toggle__icon {
     width: 20px;
     height: 20px;
@@ -167,17 +176,17 @@ const handleClick = () => {
   background: var(--cl-surface);
   border: none;
   border-radius: 0;
-  
+
   &:hover {
     background: var(--cl-surface-hover);
   }
-  
+
   .theme-toggle__icon {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
   }
-  
+
   .theme-toggle__label {
     font-size: 0.875rem;
     font-weight: 500;
@@ -201,7 +210,7 @@ const handleClick = () => {
   .theme-toggle__icon {
     color: var(--cl-accent);
   }
-  
+
   &:hover .theme-toggle__icon {
     color: var(--cl-accent-hover);
   }
@@ -212,7 +221,7 @@ const handleClick = () => {
   .theme-toggle__icon {
     color: var(--cl-primary);
   }
-  
+
   &:hover .theme-toggle__icon {
     color: var(--cl-primary-hover);
   }
@@ -223,7 +232,7 @@ const handleClick = () => {
   .theme-toggle__icon {
     color: var(--cl-text-muted);
   }
-  
+
   &:hover .theme-toggle__icon {
     color: var(--cl-text);
   }

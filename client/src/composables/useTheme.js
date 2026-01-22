@@ -27,10 +27,10 @@ function getSystemTheme() {
  */
 function applyTheme(theme) {
   if (typeof document === 'undefined') return
-  
+
   effectiveTheme.value = theme
   document.documentElement.setAttribute('data-theme', theme)
-  
+
   // Also update color-scheme for native browser elements
   document.documentElement.style.colorScheme = theme
 }
@@ -65,8 +65,8 @@ function loadThemePreference() {
   if (typeof localStorage === 'undefined') return THEME_MODES.SYSTEM
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
-    return saved && Object.values(THEME_MODES).includes(saved) 
-      ? saved 
+    return saved && Object.values(THEME_MODES).includes(saved)
+      ? saved
       : THEME_MODES.SYSTEM
   } catch (e) {
     console.warn('Failed to load theme preference:', e)
@@ -79,15 +79,15 @@ function loadThemePreference() {
  */
 function setupSystemThemeListener() {
   if (typeof window === 'undefined') return
-  
+
   mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-  
+
   const handleChange = () => {
     if (themeMode.value === THEME_MODES.SYSTEM) {
       updateEffectiveTheme()
     }
   }
-  
+
   // Modern API
   if (mediaQuery.addEventListener) {
     mediaQuery.addEventListener('change', handleChange)
@@ -103,19 +103,19 @@ function setupSystemThemeListener() {
 function initializeTheme() {
   if (isInitialized) return
   isInitialized = true
-  
+
   // Load saved preference
   themeMode.value = loadThemePreference()
-  
+
   // Apply initial theme
   updateEffectiveTheme()
-  
+
   // Watch for theme mode changes
   watch(themeMode, () => {
     updateEffectiveTheme()
     saveThemePreference(themeMode.value)
   })
-  
+
   // Listen for system theme changes
   setupSystemThemeListener()
 }
@@ -127,7 +127,7 @@ export function useTheme() {
   onMounted(() => {
     initializeTheme()
   })
-  
+
   /**
    * Set theme mode (light, dark, or system)
    */
@@ -136,7 +136,7 @@ export function useTheme() {
       themeMode.value = mode
     }
   }
-  
+
   /**
    * Cycle through theme modes: system → light → dark → system
    */
@@ -146,19 +146,19 @@ export function useTheme() {
     const nextIndex = (currentIndex + 1) % modes.length
     themeMode.value = modes[nextIndex]
   }
-  
+
   /**
    * Toggle between light and dark (skips system)
    */
   const toggleTheme = () => {
-    if (themeMode.value === THEME_MODES.LIGHT || 
+    if (themeMode.value === THEME_MODES.LIGHT ||
         (themeMode.value === THEME_MODES.SYSTEM && effectiveTheme.value === 'light')) {
       themeMode.value = THEME_MODES.DARK
     } else {
       themeMode.value = THEME_MODES.LIGHT
     }
   }
-  
+
   return {
     themeMode,
     effectiveTheme,
@@ -171,5 +171,15 @@ export function useTheme() {
 
 // Export for early initialization (before Vue app mounts)
 export function initThemeEarly() {
-  initializeTheme()
+  initializeTheme();
+  setTimeout(()=>{
+    try{
+      if (window.umami){
+        window.umami.track('initTheme', {theme: themeMode.value, effectiveTheme: effectiveTheme.value});
+      }
+    }catch(ex){
+      console.warn('umami copy markdown exception', ex);
+    }
+  },5000)
+
 }
