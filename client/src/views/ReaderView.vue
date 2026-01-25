@@ -5,6 +5,7 @@ import { useReadingProgressStore } from '../stores/readingProgress'
 import { BDropdown, BDropdownItem } from 'bootstrap-vue-next'
 import GlossaryPopover from '../components/GlossaryPopover.vue'
 import { cdnUrl } from '../lib/cdn-config.js'
+import {track} from '../lib/tracker.js';
 
 const route = useRoute()
 const router = useRouter()
@@ -136,13 +137,8 @@ const copyMarkdown = async () => {
     setTimeout(() => {
       showCopied.value = false
     }, 2000);
-    try{
-      if (window.umami){
-        window.umami.track('copyMarkdown', {codex: codex.value.originalFileName})
-    }
-    }catch(ex){
-      console.warn('umami copy markdown exception', ex);
-    }
+    track('copyMarkdown', {codex: codex.value.originalFileName})
+
   } catch (err) {
     console.error('Failed to copy:', err)
   }
@@ -163,13 +159,7 @@ const getMdLink = computed(() => {
   return `/md/${codex.value.originalFileName}`
 });
 const trackDownload = ()=> {
-  try{
-    if (window.umami){
-      window.umami.track('downloadMarkdown', {codex: codex.value.originalFileName})
-    }
-  }catch(ex){
-    console.warn('umami download markdown exception', ex);
-  }
+  track('downloadMarkdown', {codex: codex.value.originalFileName})
 }
 
 // Navigation

@@ -1,4 +1,5 @@
 import { ref, watch, onMounted } from 'vue'
+import {track} from '../lib/tracker.js';
 
 const STORAGE_KEY = 'alignos-theme'
 const THEME_MODES = {
@@ -173,13 +174,7 @@ export function useTheme() {
 export function initThemeEarly() {
   initializeTheme();
   setTimeout(()=>{
-    try{
-      if (window.umami){
-        window.umami.track('initTheme', {theme: themeMode.value, effectiveTheme: effectiveTheme.value});
-      }
-    }catch(ex){
-      console.warn('umami copy markdown exception', ex);
-    }
+    track('initTheme', {theme: themeMode.value, effectiveTheme: effectiveTheme.value});
   },5000)
 
 }

@@ -7,6 +7,7 @@
  */
 import { ref, computed, inject, onMounted, onUnmounted, nextTick } from 'vue'
 import { BPopover } from 'bootstrap-vue-next'
+import {track} from '../lib/tracker.js';
 
 const props = defineProps({
   /** CSS selector for the content container to watch */
@@ -49,13 +50,8 @@ const handleClick = (e) => {
     // Show popover for clicked term
     targetElement.value = term
     currentTerm.value = termKey;
-    try {
-      if (window?.umami) {
-        window.umami.track('livingGlossary', {term: termKey})
-      }
-    }catch(ex){
-      console.warn('umami glossary exception', ex);
-    }
+    track('livingGlossary', {term: termKey})
+
     // Use nextTick to ensure the target is set before showing
     nextTick(() => {
       isVisible.value = true

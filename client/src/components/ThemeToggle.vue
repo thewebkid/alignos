@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useTheme } from '../composables/useTheme.js'
+import {track} from '../lib/tracker.js';
 
 const props = defineProps({
   variant: {
@@ -40,13 +41,7 @@ const currentIcon = computed(() => {
 const handleClick = () => {
   cycleTheme();
   setTimeout(()=>{
-    try{
-      if (window.umami){
-        window.umami.track('setTheme', {theme: themeLabel.value})
-      }
-    }catch(ex){
-      console.warn('umami setTheme exception', ex);
-    }
+    track('setTheme', {theme: themeLabel.value})
   }, 1);
 }
 </script>

@@ -3,6 +3,7 @@ import { ref, computed, inject, watch, onMounted } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { markdown2Html } from '../lib/markdown'
 import { cdnUrl } from '../lib/cdn-config.js'
+import {track} from '../lib/tracker.js';
 
 const route = useRoute()
 const router = useRouter()
@@ -58,18 +59,13 @@ const toggleTitleOnly = () => {
 
 // Navigate to a codex
 const navigateToCodex = (codexId) => {
-  try{
-    if (window.umami){
-      umami.track('searchResultChosen', {
-        q: query.value.trim(),
-        codex: codexId,
-        searchPage: true,
-        titleOnly: titleOnly.value
-      });
-    }
-  }catch(ex){
-    console.warn('umami track search error');
-  }
+  track('searchResultChosen', {
+    q: query.value.trim(),
+    codex: codexId,
+    searchPage: true,
+    titleOnly: titleOnly.value
+  });
+
   router.push({ name: 'reader', params: { id: codexId } })
 }
 

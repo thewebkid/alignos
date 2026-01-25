@@ -3,6 +3,7 @@ import { ref, computed, watch, inject, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { markdown2Html } from '../lib/markdown.js'
 import { cdnUrl } from '../lib/cdn-config.js'
+import {track} from '../lib/tracker.js';
 
 const props = defineProps({
   show: Boolean
@@ -143,18 +144,12 @@ const handleKeydown = (e) => {
 // Select a result
 const selectResult = (result) => {
   if (result?.codex){
-    try{
-      if (window.umami){
-        umami.track('searchResultChosen', {
-          q: query.value.trim(),
-          codex: result.codex.id,
-          searchPage: false,
-          titleOnly: titleOnly.value
-        });
-      }
-    }catch(ex){
-      console.warn('umami track search error');
-    }
+    track('searchResultChosen', {
+      q: query.value.trim(),
+      codex: result.codex.id,
+      searchPage: false,
+      titleOnly: titleOnly.value
+    });
     router.push({ name: 'reader', params: { id: result.codex.id } })
     emit('close')
   }
@@ -169,15 +164,7 @@ const handleMouseDown = (e) => {
 const handleBackdropClick = (e) => {
   // Only close if both mousedown and mouseup happened on the backdrop
   if (e.target === e.currentTarget && mouseDownTarget.value === e.currentTarget) {
-    try{
-      if (window.umami){
-        const eventName = titleOnly.value ? 'closeSearchTitle' : 'closeSearchAll'
-        umami.track(eventName, { q: query.value.trim() });
-      }
-    }catch(ex){
-      console.warn('umami track search error');
-    }
-
+    track(titleOnly.value ? 'closeSearchTitle' : 'closeSearchAll', { q: query.value.trim() });
     emit('close')
   }
   mouseDownTarget.value = null
