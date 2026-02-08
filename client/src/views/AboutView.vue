@@ -190,7 +190,6 @@ const copyToClipboard = async (url) => {
             <a href="https://astrosurf.app">Astrosurf</a>,
             <a href="https://thewebkid.com">thewebkid</a></p>
           <br/><br/>
-          
         </section>
       </div>
     </div>

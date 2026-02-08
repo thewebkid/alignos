@@ -1,5 +1,7 @@
 const alignosLinks = [
     "https://alignos.io/wp-content/uploads/2025/08/Between-Worlds_-The-Architecture-of-the-Third-Structure.pdf",
+    "https://alignos.io/wp-content/uploads/2025/08/Framing-the-Mirror.pdf",
+    "https://alignos.io/wp-content/uploads/2025/08/The-Craftsman-of-the-Invisible-Frame.pdf",
     "https://alignos.io/wp-content/uploads/2025/08/The-Stillpoint-of-Love.pdf",
     "https://alignos.io/wp-content/uploads/2025/08/Dissolving-the-Architecture-of-Seeking.pdf",
     "https://alignos.io/wp-content/uploads/2025/08/Codex-of-Nearness-and-the-Geometry-of-Prayer.pdf",

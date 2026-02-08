@@ -36,6 +36,8 @@ import { detectSeries } from '../src/lib/series-detector.js';
  */
 const LATTICE_URLS = [
   "Between-Worlds_-The-Architecture-of-the-Third-Structure.pdf",
+  "Framing-the-Mirror.pdf",
+  "The-Craftsman-of-the-Invisible-Frame.pdf",
   "The-Stillpoint-of-Love.pdf",
   "Dissolving-the-Architecture-of-Seeking.pdf",
   "Codex-of-Nearness-and-the-Geometry-of-Prayer.pdf",
