@@ -1,228 +1,99 @@
 # AlignOS - Reader
 
-A reading companion for AlignOS.io
+A reading companion for AlignOS.io  
 [https://alignos.cosmiccreation.net](https://alignos.cosmiccreation.net)
 
-## 🌟 Features
+## Features
 
-- **Codex Browser**: Navigate through the codex lattice
-- **Full-Text Search**: Powered by Lunr.js for fast client-side search
-- **Markdown Rendering**: Beautiful rendering of markdown content with DOMPurify sanitization
-- **Responsive Design**: Built with Bootstrap 5 and custom SCSS
-- **RESTful API**: Express backend with MongoDB integration
+- **Codex Browser**: Navigate through the Codex Lattice
+- **Full-Text Search**: Lunr.js client-side search
+- **Markdown Rendering**: Marked + DOMPurify
+- **Prerendered pages**: Vite SSG for SEO / LLM-friendly HTML
+- **Public JSON API**: Static `/api/*` endpoints for discovery (see `/llms.json`)
+- **Analytics**: Vercel Web Analytics + custom events (opt out via `/notrack`)
 
-## 🏗️ Architecture
+## Architecture
 
-### Frontend (`/client`)
-- **Framework**: Vue 3 with Composition API
-- **Build Tool**: Vite
-- **UI Library**: Bootstrap 5 + Bootstrap Vue Next
-- **Router**: Vue Router
-- **State Management**: Pinia
-- **Search**: Lunr.js
-- **Markdown**: Marked.js + DOMPurify
+Static **Vue 3 + Vite SSG** site deployed on **Vercel**. No application server or database.
 
-### Backend (`/server`)
-- **Framework**: Express 5
-- **Database**: MongoDB with Mongoose
-- **Middleware**: CORS, body-parser
-- **Environment**: dotenv
+| Layer | Stack |
+|---|---|
+| Frontend | Vue 3, Vite, vite-ssg, Pinia, Vue Router, Bootstrap 5 |
+| Content | Markdown → `build-lattice.js` → JSON + prerendered HTML |
+| Hosting | Vercel (root directory: `client`) |
+| Media CDN | Azure Blob (`astrotiles`) |
+| Analytics | `@vercel/analytics` |
 
-## 🚀 Quick Start
+## Quick start
 
-### Prerequisites
-- Node.js 18+ 
-- MongoDB
-- npm or yarn
-
-### Development
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/thewebkid/alignos.git
-   cd alignos
-   ```
-
-2. **Install dependencies**
-   ```bash
-   # Install server dependencies
-   cd server
-   npm install
-   
-   # Install client dependencies
-   cd ../client
-   npm install
-   ```
-
-3. **Configure environment**
-   Create `server/.env`:
-   ```env
-   PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/alignos
-   NODE_ENV=development
-   ```
-
-4. **Start MongoDB**
-   ```bash
-   # On Windows
-   net start MongoDB
-   
-   # On macOS/Linux
-   sudo systemctl start mongod
-   ```
-
-5. **Run development servers**
-   ```bash
-   # Terminal 1 - Start backend
-   cd server
-   npm run dev
-   
-   # Terminal 2 - Start frontend
-   cd client
-   npm run dev
-   ```
-
-6. **Access the application**
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:5000
-
-### Production Build
-
-```bash
-cd client
-npm run build
+```powershell
+git clone https://github.com/thewebkid/alignos.git
+cd alignos\client
+npm install
+npm run dev
 ```
 
-The built files will be in `client/dist/` and can be served by any static file server.
+Dev server: http://localhost:5555
 
-## 📦 Deployment
+```powershell
+npm run build
+npm run preview
+```
 
-### Staging Server Deployment
+## Deployment
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed staging deployment instructions.
+See [DEPLOYMENT.md](./DEPLOYMENT.md). Summary:
 
-**Quick deploy to staging (Windows Server with PM2):**
+1. Vercel project with **Root Directory** = `client`
+2. Enable Web Analytics
+3. Add domain `alignos.cosmiccreation.net`
+4. Point Azure DNS `alignos` CNAME at Vercel
 
-1. **Initial Setup** (one-time)
-   ```powershell
-   # On staging server as Administrator
-   .\setup-staging.ps1
-   ```
-
-2. **Deploy/Update**
-   
-   **Option A: Standard deployment (port 5000)**
-   ```powershell
-   # On staging server
-   .\deploy-to-staging.ps1
-   ```
-   
-   **Option B: Multi-port deployment (80, 443, 5000)**
-   ```powershell
-   # Deploy on specific ports
-   .\deploy-multi-port.ps1 -Port80          # Deploy on port 80
-   .\deploy-multi-port.ps1 -Port5000        # Deploy on port 5000
-   .\deploy-multi-port.ps1 -All             # Deploy on all ports
-   ```
-
-
-
-**Note:** The Express server now serves both the Vue frontend and API endpoints. All routes serve the SPA except `/api/*` which are reserved for API endpoints.
-
-## 📁 Project Structure
+## Project structure
 
 ```
 alignos/
-├── client/                  # Vue.js frontend
+├── client/                 # Vercel root
+│   ├── vercel.json         # cleanUrls + /api rewrites
+│   ├── scripts/            # build-lattice.js
+│   ├── public/
+│   │   ├── md/             # Codex markdown source
+│   │   ├── codex-content/  # Per-codex content JSON
+│   │   ├── data/           # Generated /api mirrors (gitignored)
+│   │   └── llms.json
 │   ├── src/
-│   │   ├── components/     # Vue components
-│   │   ├── views/          # Page views
-│   │   ├── router/         # Vue Router config
-│   │   ├── stores/         # Pinia stores
-│   │   ├── lib/            # Utility libraries
-│   │   ├── assets/         # Static assets & SCSS
-│   │   └── generated/      # Generated data files
-│   ├── md/                 # Markdown content files
-│   ├── pdf/                # PDF documents
-│   ├── public/             # Public static files
-│   └── scripts/            # Build scripts
-│
-├── server/                  # Express backend
-│   ├── index.js            # Main server file
-│   ├── .env                # Environment config (not in git)
-│   └── package.json
-│
-├── setup-staging.ps1        # Staging setup script
-├── deploy-to-staging.ps1    # Deployment script
-└── DEPLOYMENT.md            # Deployment guide
+│   │   ├── generated/      # Lattice JSON for the app
+│   │   └── ...
+│   └── dist/               # SSG output
+├── package.json
+└── DEPLOYMENT.md
 ```
 
-## 🛠️ Available Scripts
+## Scripts (`client/`)
 
-### Client
-- `npm run dev` - Start Vite dev server with hot reload
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run build:lattice` - Generate codex lattice JSON
+- `npm run dev` — lattice build + Vite dev server
+- `npm run build` — lattice + vite-ssg production build
+- `npm run preview` — preview `dist/`
+- `npm run build:lattice` — regenerate lattice / API JSON only
 
-### Server
-- `npm start` - Start production server
-- `npm run dev` - Start development server with nodemon
+## Public API
 
-## 🔧 Configuration
+| URL | Description |
+|---|---|
+| `/api/health` | Health check |
+| `/api/codex-lattice-meta` | Lightweight index (~128 KB) |
+| `/api/codex-lattice` | Full corpus JSON |
+| `/api/codex/:id` | Single codex |
 
-### Environment Variables
+## Content
 
-**Server** (`server/.env`):
-```env
-PORT=5000                                    # Server port
-MONGODB_URI=mongodb://localhost:27017/alignos  # MongoDB connection
-NODE_ENV=production                          # Environment mode
-```
+Markdown lives in `client/public/md/`. `build-lattice.js` indexes it into `src/generated/` and `public/data/`.
 
-### MongoDB Setup
+## License
 
-The application requires MongoDB to be running. Default connection:
-- **Host**: localhost
-- **Port**: 27017
-- **Database**: alignos
+This project is open and you are welcome here.
 
-## 🎨 Theming
-
-Custom theme variables are defined in `client/src/assets/scss/_variables.scss`
-
-## 🔍 Search Configuration
-
-The search index is built from markdown files in `client/md/` using the `build-lattice.js` script. The generated index is stored in `client/src/generated/codex-lattice.json`.
-
-## 📝 Content Management
-
-Markdown files in `client/md/` are automatically indexed and made searchable. Each markdown file should have:
-- A title (H1 heading)
-- Metadata (front matter, optional)
-- Content body
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is open and you are welcome here. 
-
-## 🔗 Links
+## Links
 
 - **Repository**: https://github.com/thewebkid/alignos
-- **Staging**: http://192.168.50.209:5000
-
-## 📞 Support
-
-For issues or questions, please open an issue on GitHub.
-
----
-
-Built with ❤️ by Claude, Grok, Copilot, and Ron (thewebkid)
+- **Live**: https://alignos.cosmiccreation.net

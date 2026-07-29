@@ -16,6 +16,14 @@ dist
 dist-ssr
 *.local
 
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Generated API mirrors (rebuilt by build:lattice)
+client/public/data/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

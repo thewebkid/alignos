@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/api/health", "destination": "/data/health.json" },
+    { "source": "/api/codex-lattice", "destination": "/data/codex-lattice.json" },
+    { "source": "/api/codex-lattice-meta", "destination": "/data/codex-lattice-meta.json" },
+    { "source": "/api/codex/:id", "destination": "/data/codex/:id.json" }
+  ]
+}

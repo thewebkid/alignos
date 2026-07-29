@@ -21,17 +21,9 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 onMounted(() => {
-  // Set the notrack flag in localStorage
   localStorage.setItem('notrack', 'true')
-  
-  // Disable window.umami if it exists
-  if (typeof window.umami !== 'undefined') {
-    window.umami = null
-  }
-  
   console.log('🚫 Analytics tracking disabled')
-  
-  // Redirect to home after a brief moment
+
   setTimeout(() => {
     router.push('/')
   }, 1500)

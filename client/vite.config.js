@@ -4,17 +4,50 @@ import { resolve } from 'path'
 import fs from 'fs'
 
 // Read codex lattice to generate all routes for SSG
-const codexLatticeData = JSON.parse(
-  fs.readFileSync(resolve(__dirname, 'src/generated/codex-lattice.json'), 'utf-8')
-)
+const latticePath = resolve(__dirname, 'src/generated/codex-lattice.json')
+const codexLatticeData = fs.existsSync(latticePath)
+  ? JSON.parse(fs.readFileSync(latticePath, 'utf-8'))
+  : []
 
 // Generate all codex routes
 const codexRoutes = codexLatticeData.map(codex => `/codex/${codex.id}`)
+
+/** Map extensionless /api/* URLs to static JSON under /data (matches vercel.json). */
+function rewriteApiToData(req) {
+  if (!req.url) return
+  const url = req.url.split('?')[0]
+  if (url === '/api/health') req.url = '/data/health.json'
+  else if (url === '/api/codex-lattice') req.url = '/data/codex-lattice.json'
+  else if (url === '/api/codex-lattice-meta') req.url = '/data/codex-lattice-meta.json'
+  else {
+    const match = url.match(/^\/api\/codex\/([^/]+)\/?$/)
+    if (match) req.url = `/data/codex/${match[1]}.json`
+  }
+}
+
+function apiStaticRewrites() {
+  return {
+    name: 'api-static-rewrites',
+    configureServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        rewriteApiToData(req)
+        next()
+      })
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        rewriteApiToData(req)
+        next()
+      })
+    },
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    apiStaticRewrites(),
     // Serve md folder for cover images
     {
       name: 'serve-md-folder',
@@ -44,12 +77,6 @@ export default defineConfig({
     }
   ],
   server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-      },
-    },
     fs: {
       // Allow serving files from md and codex-content directories
       allow: ['..', 'md', 'public/codex-content']

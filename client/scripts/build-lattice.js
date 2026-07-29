@@ -22,6 +22,9 @@ const OUTPUT_DIR = path.join(ROOT_DIR, 'src', 'generated');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'codex-lattice.json');
 const OUTPUT_META_FILE = path.join(OUTPUT_DIR, 'codex-lattice-meta.json');
 const CODEX_CONTENT_DIR = path.join(ROOT_DIR, 'public', 'codex-content');
+// Public static API payloads (served via /api/* rewrites on Vercel)
+const PUBLIC_DATA_DIR = path.join(ROOT_DIR, 'public', 'data');
+const PUBLIC_CODEX_API_DIR = path.join(PUBLIC_DATA_DIR, 'codex');
 
 // Import series detector (relative path)
 import { detectSeries } from '../src/lib/series-detector.js';
@@ -601,25 +604,45 @@ async function build() {
   // Ensure output directories exist
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
   await fs.mkdir(CODEX_CONTENT_DIR, { recursive: true });
+  await fs.mkdir(PUBLIC_CODEX_API_DIR, { recursive: true });
 
   // Write full lattice (for SSG build)
   console.log('\n📝 Writing full lattice...');
-  await fs.writeFile(OUTPUT_FILE, JSON.stringify(codexes, null, 2));
+  const fullLatticeJson = JSON.stringify(codexes, null, 2);
+  await fs.writeFile(OUTPUT_FILE, fullLatticeJson);
   const fullSize = (await fs.stat(OUTPUT_FILE)).size;
 
   // Write metadata-only lattice (for client-side hydration)
   console.log('📝 Writing metadata-only lattice...');
   const metadataLattice = codexes.map(extractMetadata);
-  await fs.writeFile(OUTPUT_META_FILE, JSON.stringify(metadataLattice, null, 2));
+  const metaLatticeJson = JSON.stringify(metadataLattice, null, 2);
+  await fs.writeFile(OUTPUT_META_FILE, metaLatticeJson);
   const metaSize = (await fs.stat(OUTPUT_META_FILE)).size;
 
-  // Write individual content files
+  // Public API static mirrors (preserve /api/* URLs for LLMs via rewrites)
+  console.log('📝 Writing public API data files...');
+  await fs.writeFile(path.join(PUBLIC_DATA_DIR, 'codex-lattice.json'), fullLatticeJson);
+  await fs.writeFile(path.join(PUBLIC_DATA_DIR, 'codex-lattice-meta.json'), metaLatticeJson);
+  await fs.writeFile(
+    path.join(PUBLIC_DATA_DIR, 'health.json'),
+    JSON.stringify({
+      status: 'ok',
+      message: 'AlignOS API is running',
+      timestamp: new Date().toISOString()
+    }, null, 2)
+  );
+
+  // Write individual content files + full-codex API payloads
   console.log('📝 Writing individual content files...');
   let contentFilesWritten = 0;
   for (const codex of codexes) {
     const contentFile = path.join(CODEX_CONTENT_DIR, `${codex.id}.json`);
     const content = extractContent(codex);
     await fs.writeFile(contentFile, JSON.stringify(content, null, 2));
+    await fs.writeFile(
+      path.join(PUBLIC_CODEX_API_DIR, `${codex.id}.json`),
+      JSON.stringify(codex, null, 2)
+    );
     contentFilesWritten++;
   }
 
@@ -645,6 +668,7 @@ async function build() {
   console.log(`      • Full lattice: ${OUTPUT_FILE} (${(fullSize / 1024 / 1024).toFixed(2)} MB)`);
   console.log(`      • Meta lattice: ${OUTPUT_META_FILE} (${(metaSize / 1024).toFixed(0)} KB)`);
   console.log(`      • Content files: ${contentFilesWritten} files in ${CODEX_CONTENT_DIR}`);
+  console.log(`      • Public API data: ${PUBLIC_DATA_DIR}`);
   console.log(`      • Size reduction: ${((1 - metaSize / fullSize) * 100).toFixed(1)}%`);
   console.log('─'.repeat(50) + '\n');
 }

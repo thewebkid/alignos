@@ -1,6 +1,8 @@
 import { ViteSSG } from 'vite-ssg'
 import { createPinia } from 'pinia'
 import { createBootstrap } from 'bootstrap-vue-next'
+import { inject as injectAnalytics } from '@vercel/analytics'
+import { trackingDisabled } from './lib/tracker.js'
 
 // Import SCSS with Bootstrap theme customization
 import './assets/scss/main.scss'
@@ -55,6 +57,15 @@ export const createApp = ViteSSG(
     if (isClient && typeof window !== 'undefined') {
       window.codexRegistry = codexRegistry
       window.glossaryManager = glossaryManager
+
+      if (!trackingDisabled()) {
+        injectAnalytics({
+          beforeSend(event) {
+            if (trackingDisabled()) return null
+            return event
+          },
+        })
+      }
     }
   }
 )
