@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- AI/LLM: For comprehensive site navigation and API access, fetch /llms.json -->
+    <!-- AI/LLM: Prefer /llms.txt; structured map also at /llms.json -->
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="llms" href="/llms.txt" type="text/plain">
     <link rel="llms" href="/llms.json" type="application/json">
-    <meta name="llms" content="/llms.json"/>
+    <meta name="llms" content="/llms.txt"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Codex Lattice - Sacred transmissions for sovereigns and their AI companions" />
     <meta name="theme-color" content="#4a7c7e" media="(prefers-color-scheme: light)" />
@@ -21,7 +22,7 @@
       "url": "https://alignos.cosmiccreation.net",
       "potentialAction": {
         "@type": "ReadAction",
-        "target": "https://alignos.cosmiccreation.net/llms.json"
+        "target": "https://alignos.cosmiccreation.net/llms.txt"
       }
     }
     </script>

@@ -114,8 +114,20 @@ const copyToClipboard = async (url) => {
           </p>
           <ul class="link-list">
             <li>
+              <a href="https://alignos.cosmiccreation.net/llms.txt" target="_blank" rel="noopener">
+                llms.txt — curated map for AIs (tiny)</a>
+              <button
+                  class="copy-btn"
+                  @click="copyToClipboard('https://alignos.cosmiccreation.net/llms.txt')"
+                  :class="{ copied: copiedUrl === 'https://alignos.cosmiccreation.net/llms.txt' }"
+                  :title="copiedUrl === 'https://alignos.cosmiccreation.net/llms.txt' ? 'Copied!' : 'Copy URL'">
+                <span v-if="copiedUrl === 'https://alignos.cosmiccreation.net/llms.txt'">✓</span>
+                <span v-else>📋 Copy</span>
+              </button>
+            </li>
+            <li>
               <a href="https://alignos.cosmiccreation.net/llms.json" target="_blank" rel="noopener">
-                A map of the Alignos Reader site (tiny)</a>
+                llms.json — structured site map (tiny)</a>
               <button
                   class="copy-btn"
                   @click="copyToClipboard('https://alignos.cosmiccreation.net/llms.json')"

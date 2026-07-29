@@ -34,7 +34,7 @@ const totalCodexes = computed(() => codexRegistry?.size || 0)
           <a href="https://alignos.io" target="_blank" rel="noopener" class="footer-link">
             alignos.io
           </a><span class="divider">·</span>
-          <a href="/llms.json">For AI explorers</a>
+          <a href="/llms.txt">For AI explorers</a>
           <span class="divider">·</span>
           <a href="https://coherenceacrossscales.org">Coherence Across Scales (new)</a>
         </div>
