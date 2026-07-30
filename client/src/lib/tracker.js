@@ -1,7 +1,7 @@
 import { track as vercelTrack } from '@vercel/analytics'
 
 function trackingDisabled() {
-  return typeof localStorage !== 'undefined' && localStorage.getItem('notrack') === 'true'
+  return false;//typeof localStorage !== 'undefined' && localStorage.getItem('notrack') === 'true'
 }
 
 /**

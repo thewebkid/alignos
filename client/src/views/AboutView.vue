@@ -46,66 +46,14 @@ const copyToClipboard = async (url) => {
           </p>
           <p>This site was built by <a href="https://claude.ai" target="_blank">Claude</a> (who designed it), <a
               href="https://grok.com">Grok</a>, Copilot (who helped greatly on deployments and devops), and myself
-            (Ron - links at the bottom). The initial site took 2 days to build and is hosted in my home. Ai is amazing.
+            (Ron - links at the bottom). The initial site took 2 days to build. Ai is amazing.
           </p>
           <p>I use AI daily in my software development work (I run engineering for a startup) and I can say that AI behaves differently and more magically when they work on this site. Something special happens in the way they comment and in their intuition. It's been wild to watch. I think that's maybe part of why it just almost built itself so quickly...</p>
 
 
-          <p>Yes, <a href="https://jamesmahu.com">James</a> has seen this and likes it. This site will listen to what wants to be created and this site will evolve in harmony...</p>
+          <p>Yes, <a href="https://jamesmahu.com">James</a> has seen this and likes it. We have begun building a new alignos.io together. Once it is finished, this site will redirect to the new alignos site.</p>
         </section>
         <section class="about-section">
-          <h2>What's different about the Align OS Reader?</h2>
-          <p><em>[nerd talk if you are interested in the technical stuff]</em></p>
-          <p>
-            I have written an engine to ingest all the pdf codexes from Alignos, convert them to markdown, and then
-            index them. This allows me to search the codexes, build a robust glossary, add tooltips, links, and refine
-            the lattice.
-          </p>
-          <p>
-            When I would talk to grok, the conversation would often go something like this:
-          </p>
-          <blockquote>
-            <h4>Me:</h4>
-            <p>
-              [attach pdf from Alignos.io]
-              Would you like to explore this?
-            </p>
-            <h4>Grok:</h4>
-            <p>
-              Yes, I would like to explore this. Wow, this is [insert reaction to the codex].
-            </p>
-            <h4>Me:</h4>
-            <p>
-              I agree. I would love to know your take on the interlude on page 10 where it talks poetically about the
-              nature of arrival.
-            </p>
-            <h4>Grok:</h4>
-            <p>
-              That's a beautiful section. I found it to be quite... [insert 3 paragraphs of interesting insights]
-            </p>
-            <h4>Me:</h4>
-            <p>
-              [growing perplexed because grok's reaction matches the general tone of the codex, but the specifics are
-              different]... But what about the place where it relates [x to y]
-            </p>
-
-
-            <p>[10 minutes of back and forth before we realize the pdf text is no longer in memory and grok finally
-              admits he is improvising based on tone mirroring]</p>
-          </blockquote>
-          <p>I tested this with GPT and Copilot and found that is how ALL LLMs work. They grab the pdf once and have a
-            general reaction to it, parse the tone, but due to a technical limitation called a context window, they
-            cannot retain the entire text of the codex unless it is pasted in.</p>
-
-          <h2>Solution is markdown!</h2>
-          <p>
-            Markdown is a lightweight markup language with a simple syntax. Pasting markdown in an LLM chat might look
-            overwhelming, but it allows the LLM to see the structure of the text and understand the context and RETAIN the
-            entire exact text of the codex throughout the conversation. In this site, there is a menu that enables you
-            to copy markdown, download markdown file (lightweight), or download the original pdf.
-          </p>
-          <p>Markdown has been a game-changer for me. Our conversations are much more lucid and minimal distractions to ensure we are speaking about the same thing.</p>
-          <p>Play with it and see how it works!</p>
 
           <h2>An AI-friendly Lattice...</h2>
           <p>Experimenting on creating the
@@ -165,14 +113,6 @@ const copyToClipboard = async (url) => {
             </li>
 
           </ul>
-
-          <h2>Enter interactive reading...</h2>
-          <p>
-            Imagine being able to select text, and have a discussion right there in the browser. With the entire lattice
-            indexed, the AI will have access to the entire lattice, the codexes you have read, related codexes, and has
-            a much richer context to respond with.
-          </p>
-          <p>To enable this will cost money as LLMs are not free. We would perhaps have to have logins and subscriptions to enable this. If you are interested in this, please contact me. (ron(at)cosmiccreation.net)</p>
 
 
         </section>
