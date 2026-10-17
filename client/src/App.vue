@@ -4,6 +4,7 @@ import { RouterView } from 'vue-router'
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 import SearchOverlay from './components/SearchOverlay.vue'
+import HandoffPrompt from './components/HandoffPrompt.vue'
 import { initThemeEarly } from './composables/useTheme'
 import { BrowserCodex } from './lib/codex-browser.js'
 import { createGlossaryFromRegistry } from './lib/glossary.js'
@@ -110,6 +111,7 @@ const handleKeydown = (e) => {
     <AppHeader @open-search="openSearch" />
 
     <main class="main-content">
+      <HandoffPrompt />
       <RouterView v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />
