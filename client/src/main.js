@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import { createBootstrap } from 'bootstrap-vue-next'
 import { inject as injectAnalytics } from '@vercel/analytics'
 import { trackingDisabled } from './lib/tracker.js'
+import { HANDOFF_MODE, handoffLink } from './lib/handoff.js'
 
 // Import SCSS with Bootstrap theme customization
 import './assets/scss/main.scss'
@@ -20,6 +21,12 @@ export const createApp = ViteSSG(
   App,
   { routes },
   async ({ app, router, routes, isClient, initialState }) => {
+    if (isClient && HANDOFF_MODE === 'forward') {
+      window.location.replace(await handoffLink(window.location.pathname + window.location.search))
+      // Never mount: the prerendered page stays on screen until alignos.io loads
+      await new Promise(() => {})
+    }
+
     // SSG (server-side) needs full content for pre-rendering
     // Client-side loads metadata only initially, full lattice loads in App.vue
     const latticeType = isClient ? 'metadata only (full loads in App.vue)' : 'full content for SSG'

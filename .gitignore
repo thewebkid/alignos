@@ -20,6 +20,7 @@ dist-ssr
 .env
 .env.*
 !.env.example
+!.env.development
 
 # Generated API mirrors (rebuilt by build:lattice)
 client/public/data/
